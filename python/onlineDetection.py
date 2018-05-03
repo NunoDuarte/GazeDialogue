@@ -3,28 +3,24 @@ from pylsl import StreamInlet, resolve_stream
 from pylsl import StreamInfo, StreamOutlet
 
 # import files
-from mesh import meshingAlg
-from find_nearest import find_nearest
 from redBalltracking import redBall
 from faceDetector import faceDetector
 from gazeBehaviour import gazeBehaviour
+
 # import necessary libraries
+from msgpack import unpackb, packb
 from collections import deque
 import numpy as np
 import cv2
 import csv
+import zmq
 import argparse
 import imutils
-import logging as log
 
 """
 Receive world camera data from Pupil using ZMQ.
 Make sure the frame publisher plugin is loaded and confugured to gray or rgb
 """
-import zmq
-from msgpack import unpackb, packb
-import numpy as np
-import cv2
 
 context = zmq.Context()
 # open a req port to talk to pupil
