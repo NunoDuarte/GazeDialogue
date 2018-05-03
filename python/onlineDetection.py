@@ -86,23 +86,7 @@ ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
 args = vars(ap.parse_args())
 pts = deque(maxlen=args["buffer"])
 
-mesh = meshingAlg()
-
 ballTracking = redBall()
-
-cascPath = "haarcascade_frontalface_default.xml"
-faceCascade = cv2.CascadeClassifier(cascPath)
-log.basicConfig(filename='faceDetected.log', level=log.INFO)
-anterior = 0
-face = faceDetector()
-
-print("Preparing Data...")
-knownFaces, knownLabels = face.prepare_training_data("training-data", faceCascade)
-print("Data prepared")
-
-# create our LBPH face recognizer
-face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-face_recognizer.train(knownFaces, np.array(knownLabels))
 
 gaze = gazeBehaviour(outlet)
 f = gaze.open()
@@ -111,7 +95,6 @@ print("looking for an NormPose2IP stream...")
 streams = resolve_stream('name', 'NormPose2IP')
 # create a new inlet to read from the stream
 inlet = StreamInlet(streams[0])
-
 
 i = 0
 while True:
