@@ -89,7 +89,6 @@ pts = deque(maxlen=args["buffer"])
 ballTracking = redBall()
 
 gaze = gazeBehaviour(outlet)
-f = gaze.open()
 
 print("looking for an NormPose2IP stream...")
 streams = resolve_stream('name', 'NormPose2IP')
@@ -99,12 +98,9 @@ inlet = StreamInlet(streams[0])
 i = 0
 while True:
     topic, msg = recv_from_sub()
-    # file = open('Failed.py', 'w')
 
     if topic == 'frame.world' and i % 2 == 0:
-        # file.write(str(msg))
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
-        # cv2.imshow('test', frame)
         cv2.waitKey(1)
 
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -119,7 +115,6 @@ while True:
 
             sample, timestamp = inlet.pull_chunk()
             if sample:
-                # print(sample[0])
                 pos_x = sample[0][1]
                 pos_y = sample[0][2]
 
@@ -131,7 +126,7 @@ while True:
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], [], ball, [], fixation, [], f)
+                    mysample = gaze.record(sample[0][0], [], ball, [], fixation, [])
                     if mysample is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)
@@ -141,6 +136,5 @@ while True:
     i = i + 1
     # cv2.waitKey(0)
 
-gaze.close(f)
 # cap.release()
 cv2.destroyAllWindows()
