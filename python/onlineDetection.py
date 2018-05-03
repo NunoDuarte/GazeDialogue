@@ -92,12 +92,11 @@ streams = resolve_stream('name', 'NormPose2IP')
 inlet = StreamInlet(streams[0])
 
 i = 0
-while True:
+while cv2.waitKey(1):
     topic, msg = recv_from_sub()
 
     if topic == 'frame.world' and i % 2 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
-        cv2.waitKey(1)
 
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if frame is not None:
@@ -128,9 +127,7 @@ while True:
                         outlet.push_sample(mysample)
 
         cv2.imshow('frame', frame)
-
     i = i + 1
-    # cv2.waitKey(0)
 
 # cap.release()
 cv2.destroyAllWindows()
