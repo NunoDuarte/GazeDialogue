@@ -1,0 +1,57 @@
+<application>
+
+  <name>Pupil_system</name>
+
+  <module>
+      <name>iCub_SIM</name>
+      <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+      <node>localhost</node>
+  </module>
+
+ <module>
+      <name>yarprobotinterface</name>
+      <parameters>--context simCartesianControl --config no_legs.xml</parameters>
+      <dependencies>
+          <port timeout="20">/icubSim/torso/state:o</port>
+      </dependencies>
+      <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+      <node>localhost</node>
+  </module>
+
+  <module>
+      <name>iKinGazeCtrl</name>
+      <parameters>--from configSim.ini</parameters>
+      <dependencies>
+          <port timeout="20">/icubSim/torso/state:o</port>
+          <port timeout="20">/icubSim/head/state:o</port>
+          <port timeout="20">/icubSim/inertial</port>
+      </dependencies>
+      <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+      <node>localhost</node>
+  </module>
+
+  <module>
+      <name>yarpview</name>
+      <parameters>--name /viewer --x 10 --y 10 --compact</parameters>
+      <node>localhost</node>
+  </module>
+
+  <connection>
+      <from>/icubSim/cam/left</from>
+      <to>/detector/image/in</to>
+      <protocol>udp</protocol>
+  </connection>
+  
+  <connection>
+      <from>/detector/image/out</from>
+      <to>/viewer</to>
+      <protocol>udp</protocol>
+  </connection>
+
+  <connection>
+    <from>/detector/target</from>
+    <to>/tracker/target:i</to>
+    <protocol>tcp</protocol>
+  </connection>
+
+</application>
