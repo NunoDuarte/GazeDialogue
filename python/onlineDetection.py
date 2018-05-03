@@ -104,10 +104,6 @@ print("Data prepared")
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 face_recognizer.train(knownFaces, np.array(knownLabels))
 
-timestamps_gaze = list()
-norm_pos_x = list()
-norm_pos_y = list()
-
 gaze = gazeBehaviour(outlet)
 f = gaze.open()
 
@@ -116,21 +112,13 @@ streams = resolve_stream('name', 'NormPose2IP')
 # create a new inlet to read from the stream
 inlet = StreamInlet(streams[0])
 
-with open('gaze_positions_18-12-2017.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
-    for row in reader:
-        timestamps_gaze.append(float(row['timestamp']))
-        norm_pos_x.append(row['norm_pos_x'])
-        norm_pos_y.append(row['norm_pos_y'])
-
-timestamps = np.load('world_viz_timestamps.npy')
 
 i = 0
 while True:
     topic, msg = recv_from_sub()
     # file = open('Failed.py', 'w')
 
-    if topic == 'frame.world' and i % 10 == 0:
+    if topic == 'frame.world' and i % 2 == 0:
         # file.write(str(msg))
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
         # cv2.imshow('test', frame)
@@ -141,18 +129,11 @@ while True:
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            frame, markers = mesh.mesh(frame)
-            #
             frame, pts, ball = ballTracking.tracking(frame, pts, args)
 
-            anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
-            labels = face.predict(frame, face_recognizer, faces, facesTrained)
-            #
-            # # calculate the nearest timestamp for the current frame
-            # time = timestamps[i]
-            # time_close, ind = find_nearest(timestamps_gaze, float(time))
-            # #
-            # use the x, y position of the closest timestamp norm_pos_*
+            # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
+            # labels = face.predict(frame, face_recognizer, faces, facesTrained)
+
             sample, timestamp = inlet.pull_chunk()
             if sample:
                 # print(sample[0])
@@ -167,7 +148,7 @@ while True:
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], markers, ball, faces, fixation, labels, f)
+                    mysample = gaze.record(sample[0][0], [], ball, [], fixation, [], f)
                     if mysample is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)

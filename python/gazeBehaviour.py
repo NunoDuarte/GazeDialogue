@@ -3,7 +3,7 @@ from pylsl import StreamInfo, StreamOutlet
 
 class gazeBehaviour:
 
-    def __init__(self, outlet):
+    def __init__(self, outlet=None):
         pass
 
     def open(self):
