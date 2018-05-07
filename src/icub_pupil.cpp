@@ -98,7 +98,7 @@ public:
             return false;
         }
 
-         yInfo()<<"Begin moving arms to first initial position";
+        yInfo()<<"Begin moving arms to first initial position";
         // GET ARMS IN THE CORRECT POSITION
         Vector x(3);
 
@@ -107,7 +107,7 @@ public:
         x[1] =  -0.5; // to the left
         initArm(x);
 
-	yInfo()<<"Finished moving the arms to initial position.";
+	    yInfo()<<"Finished moving the arms to initial position.";
 
         Network yarp;
 
@@ -119,6 +119,7 @@ public:
         Bottle reply;
 
         Bottle cmd2;
+        // Blue ball
         // CREATE the sphere affected by gravity we will use
         cmd2.addString("world");
         cmd2.addString("mk"); 
@@ -132,6 +133,52 @@ public:
         cmd2.addDouble(0);
         cmd2.addDouble(0);
         cmd2.addDouble(1);
+
+        printf("Sending message... %s\n", cmd2.toString().c_str());
+        objectLocation.write(cmd2,reply);
+        printf("Got response: %s\n", reply.toString().c_str());
+
+        cmd2.clear();
+
+        // Red Space
+        // CREATE the sphere affected by gravity we will use
+        cmd2.addString("world");
+        cmd2.addString("mk"); 
+        cmd2.addString("sbox");
+        cmd2.addDouble(0.15); // radius 4 cm 
+        cmd2.addDouble(0.01); // length 4 cm 
+        cmd2.addDouble(0.15); // length 4 cm 
+        // ball's position
+        cmd2.addDouble(0.0);
+        cmd2.addDouble(0.48);
+        cmd2.addDouble(0.4);
+        // ball's colour
+        cmd2.addDouble(1);
+        cmd2.addDouble(0);
+        cmd2.addDouble(0);
+
+        printf("Sending message... %s\n", cmd2.toString().c_str());
+        objectLocation.write(cmd2,reply);
+        printf("Got response: %s\n", reply.toString().c_str());
+
+        cmd2.clear();
+
+        // Green Space
+        // CREATE the sphere affected by gravity we will use
+        cmd2.addString("world");
+        cmd2.addString("mk"); 
+        cmd2.addString("sbox");
+        cmd2.addDouble(0.15); // radius 4 cm 
+        cmd2.addDouble(0.01); // length 4 cm 
+        cmd2.addDouble(0.15); // length 4 cm 
+        // ball's position
+        cmd2.addDouble(0.0);
+        cmd2.addDouble(0.48);
+        cmd2.addDouble(0.8);
+        // ball's colour
+        cmd2.addDouble(0);
+        cmd2.addDouble(1);
+        cmd2.addDouble(0);
 
         printf("Sending message... %s\n", cmd2.toString().c_str());
         objectLocation.write(cmd2,reply);
@@ -318,15 +365,15 @@ int main(int argc, char *argv[])
     // table's size
     cmd1.addDouble(1.0);
     cmd1.addDouble(0.05);
-    cmd1.addDouble(0.5);
+    cmd1.addDouble(1.0);
     // table's position
     cmd1.addDouble(0);
     cmd1.addDouble(0.45);
-    cmd1.addDouble(0.4);
+    cmd1.addDouble(0.6);
     // table's colour
     cmd1.addDouble(1.0);
     cmd1.addDouble(1.0);
-    cmd1.addDouble(1.0);
+    cmd1.addDouble(0.7);
 
     printf("Sending message... %s\n", cmd1.toString().c_str());
     objectLocation.write(cmd1,reply);
