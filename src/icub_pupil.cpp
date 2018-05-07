@@ -127,7 +127,7 @@ public:
         // ball's position
         cmd2.addDouble(-0.10);
         cmd2.addDouble(0.59);
-        cmd2.addDouble(0.2);
+        cmd2.addDouble(0.3);
         // ball's colour
         cmd2.addDouble(0);
         cmd2.addDouble(0);
@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
     // table's position
     cmd1.addDouble(0);
     cmd1.addDouble(0.45);
-    cmd1.addDouble(0.3);
+    cmd1.addDouble(0.4);
     // table's colour
     cmd1.addDouble(1.0);
     cmd1.addDouble(1.0);
