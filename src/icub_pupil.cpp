@@ -4,6 +4,7 @@
 #include <yarp/os/RateThread.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Property.h>
+#include <yarp/dev/IControlLimits2.h>         // Control Limits for Drivers
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
 #include <yarp/dev/GazeControl.h>             // gaze control
@@ -34,7 +35,7 @@ using namespace std;
 
 class ControlThread: public RateThread
 {
-    PolyDriver drvGaze;
+    PolyDriver drvGaze, drvHandR, drvHandL;
 
     ICartesianControl *iarm;
     IGazeControl      *igaze;
@@ -72,6 +73,41 @@ public:
         inPort.open("/read_pupil");
 
         port.open("/tracker/target:i");
+
+        // open a client interface to connect to the joint controller
+        Property optJoint;
+        optJoint.put("device","remote_controlboard");
+        optJoint.put("remote","/icubSim/left_arm");
+        optJoint.put("local","/position/left_arm");
+
+        if (!drvHandL.open(optJoint))
+        {
+            yError()<<"Unable to connect to /icubSim/left_arm";
+            return false;
+        }
+
+        // open a client interface to connect to the joint controller
+        Property optJoint1;
+        optJoint1.put("device","remote_controlboard");
+        optJoint1.put("remote","/icubSim/right_arm");
+        optJoint1.put("local","/position/right_arm");
+
+        if (!drvHandR.open(optJoint1))
+        {
+            yError()<<"Unable to connect to /icubSim/right_arm";
+            return false;
+        }
+
+         yInfo()<<"Begin moving arms to first initial position";
+        // GET ARMS IN THE CORRECT POSITION
+        Vector x(3);
+
+        x[1] =  0.5; // to the right
+        initArm(x);
+        x[1] =  -0.5; // to the left
+        initArm(x);
+
+	yInfo()<<"Finished moving the arms to initial position.";
 
         Network yarp;
 
@@ -131,6 +167,72 @@ public:
         port.close();
         
         printf("Done, goodbye from ControlThread\n");
+    }
+
+    /***************************************************/
+    void initArm(const Vector &x)
+    {
+        string hand=(x[1]>=0.0?"right":"left");
+
+        // select the correct interface
+        IControlLimits2   *ilim1;
+        IPositionControl2 *ipos;
+        IEncoders         *ienc1;
+        IControlMode2     *imod1;
+
+        if (hand=="right")
+        {
+            drvHandR.view(ilim1);
+            drvHandR.view(ipos);
+            drvHandR.view(imod1);
+        }
+        else
+        {
+            drvHandL.view(ilim1);
+            drvHandL.view(ipos);
+            drvHandL.view(imod1);
+        }
+
+        double target[] = {0, 90, 0, 20, 10, 0, 0};
+        // we set up here the lists of joints we need to actuate
+        // shoulders (3) + elbow + wrist (3)
+        VectorOf<int> joints;
+        for (int i=0; i<6; i++){
+            joints.push_back(i);
+        }
+        // This option you will move each joint individually
+        for (size_t i=0; i<joints.size(); i++)
+        {
+            int j=joints[i];
+            // retrieve joint bounds
+            double min_j,max_j,range;
+            ilim1->getLimits(j,&min_j,&max_j);
+            // set control mode
+            imod1->setControlMode(j,VOCAB_CM_POSITION);
+            // set up the speed in [deg/s]
+            ipos->setRefSpeed(j,15.0);
+            // set up max acceleration in [deg/s^2]
+            ipos->setRefAcceleration(j,5.0);
+            // yield the actual movement
+            yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
+            ipos->positionMove(j,target[i]);
+        }
+        // wait (with timeout) until the movement is completed
+        bool done=false;
+        double t0=Time::now();
+        while (!done && (Time::now()-t0 < 1.0))
+        {
+            yInfo()<<"Waiting...";
+            Time::delay(0.1);   // release the quantum to avoid starving resources
+            ipos->checkMotionDone(&done);
+        }
+
+        if (done)
+            yInfo()<<"Movement completed";
+        else
+            yWarning()<<"Timeout expired";
+
+        // wait until all fingers have attained their set-points
     }
 
     void run()
