@@ -33,9 +33,20 @@ public:
             ImageOf<PixelRgb> &outImage=outPort.prepare(); // get an output image
             outImage=*image;
 
-            double xMean = 0;
-            double yMean = 0;
-            int ct = 0;
+            // red 
+            double RxMean = 0;
+            double RyMean = 0;
+            int Rct = 0;
+
+            // blue
+            double BxMean = 0;
+            double ByMean = 0;
+            int Bct = 0;
+
+            // green
+            double GxMean = 0;
+            double GyMean = 0;
+            int Gct = 0;
             for (int x=0; x<image->width(); x++)
             {
                 for (int y=0; y<image->height(); y++)
@@ -52,30 +63,77 @@ public:
                         // accumulate x
                         // accumulate y
                         // count total number of points
-                        xMean += x;
-                        yMean += y;
-                        ct++;
+                        RxMean += x;
+                        RyMean += y;
+                        Rct++;
+
+                        outImage(x,y).r=255;
+                    }
+                    if ((pixel.b>pixel.r*5.0) && (pixel.b>pixel.g*5.0))
+                    {
+                        // there's a redish pixel at (x,y)!
+                        // let's find the average location of these pixels
+
+                        // accumulate x
+                        // accumulate y
+                        // count total number of points
+                        BxMean += x;
+                        ByMean += y;
+                        Bct++;
+
+                        outImage(x,y).r=255;
+                    }
+                    if ((pixel.g>pixel.b*5.0) && (pixel.g>pixel.r*5.0))
+                    {
+                        // there's a redish pixel at (x,y)!
+                        // let's find the average location of these pixels
+
+                        // accumulate x
+                        // accumulate y
+                        // count total number of points
+                        GxMean += x;
+                        GyMean += y;
+                        Gct++;
 
                         outImage(x,y).r=255;
                     }
                 }
             }
-            if (ct>0)
-            {
-                xMean /= ct;
-                yMean /= ct;
-            }
 
             Bottle &target=targetPort.prepare();
             target.clear();
-            target.addDouble(xMean);
-            target.addDouble(yMean);
-
-            //threshold on the size of the object we found
-            if (ct>(image->width()/20)*(image->height()/20))
-                target.addInt(1);
-            else
-                target.addInt(0);
+            if (Rct>0) {
+                RxMean /= Rct;
+                RyMean /= Rct;
+                target.addDouble(RxMean);
+                target.addDouble(RyMean);
+                //threshold on the size of the object we found
+                if (Rct>(image->width()/20)*(image->height()/20))
+                    target.addString("Red");
+                else
+                    target.addInt(0);
+            } if (Bct>0) {
+                BxMean /= Bct;
+                ByMean /= Bct;
+                target.addDouble(BxMean);
+                target.addDouble(ByMean);
+                //threshold on the size of the object we found
+                if (Bct>(image->width()/20)*(image->height()/20))
+                    target.addString("Blue");
+                else
+                    target.addInt(0);
+            
+            } if (Gct>0) {
+                GxMean /= Gct;
+                GyMean /= Gct;
+                target.addDouble(GxMean);
+                target.addDouble(GyMean);
+                //threshold on the size of the object we found
+                if (Gct>(image->width()/20)*(image->height()/20))
+                    target.addString("Green");
+                else
+                    target.addInt(0);
+            }
 
             yInfo()<<"Target: "<<target.toString();
             targetPort.write();
