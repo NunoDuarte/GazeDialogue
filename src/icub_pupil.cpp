@@ -7,8 +7,6 @@
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
 #include <yarp/dev/GazeControl.h>             // gaze control
-#include <yarp/dev/all.h>
-#include <yarp/os/all.h>
 #include <yarp/dev/PolyDriver.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/math/Math.h>
@@ -74,6 +72,36 @@ public:
         inPort.open("/read_pupil");
 
         port.open("/tracker/target:i");
+
+        Network yarp;
+
+        RpcClient objectLocation;
+        objectLocation.open("/objectBall");
+        
+        printf("Trying to connect to %s\n", "/icubSim/world");
+        yarp.connect("/objectBall","/icubSim/world");
+        Bottle reply;
+
+        Bottle cmd2;
+        // CREATE the sphere affected by gravity we will use
+        cmd2.addString("world");
+        cmd2.addString("mk"); 
+        cmd2.addString("sph");
+        cmd2.addDouble(0.04); // radius 4 cm (made the ball smaller)
+        // ball's position
+        cmd2.addDouble(-0.10);
+        cmd2.addDouble(0.59);
+        cmd2.addDouble(0.2);
+        // ball's colour
+        cmd2.addDouble(0);
+        cmd2.addDouble(0);
+        cmd2.addDouble(1);
+
+        printf("Sending message... %s\n", cmd2.toString().c_str());
+        objectLocation.write(cmd2,reply);
+        printf("Got response: %s\n", reply.toString().c_str());
+
+        objectLocation.close();
 
         getchar();
 
@@ -173,6 +201,36 @@ int main(int argc, char *argv[])
         printf("No yarp network, quitting\n");
         return 1;
     }
+
+    RpcClient objectLocation;
+    objectLocation.open("/objectBall");
+    
+    printf("Trying to connect to %s\n", "/icubSim/world");
+    yarp.connect("/objectBall","/icubSim/world");
+    Bottle cmd1, reply;
+
+    // CREATE the Table not affected by gravity we will use
+    cmd1.addString("world");
+    cmd1.addString("mk"); 
+    cmd1.addString("sbox");
+    // table's size
+    cmd1.addDouble(1.0);
+    cmd1.addDouble(0.05);
+    cmd1.addDouble(0.5);
+    // table's position
+    cmd1.addDouble(0);
+    cmd1.addDouble(0.45);
+    cmd1.addDouble(0.3);
+    // table's colour
+    cmd1.addDouble(1.0);
+    cmd1.addDouble(1.0);
+    cmd1.addDouble(1.0);
+
+    printf("Sending message... %s\n", cmd1.toString().c_str());
+    objectLocation.write(cmd1,reply);
+    printf("Got response: %s\n", reply.toString().c_str());
+
+    objectLocation.close();
 
     ControlThread myThread(5); //period is 10ms
 
