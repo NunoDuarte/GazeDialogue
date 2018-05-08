@@ -3,7 +3,7 @@ from pylsl import StreamInlet, resolve_stream
 from pylsl import StreamInfo, StreamOutlet
 
 # import files
-from redBalltracking import redBall
+from redBalltracking import Ball
 from faceDetector import faceDetector
 from gazeBehaviour import gazeBehaviour
 
@@ -19,7 +19,7 @@ import imutils
 
 """
 Receive world camera data from Pupil using ZMQ.
-Make sure the frame publisher plugin is loaded and confugured to gray or rgb
+Make sure the frame publisher plugin is loaded and configuredsource  to gray or rgb
 """
 
 context = zmq.Context()
@@ -82,7 +82,7 @@ ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
 args = vars(ap.parse_args())
 pts = deque(maxlen=args["buffer"])
 
-ballTracking = redBall()
+ballTracking = Ball()
 
 gaze = gazeBehaviour(outlet)
 
@@ -95,7 +95,7 @@ i = 0
 while cv2.waitKey(1):
     topic, msg = recv_from_sub()
 
-    if topic == 'frame.world' and i % 2 == 0:
+    if topic == 'frame.world' and i % 5 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -103,7 +103,10 @@ while cv2.waitKey(1):
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            frame, pts, ball = ballTracking.tracking(frame, pts, args)
+            frame, pts, ballG = ballTracking.trackingGreen(frame, pts, args)
+            frame, pts, ballR = ballTracking.trackingRed(frame, pts, args)
+            frame, pts, ballB = ballTracking.trackingBlue(frame, pts, args)
+
 
             # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
             # labels = face.predict(frame, face_recognizer, faces, facesTrained)
@@ -119,12 +122,12 @@ while cv2.waitKey(1):
                            thickness=5, lineType=8, shift=0)  # draw circle
                 fixation = [(int(float(pos_x) * width)), int(height - int(float(pos_y) * height))]
 
-                # check the gaze behaviour
-                if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], [], ball, [], fixation, [])
-                    if mysample is not 0:
-                        #print(mysample)
-                        outlet.push_sample(mysample)
+                # # check the gaze behaviour
+                # if len([ballG, ballR, ballB]) is not 0:
+                #     mysample = gaze.record(sample[0][0], [], [ballG, ballR, ballB], [], fixation, [])
+                #     if mysample is not 0:
+                #         #print(mysample)
+                #         outlet.push_sample(mysample)
 
         cv2.imshow('frame', frame)
     i = i + 1
