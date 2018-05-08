@@ -18,42 +18,55 @@ import numpy as np
 import cv2 as cv
 face_cascade = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
 # eye_cascade = cv.CascadeClassifier('haarcascade_eye.xml')
-image = cv.imread('icub_face.png')
-cv2.imshow('Raw', image)
-
-# image = np.zeros((400, 400, 3), dtype="uint8")
-# raw = image.copy()
-# image[np.where((image == [0, 0, 0]).all(axis=2))] = [255, 255, 255]
+# image = cv.imread('icub_face.png')
+# cv2.imshow('Raw', image)
+#
+# # if cv2.waitKey() == ord('q'):
+# #     cv2.destroyAllWindows()
+# image[np.where((image == [208, 225, 244]).all(axis = 2))] = [3, 7, 14]
+# cv2.imwrite('output.png', image)
+#
+# # lower_red = np.array([69, 118, 247], dtype="uint16")
+# # upper_red = np.array([92, 153, 255], dtype="uint16")
+# # black_mask = cv2.inRange(image, lower_red, upper_red)
+# # newImg = image.copy()
+# # mat = np.where((black_mask == [255]))
+# # print(mat[0])
+# # print(mat[1])
+# # for submat0 in mat[0]:
+# #     for submat1 in mat[1]:
+# #         newImg[submat0][submat1] == [0, 0, 0]
+#
+# # newImg[np.where((black_mask == [255]))] == [0, 0, 0]
+# # file = open('text.txt', 'w')
+# # i = 0
+# # for mask in newImg:
+# #     for submask in mask:
+# #         file.write(str(submask) + str(i))
+# #         file.write('\n')
+# #         i = i + 1
+# cv2.imwrite('output1.png', newImg)
+# # image[np.where((image == [255, 255, 255]).all(axis=2))] = [0, 0, 0]  # it works
+# # black_mask[np.where(black_mask == [10])] = [0]
+# # black_mask[np.where((black_mask == [0, 0, 0]).all(axis=2))] = [0, 255, 255]  # it doesn't work
 # cv2.imshow('Test', image)
-# cv2.imshow('Test2', raw)
-# if cv2.waitKey() == ord('q'):
-#     cv2.destroyAllWindows()
-image[np.where((image == [208, 225, 244]).all(axis = 2))] = [3, 7, 14]
-cv2.imwrite('output.png', image)
-
-lower_red = np.array([69, 118, 247], dtype="uint16")
-upper_red = np.array([90, 153, 252], dtype="uint16")
-black_mask = cv2.inRange(image, lower_red, upper_red)
-print(black_mask)
-# image[np.where((image == [255, 255, 255]).all(axis=2))] = [0, 0, 0]  # it works
-black_mask[np.where(black_mask == [50])] = [0]
-# black_mask[np.where((black_mask == [0, 0, 0]).all(axis=2))] = [0, 255, 255]  # it doesn't work
-cv2.imshow('Test', image)
-cv2.imshow('Test2', black_mask)
-cv2.imwrite('output.png', black_mask)
-
-# print(type(img))
-# img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# new = [[[0, 0, 255 % j] for j in i] for i in img_gray]
-# dt = np.dtype('f8')
-# new = np.array(new, dtype=dt)
-# new1 = new/255
-
-# cv2.imwrite('img.jpg', new)
-cv2.imshow('Test', new1)
+# cv2.imshow('Test2', black_mask)
+# cv2.imwrite('output.png', black_mask)
+#
+# # print(type(img))
+# # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# # new = [[[0, 0, 255 % j] for j in i] for i in img_gray]
+# # dt = np.dtype('f8')
+# # new = np.array(new, dtype=dt)
+# # new1 = new/255
+#
+# # cv2.imwrite('img.jpg', new)
+# cv2.imshow('Test', newImg)
 
 if cv2.waitKey() == ord('q'):
     cv2.destroyAllWindows()
+
+img = cv.imread('output1.png')
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
