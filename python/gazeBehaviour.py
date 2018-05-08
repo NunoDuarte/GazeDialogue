@@ -14,8 +14,8 @@ class gazeBehaviour:
             distY = fixation[1] - ball[0][0][1]
 
             if math.sqrt(pow(distX, 2) + pow(distY, 2)) < epsilon:
-                #           time        ball    x           y           color of ball
-                mysample = [timestamp, 0.0, ball[0][0][0], ball[0][0][1], ball[1]]
+                #           time        color of ball    x           y
+                mysample = [timestamp, ball[1], ball[0][0][0], ball[0][0][1], ]
                 return mysample
 
             for marker in markers:

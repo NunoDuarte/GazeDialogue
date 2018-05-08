@@ -92,6 +92,7 @@ streams = resolve_stream('name', 'NormPose2IP')
 inlet = StreamInlet(streams[0])
 
 i = 0
+ball = []
 while cv2.waitKey(1):
     topic, msg = recv_from_sub()
 
@@ -104,10 +105,15 @@ while cv2.waitKey(1):
             height, width, channels = frame.shape
 
             frame, pts, ballG = ballTracking.trackingGreen(frame, pts, args)
+            if ballG is not [ ]:
+                ball.append([ballG, 1.111111111111111])
             frame, pts, ballR = ballTracking.trackingRed(frame, pts, args)
+            if ballR is not [ ]:
+                ball.append([ballR, 1.222222222222222])
             frame, pts, ballB = ballTracking.trackingBlue(frame, pts, args)
+            if ballB is not [ ]:
+                ball.append([ballB, 1.333333333333333])
 
-            ball = [[ballG, 1.1], [ballB, 1.2], [ballR, 1.3]]
             # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
             # labels = face.predict(frame, face_recognizer, faces, facesTrained)
 
