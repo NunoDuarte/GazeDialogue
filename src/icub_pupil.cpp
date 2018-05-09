@@ -35,7 +35,7 @@ using namespace std;
 
 class ControlThread: public RateThread
 {
-    PolyDriver drvGaze, drvHandR, drvHandL;
+    PolyDriver drvArmR, drvArmL, drvGaze, drvHandR, drvHandL;
 
     ICartesianControl *iarm;
     IGazeControl      *igaze;
@@ -45,6 +45,24 @@ class ControlThread: public RateThread
     BufferedPort<Bottle> port;
 
     int startup_ctxt_gaze;
+    string _hand;
+
+    // position and orientation of the robot's arm
+    Vector p, o;
+    // current linear and angular velocities
+    Vector vcur, wcur;
+    // 3d location in the 3d world reference frame
+    Vector x;
+
+    // calculte distances for giving action
+    float Vmax;
+    float epsilon;
+    int count;
+    Vector e;
+    Vector unit_e;
+    double v_mag;
+    double acc_mag;
+    double mag_e; 
 
 public:
     ControlThread(int period):RateThread(period){}
@@ -56,6 +74,22 @@ public:
 
         // Open cartesian solver for right and left arm
         string robot="icubSim";
+
+        if (!openCartesian(robot,"left_arm"))
+        {
+            drvArmL.close();
+            return false;
+        }
+        // SELECT THE HAND
+        //
+        _hand="left";
+
+	    // select the correct interface
+        if (_hand=="right")
+            drvArmR.view(iarm);
+        else
+            drvArmL.view(iarm);
+
         // open a client interface to connect to Gaze Cartesian controller
         Property optGaze;
         optGaze.put("device","gazecontrollerclient");
@@ -100,8 +134,7 @@ public:
 
         yInfo()<<"Begin moving arms to first initial position";
         // GET ARMS IN THE CORRECT POSITION
-        Vector x(3);
-
+        x = x(3);
         x[1] =  0.5; // to the right
         initArm(x);
         x[1] =  -0.5; // to the left
@@ -188,7 +221,59 @@ public:
 
         getchar();
 
+        // initiate variables for giving action
+        count       = 0;
+        Vmax        = 0.02; // 0.5 m/s
+        epsilon     = 0.01; // 10 cm
+
+        e = e(3);
+        unit_e = unit_e(3);
+        v_mag = 0;
+        acc_mag = 0.01;
+
+        // pre-define final handover position
+        x[0] = -0.25;
+        x[1] = -0.15;
+        x[2] =  0.02;
+
         return true;
+    }
+
+    bool openCartesian(const string &robot, const string &arm)
+    {
+        PolyDriver &drvArm=(arm=="right_arm"?drvArmR:drvArmL);
+
+        Property optArm;
+        optArm.put("device","cartesiancontrollerclient");
+        optArm.put("remote","/"+robot+"/cartesianController/"+arm);
+        optArm.put("local","/cartesian_client/"+arm);
+
+        // let's give the controller some time to warm up
+        bool ok=false;
+        double t0=Time::now();
+        while (Time::now()-t0<10.0)
+        {
+            // this might fail if controller
+            // is not connected to solver yet
+            if (drvArm.open(optArm))
+            {
+                ok=true;
+                break;
+            }
+
+            Time::delay(1.0);
+        }
+        if (!ok)
+        {
+            yError()<<"Unable to open the Cartesian Controller for "<<arm;
+            return false;
+        }
+        return true;
+    }
+
+    float magnitude(Vector x)     //  <! Vector magnitude
+    {
+        return sqrt((x[0]*x[0])+(x[1]*x[1])+(x[2]*x[2]));
     }
 
     /***************************************************/
@@ -282,180 +367,130 @@ public:
         // wait until all fingers have attained their set-points
     }
 
+    /***************************************************/
+    std::string predictAL(int state)
+    {
+        // input: state of the human
+        // output: action to perform
+        std::string action;
+
+        action = "giving";
+
+        return action;
+    }
+
+    /***************************************************/
+    void actionBehavior(int state)
+    {
+        // input: state of the human
+        // output: behavior of robot
+        std::string action;
+        action = predictAL(state);
+        if (action == "Giving"){
+            // get current location
+            iarm->getPose(p,o);
+            // get current velocities
+            iarm->getTaskVelocities(vcur, wcur);
+
+        } else if (action == "Placing") {
+            // just observe the action
+
+        }
+    }
+
+    void reachArmGiving(Vector position, Vector orientation)
+    {
+        e[0] = x[0] - p[0];
+        e[1] = x[1] - p[1];
+        e[2] = x[2] - p[2];        
+
+        /*if (count == 3500 ){
+            release("left");
+        }*/
+        mag_e = magnitude(e);
+        unit_e[0] = e[0]/mag_e;  // this gives us the orientation of the 
+        unit_e[1] = e[1]/mag_e;  // equilibrium point
+        unit_e[2] = e[2]/mag_e;
+
+        if( mag_e < epsilon ){
+            v_mag = 0.9*v_mag*mag_e/epsilon;
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+           /* if(!send_or){
+                send_or=1;
+                Vector o = computeHandOrientation("left");
+                approachTargetWithHand("left", x, o);
+            } */
+        }else if( mag_e > epsilon and magnitude(vcur) < Vmax){
+            v_mag+=acc_mag;   
+
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+        }else{
+            v_mag = Vmax;
+
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+        }
+        iarm->goToPose(x,o);
+        yInfo() << "v:" << v_mag;
+
+    }
+
+    /***************************************************/
+    void gazeBehavior(int state)
+    {
+
+        //igaze->lookAtFixationPoint(state);
+        //igaze->waitMotionDone();
+        //to track from now on
+        igaze->setTrackingMode(true);
+    }
+
     void run()
     {
       	Vector pupil; string hand; Vector gaze;
-	    yInfo() << "Im in !!!!!!";
+        int state; // state the human is in
         if (inPort.read(pupil))
         {
             if ( pupil(1) == 1){
-                yInfo() << "1";
-                // make iCub look down
-                Vector ang(3,0.0);
-                ang[1]=-40.0;
-                //ang[2]=-20;
-                igaze->lookAtAbsAngles(ang);
-
-                double timeout = 10.0; 
-                bool done = false; 
-                done = igaze->waitMotionDone(0.1,timeout); 
-                if(!done){
-                    yWarning("Something went wrong with the initial approach, using timeout");
-                    igaze->stopControl();
-                }
-                // look for red ball
-                Bottle *pTarget=port.read(false);
-                if (pTarget!=NULL)
-                {
-                    if (pTarget->size()>2)
-                    {
-                        if (pTarget->get(2).asInt()!=0)
-                        {
-                            Vector px1(2);
-                            std::string str1;
-                            Vector px2(2);
-                            std::string str2;
-                            Vector px3(2);
-                            std::string str3;
-                            px1[0]=pTarget->get(0).asDouble();
-                            px1[1]=pTarget->get(1).asDouble();
-                            str1=pTarget->get(2).asString();
-                            px2[0]=pTarget->get(3).asDouble();
-                            px2[1]=pTarget->get(4).asDouble();
-                            str2=pTarget->get(5).asString();
-                            px3[0]=pTarget->get(6).asDouble();
-                            px3[1]=pTarget->get(7).asDouble();
-                            str3=pTarget->get(8).asString();
-
-	                        yInfo() << "Im in again !!!!!!\n";
-                            // track the moving target within the camera image
-                            igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                            yInfo()<<"gazing at green object: "<<px1.toString(3,3);
-                        }
-                    }
-                }
+                yInfo() << "Teammate's Tower";
+                state = 1;
+           
             }else if ( pupil(1) == 2) {
-                yInfo() << "2";
-                // make iCub look down
-                Vector ang(3,0.0);
-                ang[1]=-40.0;
-                //ang[2]=-20;
-                igaze->lookAtAbsAngles(ang);
-
-                double timeout = 10.0; 
-                bool done = false; 
-                done = igaze->waitMotionDone(0.1,timeout); 
-                if(!done){
-                    yWarning("Something went wrong with the initial approach, using timeout");
-                    igaze->stopControl();
-                }
-                // look for red ball
-                Bottle *pTarget=port.read(false);
-                if (pTarget!=NULL)
-                {
-                    if (pTarget->size()>2)
-                    {
-                        if (pTarget->get(2).asInt()!=0)
-                        {
-                            Vector px1(2);
-                            std::string str1;
-                            Vector px2(2);
-                            std::string str2;
-                            Vector px3(2);
-                            std::string str3;
-                            px1[0]=pTarget->get(0).asDouble();
-                            px1[1]=pTarget->get(1).asDouble();
-                            str1=pTarget->get(2).asString();
-                            px2[0]=pTarget->get(3).asDouble();
-                            px2[1]=pTarget->get(4).asDouble();
-                            str2=pTarget->get(5).asString();
-                            px3[0]=pTarget->get(6).asDouble();
-                            px3[1]=pTarget->get(7).asDouble();
-                            str3=pTarget->get(8).asString();
-
-	                        yInfo() << "Im in again !!!!!!\n";
-                            // track the moving target within the camera image
-                            igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                            yInfo()<<"gazing at red object: "<<px2.toString(3,3);
-                        }
-                    }
-                }
-
-                //yInfo()<<"retrieved 3D location = ("<<x.toString(3,3)<<")";
-                //yInfo() << x(0);
-                //yInfo() << x(1);
-                //yInfo() << x(2);
-                gaze = pupil;
-                gaze(0) = -20; // -20 meters for x in robot frame (20 meters in z for pupil)
-                gaze(1) =  0;
-                gaze(2) =  0;
-
-                yInfo() << gaze(0);
-                yInfo() << gaze(1);
-                yInfo() << gaze(2);
-                fixate(gaze);
+                yInfo() << "My Tower";
+                state = 2;
+                
             }else if ( pupil(1) == 3) {
-                yInfo() << "3";
-                // make iCub look down
-                Vector ang(3,0.0);
-                ang[1]=-40.0;
-                //ang[2]=-20;
-                igaze->lookAtAbsAngles(ang);
+                yInfo() << "Brick/Object";
+                state = 3;
+                
+            }else if ( pupil(1) == 4) {
+                yInfo() << "iCub's Face";
+                state = 4;
+                
+            } else {
+                yInfo() << "wrong state";
+                state = -1;            
+            }
+        
+            if (state != -1){
+                // if you observe the human looking at one of the states then act
+                
 
-                double timeout = 10.0; 
-                bool done = false; 
-                done = igaze->waitMotionDone(0.1,timeout); 
-                if(!done){
-                    yWarning("Something went wrong with the initial approach, using timeout");
-                    igaze->stopControl();
-                }
-                // look for red ball
-                Bottle *pTarget=port.read(false);
-                if (pTarget!=NULL)
-                {
-                    if (pTarget->size()>2)
-                    {
-                        if (pTarget->get(2).asInt()!=0)
-                        {
-                            Vector px1(2);
-                            std::string str1;
-                            Vector px2(2);
-                            std::string str2;
-                            Vector px3(2);
-                            std::string str3;
-                            px1[0]=pTarget->get(0).asDouble();
-                            px1[1]=pTarget->get(1).asDouble();
-                            str1=pTarget->get(2).asString();
-                            px2[0]=pTarget->get(3).asDouble();
-                            px2[1]=pTarget->get(4).asDouble();
-                            str2=pTarget->get(5).asString();
-                            px3[0]=pTarget->get(6).asDouble();
-                            px3[1]=pTarget->get(7).asDouble();
-                            str3=pTarget->get(8).asString();
 
-	                        yInfo() << "Im in again !!!!!!\n";
-                            igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                            yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
-                        }
-                    }
-                }
 
-                //yInfo()<<"retrieved 3D location = ("<<x.toString(3,3)<<")";
-                //yInfo() << x(0);
-                //yInfo() << x(1);
-                //yInfo() << x(2);
-                gaze = pupil;
-                gaze(0) = -20; // -20 meters for x in robot frame (20 meters in z for pupil)
-                gaze(1) =  0;
-                gaze(2) =  0;
 
-                yInfo() << gaze(0);
-                yInfo() << gaze(1);
-                yInfo() << gaze(2);
-                fixate(gaze);
-            } else
-                yInfo() << "didn't get object Location";
-        }    
+            }
+    
+        } 
+           
     }
 };
 
