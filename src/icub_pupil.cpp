@@ -488,7 +488,7 @@ public:
         
             if (state != -1){
                 // if you observe the human looking at one of the states then act
-                
+                actionBehavior( state);
 
 
 
