@@ -385,12 +385,18 @@ public:
         // input: state of the human
         // output: behavior of robot
         std::string action;
+
+        // call the predictor function
         action = predictAL(state);
+
+        // make a decision based on the predictor's response
         if (action == "Giving"){
             // get current location
             iarm->getPose(p,o);
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
+
+            reachArmGiving(p, o, vcur);
 
         } else if (action == "Placing") {
             // just observe the action
@@ -398,7 +404,7 @@ public:
         }
     }
 
-    void reachArmGiving(Vector position, Vector orientation)
+    void reachArmGiving(Vector position, Vector orientation, Vector velocity)
     {
         e[0] = x[0] - p[0];
         e[1] = x[1] - p[1];
