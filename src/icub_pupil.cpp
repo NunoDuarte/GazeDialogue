@@ -329,16 +329,8 @@ public:
 
 	                        yInfo() << "Im in again !!!!!!\n";
                             // track the moving target within the camera image
-                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
-                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
-                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
-                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
-                            } if ( pupil(1) > 1.3333){
-                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
-                            }
+                            igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                            yInfo()<<"gazing at green object: "<<px1.toString(3,3);
                         }
                     }
                 }
@@ -383,16 +375,8 @@ public:
 
 	                        yInfo() << "Im in again !!!!!!\n";
                             // track the moving target within the camera image
-                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
-                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
-                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
-                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
-                            } if ( pupil(1) > 1.3333){
-                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
-                            }
+                            igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                            yInfo()<<"gazing at red object: "<<px2.toString(3,3);
                         }
                     }
                 }
@@ -450,17 +434,8 @@ public:
                             str3=pTarget->get(8).asString();
 
 	                        yInfo() << "Im in again !!!!!!\n";
-                            // track the moving target within the camera image
-                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
-                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
-                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
-                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
-                            } if ( pupil(1) > 1.3333){
-                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
-                            }
+                            igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                            yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
                         }
                     }
                 }
@@ -479,7 +454,8 @@ public:
                 yInfo() << gaze(2);
                 fixate(gaze);
             } else
-            yInfo() << "didn't get object Location";
+                yInfo() << "didn't get object Location";
+        }    
     }
 };
 
