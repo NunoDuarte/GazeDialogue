@@ -288,7 +288,8 @@ public:
 	    yInfo() << "Im in !!!!!!";
         if (inPort.read(pupil))
         {
-            if ( pupil(1) == 0){
+            if ( pupil(1) == 1){
+                yInfo() << "1";
                 // make iCub look down
                 Vector ang(3,0.0);
                 ang[1]=-40.0;
@@ -310,17 +311,92 @@ public:
                     {
                         if (pTarget->get(2).asInt()!=0)
                         {
-                            Vector px(2);
-                            px[0]=pTarget->get(0).asDouble();
-                            px[1]=pTarget->get(1).asDouble();
+                            Vector px1(2);
+                            std::string str1;
+                            Vector px2(2);
+                            std::string str2;
+                            Vector px3(2);
+                            std::string str3;
+                            px1[0]=pTarget->get(0).asDouble();
+                            px1[1]=pTarget->get(1).asDouble();
+                            str1=pTarget->get(2).asString();
+                            px2[0]=pTarget->get(3).asDouble();
+                            px2[1]=pTarget->get(4).asDouble();
+                            str2=pTarget->get(5).asString();
+                            px3[0]=pTarget->get(6).asDouble();
+                            px3[1]=pTarget->get(7).asDouble();
+                            str3=pTarget->get(8).asString();
 
+	                        yInfo() << "Im in again !!!!!!\n";
                             // track the moving target within the camera image
-                            igaze->lookAtMonoPixel(0,px); // 0: left image, 1: for right
-                            yInfo()<<"gazing at pixel: "<<px.toString(3,3);
+                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
+                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
+                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
+                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
+                            } if ( pupil(1) > 1.3333){
+                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
+                            }
                         }
                     }
                 }
-            }else{
+            }else if ( pupil(1) == 2) {
+                yInfo() << "2";
+                // make iCub look down
+                Vector ang(3,0.0);
+                ang[1]=-40.0;
+                //ang[2]=-20;
+                igaze->lookAtAbsAngles(ang);
+
+                double timeout = 10.0; 
+                bool done = false; 
+                done = igaze->waitMotionDone(0.1,timeout); 
+                if(!done){
+                    yWarning("Something went wrong with the initial approach, using timeout");
+                    igaze->stopControl();
+                }
+                // look for red ball
+                Bottle *pTarget=port.read(false);
+                if (pTarget!=NULL)
+                {
+                    if (pTarget->size()>2)
+                    {
+                        if (pTarget->get(2).asInt()!=0)
+                        {
+                            Vector px1(2);
+                            std::string str1;
+                            Vector px2(2);
+                            std::string str2;
+                            Vector px3(2);
+                            std::string str3;
+                            px1[0]=pTarget->get(0).asDouble();
+                            px1[1]=pTarget->get(1).asDouble();
+                            str1=pTarget->get(2).asString();
+                            px2[0]=pTarget->get(3).asDouble();
+                            px2[1]=pTarget->get(4).asDouble();
+                            str2=pTarget->get(5).asString();
+                            px3[0]=pTarget->get(6).asDouble();
+                            px3[1]=pTarget->get(7).asDouble();
+                            str3=pTarget->get(8).asString();
+
+	                        yInfo() << "Im in again !!!!!!\n";
+                            // track the moving target within the camera image
+                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
+                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
+                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
+                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
+                            } if ( pupil(1) > 1.3333){
+                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
+                            }
+                        }
+                    }
+                }
+
                 //yInfo()<<"retrieved 3D location = ("<<x.toString(3,3)<<")";
                 //yInfo() << x(0);
                 //yInfo() << x(1);
@@ -334,9 +410,75 @@ public:
                 yInfo() << gaze(1);
                 yInfo() << gaze(2);
                 fixate(gaze);
-            }
-        }
-        else
+            }else if ( pupil(1) == 3) {
+                yInfo() << "3";
+                // make iCub look down
+                Vector ang(3,0.0);
+                ang[1]=-40.0;
+                //ang[2]=-20;
+                igaze->lookAtAbsAngles(ang);
+
+                double timeout = 10.0; 
+                bool done = false; 
+                done = igaze->waitMotionDone(0.1,timeout); 
+                if(!done){
+                    yWarning("Something went wrong with the initial approach, using timeout");
+                    igaze->stopControl();
+                }
+                // look for red ball
+                Bottle *pTarget=port.read(false);
+                if (pTarget!=NULL)
+                {
+                    if (pTarget->size()>2)
+                    {
+                        if (pTarget->get(2).asInt()!=0)
+                        {
+                            Vector px1(2);
+                            std::string str1;
+                            Vector px2(2);
+                            std::string str2;
+                            Vector px3(2);
+                            std::string str3;
+                            px1[0]=pTarget->get(0).asDouble();
+                            px1[1]=pTarget->get(1).asDouble();
+                            str1=pTarget->get(2).asString();
+                            px2[0]=pTarget->get(3).asDouble();
+                            px2[1]=pTarget->get(4).asDouble();
+                            str2=pTarget->get(5).asString();
+                            px3[0]=pTarget->get(6).asDouble();
+                            px3[1]=pTarget->get(7).asDouble();
+                            str3=pTarget->get(8).asString();
+
+	                        yInfo() << "Im in again !!!!!!\n";
+                            // track the moving target within the camera image
+                            if ( pupil(1) > 1.1111 and pupil(1) < 1.2222){
+                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                yInfo()<<"gazing at green object: "<<px1.toString(3,3);
+                            } if ( pupil(1) > 1.2222 and pupil(1) < 1.3333){
+                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                yInfo()<<"gazing at red object: "<<px2.toString(3,3);
+                            } if ( pupil(1) > 1.3333){
+                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
+                            }
+                        }
+                    }
+                }
+
+                //yInfo()<<"retrieved 3D location = ("<<x.toString(3,3)<<")";
+                //yInfo() << x(0);
+                //yInfo() << x(1);
+                //yInfo() << x(2);
+                gaze = pupil;
+                gaze(0) = -20; // -20 meters for x in robot frame (20 meters in z for pupil)
+                gaze(1) =  0;
+                gaze(2) =  0;
+
+                yInfo() << gaze(0);
+                yInfo() << gaze(1);
+                yInfo() << gaze(2);
+                fixate(gaze);
+            } else
             yInfo() << "didn't get object Location";
     }
 };

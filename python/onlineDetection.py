@@ -96,7 +96,7 @@ ball = []
 while cv2.waitKey(1):
     topic, msg = recv_from_sub()
 
-    if topic == 'frame.world' and i % 5 == 0:
+    if topic == 'frame.world' and i % 4 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -105,13 +105,13 @@ while cv2.waitKey(1):
             height, width, channels = frame.shape
 
             frame, pts, ballG = ballTracking.trackingGreen(frame, pts, args)
-            if ballG is not [ ]:
+            if ballG is not []:
                 ball.append([ballG, 1.111111111111111])
             frame, pts, ballR = ballTracking.trackingRed(frame, pts, args)
-            if ballR is not [ ]:
+            if ballR is not []:
                 ball.append([ballR, 1.222222222222222])
             frame, pts, ballB = ballTracking.trackingBlue(frame, pts, args)
-            if ballB is not [ ]:
+            if ballB is not [] and len(ballB) != 0:
                 ball.append([ballB, 1.333333333333333])
 
             # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
@@ -131,7 +131,7 @@ while cv2.waitKey(1):
                 # check the gaze behaviour
                 if len(ball) is not 0:
                     mysample = gaze.record(sample[0][0], [], ball, [], fixation, [])
-                    if mysample is not 0:
+                    if len(mysample) is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)
 
