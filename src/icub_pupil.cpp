@@ -40,6 +40,7 @@ class ControlThread: public RateThread
     ICartesianControl *iarm;
     IGazeControl      *igaze;
     ObjectRetriever object;
+    ActionRetriever act;
     Port inPort;
 
     BufferedPort<Bottle> port;
@@ -134,7 +135,7 @@ public:
 
         yInfo()<<"Begin moving arms to first initial position";
         // GET ARMS IN THE CORRECT POSITION
-        x = x(3);
+        x.resize(3);
         x[1] =  0.5; // to the right
         initArm(x);
         x[1] =  -0.5; // to the left
@@ -226,8 +227,8 @@ public:
         Vmax        = 0.02; // 0.5 m/s
         epsilon     = 0.01; // 10 cm
 
-        e = e(3);
-        unit_e = unit_e(3);
+        e.resize(3);
+        unit_e.resize(3);
         v_mag = 0;
         acc_mag = 0.01;
 
@@ -368,15 +369,22 @@ public:
     }
 
     /***************************************************/
-    std::string predictAL(int state)
+    int predictAL(int state)
     {
         // input: state of the human
         // output: action to perform
-        std::string action;
+        int action;
 
-        action = "giving";
+        if (act.getAction(action))
+        {
+            yInfo()<<" retrieved Action = ("<<action <<")";
 
-        return action;
+            return action;
+        }
+        else 
+            action = -1;
+
+        
     }
 
     /***************************************************/
@@ -384,13 +392,13 @@ public:
     {
         // input: state of the human
         // output: behavior of robot
-        std::string action;
+        int action;
 
         // call the predictor function
         action = predictAL(state);
 
         // make a decision based on the predictor's response
-        if (action == "Giving"){
+        if (action == 1){
             // get current location
             iarm->getPose(p,o);
             // get current velocities
@@ -398,10 +406,12 @@ public:
 
             reachArmGiving(p, o, vcur);
 
-        } else if (action == "Placing") {
+        } else if (action == 0) {
             // just observe the action
+            yInfo() << "I'm observing";
 
-        }
+        } else 
+            yInfo() << "Wrong action";
     }
 
     void reachArmGiving(Vector position, Vector orientation, Vector velocity)

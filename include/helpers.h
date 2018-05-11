@@ -22,3 +22,16 @@ public:
     bool getLocation(yarp::sig::Vector &location, const std::string &hand="dummy");
     virtual ~ObjectRetriever();
 };
+
+class ActionRetriever : yarp::os::PortReport
+{
+    bool simulation;
+    yarp::os::RpcClient portAction;
+    virtual void report(const yarp::os::PortInfo &info);
+    bool calibrate(yarp::sig::Vector &location, const std::string &hand);
+
+public:
+    ActionRetriever();
+    bool getAction(int &action);
+    virtual ~ActionRetriever();
+};

@@ -72,6 +72,92 @@ bool ObjectRetriever::calibrate(Vector &location,
 }
 
 /***************************************************/
+ActionRetriever::ActionRetriever() : simulation(false)
+{
+    portAction.open("/action");
+
+    portAction.asPort().setTimeout(20.0);
+
+    portAction.setReporter(*this);
+}
+
+/***************************************************/
+ActionRetriever::~ActionRetriever()
+{
+    portAction.close();
+}
+
+/***************************************************/
+bool ActionRetriever::getAction(int &action)
+{
+    //Network yarp;
+    //printf("Trying to connect to %s\n", "/icubSim/world");
+    //yarp.connect("/location","/icubSim/world");
+    //yInfo()<<"Output Count" << portLocation.getOutputCount();
+    if (portAction.getOutputCount()>0)
+    {
+        Bottle cmd,reply;
+        if (simulation)
+        {
+
+        }
+        else if(!simulation)
+        {
+            cmd.addString("Manda-me ai a acção");
+            cmd.addString("estou a espera de 1 string");
+            if (portAction.write(cmd,reply))
+            {
+                yInfo()<<"Reply size" << reply.size();
+                yInfo()<<"Reply" << reply.toString().c_str();
+                if (reply.size()>=1)
+                {
+                    action = reply.get(0).asInt();
+                    return true;
+                }
+            }
+        }
+    }
+
+    yError()<<"Unable to retrieve action";
+    return false;
+}
+
+/***************************************************/
+void ActionRetriever::report(const PortInfo &info)
+{
+    if (info.created && !info.incoming)
+    {
+        simulation=(info.targetName=="/icubSim/world");
+        yInfo()<<"We are talking to "<<(simulation?"icubSim":"icub");
+    }
+}
+
+/***************************************************/
+bool ActionRetriever::calibrate(Vector &location,
+                                const string &hand)
+{
+    if ((portAction.getOutputCount()>0) &&
+        (location.length()>=3))
+    {
+        Bottle cmd,reply;
+        cmd.addString("get_location_nolook");
+        cmd.addString("iol-"+hand);
+        cmd.addDouble(location[0]);
+        cmd.addDouble(location[1]);
+        cmd.addDouble(location[2]);
+        portAction.write(cmd,reply);
+
+        location.resize(3);
+        location[0]=reply.get(1).asDouble();
+        location[1]=reply.get(2).asDouble();
+        location[2]=reply.get(3).asDouble();
+        return true;
+    }
+
+    return false;
+}
+
+/***************************************************/
 bool ObjectRetriever::getLocation(Vector &location,
                                   const string &hand)
 {
