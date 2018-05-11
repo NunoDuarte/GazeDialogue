@@ -14,6 +14,7 @@
 #include <yarp/os/Port.h>
 #include <yarp/sig/Image.h>
 #include <yarp/os/BufferedPort.h>
+#include <opencv2/core/mat.hpp>               // add Mat variables from OpenCV
 
 #include <string>
 #include <iostream>
@@ -54,6 +55,9 @@ class ControlThread: public RateThread
     Vector vcur, wcur;
     // 3d location in the 3d world reference frame
     Vector x, xf, xi;
+
+    // Declare the probabilities of being giving or placing action
+    cv::Mat act_probability;
 
     // calculte distances for giving action
     float Vmax;
@@ -238,12 +242,18 @@ public:
 		xi[1] = -0.20;  //move left 5 cm
 		xi[2] =   0.1;  //move down 10 cm
 
-
         // pre-define final handover position
         xf.resize(3);
         xf[0] = -0.4;
         xf[1] = -0.05;
         xf[2] =  0.02;
+
+        // initialize the act_probability
+        yInfo() << "1";
+        act_probability = cv::Mat(2,1, CV_64F);
+        yInfo() << "1";
+        act_probability.at<double>(0,0) = 0.5;
+        act_probability.at<double>(1,0) = 0.5;
 
         return true;
     }
@@ -376,23 +386,91 @@ public:
         // wait until all fingers have attained their set-points
     }
 
-    /***************************************************/
-    int predictAL(int state)
-    {
-        // input: state of the human
-        // output: action to perform
-        int action;
+    int predictAL(cv::Mat& act_prob, int cur_state, int cur_action){
+        /***********************************************************************************
+        act_prob is a 2x1 matrix with two probabilities, 
+            <0,0> is probability for giving, and 
+            <1,0> i probability for placing action. They sum to 1.
+        This value (as argument) containes the current probabilities 
+            for the two actions that are updated within the function.
 
-        if (act.getAction(action))
+        cur_state is 0-5 integer representing the loeaders focuse of attention. 
+            0 - brick 
+            1 - TM face 
+            2 - TM hand 
+            3 - Own hand 
+            4 - TM tower 
+            5 - Own tower
+
+        cur_action //0-giving 1-placing -1-uncertain
+
+        internal parameters of the fucntion
+
+        APdataL - action prediction matrix that is obtained from the data, 
+            it containtes probabilities for each of the action with respect 
+            to the focus of attention of the LEADER
+        rows are foc of leader, 
+        columns are giving and placing probabilities
+        treshold - is a parameter defining the required difference 
+            between the two elements in act_prob to classify the action 
+            as 0-giving 1-placing -1-uncertain
+        alfa - a parameter for moving average filtering a = (1-alfa)*a+alfa*new_val;
+        *************************************************************************************/
+        double APdataL[] = {0.495420313454101, 0.504579686545899,
+                          0.840179238237491, 0.159820761762509,
+                          0.931922196796339, 0.0680778032036613,
+                          0.520000000000000, 0.480000000000000,
+                          0.748014440433213, 0.251985559566787,
+                          0.186659772492244, 0.813340227507756};
+        cv::Mat APL = cv::Mat(6,2,CV_64F,APdataL).clone();
+
+        int new_action;//0-giving 1-placing -1-uncertain
+
+        double rn = rand();
+
+        double prob_G = 0.5;
+        double prob_P = 0.5;
+        double deltalgc = 0.0;
+        double deltalpc = 0.0;
+        double treshold = 0.15;
+        double alfa = 0.01;//parameter of exponential moving average
+
+        if(cur_state>=0 && cur_state<6)
         {
-            yInfo()<<" retrieved Action = ("<<action <<")";
-
-            return action;
+            prob_G = APL.at<double>(cur_state,0);
+            prob_P = APL.at<double>(cur_state,1);
         }
-        else 
-            action = -1;
 
-        
+
+        if(rn<prob_G)//it is GIVING
+        {
+            deltalgc = prob_G - act_prob.at<double>(0,0);
+            deltalpc = -deltalgc;
+        }
+        else//it is placing
+        {
+            deltalpc = prob_P - act_prob.at<double>(1,0);
+            deltalgc = -deltalpc;
+        }
+
+        deltalgc = act_prob.at<double>(0,0)+deltalgc;
+        deltalpc = act_prob.at<double>(1,0)+deltalpc;
+
+        //expoential moving average
+        act_prob.at<double>(0,0)=(1-alfa)*act_prob.at<double>(0,0) + alfa*deltalgc;
+        act_prob.at<double>(1,0)=(1-alfa)*act_prob.at<double>(1,0) + alfa*deltalpc;
+
+        //act_prob.at<double>(0,0)=act_prob.at<double>(0,0)+0.1;
+        //act_prob.at<double>(1,0)=act_prob.at<double>(1,0)-0.1;
+
+        if((act_prob.at<double>(0,0)-act_prob.at<double>(1,0))>treshold)
+            new_action = 0;//
+        else if((act_prob.at<double>(0,0)-act_prob.at<double>(1,0))<-treshold)
+            new_action = 1;
+        else
+            new_action = -1;
+
+        return new_action;
     }
 
     /***************************************************/
@@ -403,7 +481,7 @@ public:
         int action;
 
         // call the predictor function
-        action = predictAL(state);
+        action = predictAL(act_probability, state, action);
 
         // make a decision based on the predictor's response
         if (action == 1){
@@ -491,19 +569,27 @@ public:
         {
             if ( pupil(1) == 1){
                 yInfo() << "Teammate's Tower";
-                state = 1;
+                state = 4;
            
             }else if ( pupil(1) == 2) {
                 yInfo() << "My Tower";
-                state = 2;
+                state = 5;
                 
             }else if ( pupil(1) == 3) {
                 yInfo() << "Brick/Object";
-                state = 3;
-                
+                state = 0;
+  
             }else if ( pupil(1) == 4) {
                 yInfo() << "iCub's Face";
-                state = 4;
+                state = 1;
+
+            }else if ( pupil(1) == 5) {
+                yInfo() << "iCub's Hand";
+                state = 2;
+
+            }else if ( pupil(1) == 4) {
+                yInfo() << "Own's Hand";
+                state = 3;
                 
             } else {
                 yInfo() << "wrong state";
@@ -512,15 +598,9 @@ public:
         
             if (state != -1){
                 // if you observe the human looking at one of the states then act
-                actionBehavior( state);
-
-
-
-
+                actionBehavior(state);
             }
-    
         } 
-           
     }
 };
 

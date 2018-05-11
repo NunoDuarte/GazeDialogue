@@ -26,6 +26,12 @@ add_definitions(-D_USE_MATH_DEFINES)
 include_directories(${YARP_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/src)
 include_directories( include )
 
+find_package( OpenCV REQUIRED )
+if( OpenCV_FOUND )
+list( APPEND ThirdParty_LIBS ${OpenCV_LIBS} )
+    include_directories( ${OpenCV_INCLUDE_DIRS} )
+endif( OpenCV_FOUND )
+
 add_executable(${PROJECT_NAME}-main ${CMAKE_SOURCE_DIR}/include/helpers.h 
 		               ${CMAKE_SOURCE_DIR}/src/icub_pupil.cpp
 			       ${CMAKE_SOURCE_DIR}/src/helpers.cpp  
@@ -37,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}-detector ${YARP_LIBRARIES})
 install(TARGETS ${PROJECT_NAME}-detector DESTINATION bin)
 
 target_link_libraries(${PROJECT_NAME}-main ${YARP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-main ${OpenCV_LIBS})
 install(TARGETS ${PROJECT_NAME}-main DESTINATION bin)
 
 # generate ad-hoc project to perform "make uninstall"
