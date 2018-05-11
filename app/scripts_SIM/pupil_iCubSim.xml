@@ -20,8 +20,8 @@
   </connection>
 
   <connection>
-      <from>/hardcoded</from>
-      <to>/action</to>
+      <from>/action</from>
+      <to>/hardcoded</to>
       <protocol>tcp</protocol>
   </connection>
 
