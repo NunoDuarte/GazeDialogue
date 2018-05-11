@@ -53,7 +53,7 @@ class ControlThread: public RateThread
     // current linear and angular velocities
     Vector vcur, wcur;
     // 3d location in the 3d world reference frame
-    Vector x;
+    Vector x, xf, xi;
 
     // calculte distances for giving action
     float Vmax;
@@ -232,10 +232,18 @@ public:
         v_mag = 0;
         acc_mag = 0.01;
 
+        // pre-define initial position
+        xi.resize(3);
+		xi[0] = -0.15;  //move forward 25 cm
+		xi[1] = -0.20;  //move left 5 cm
+		xi[2] =   0.1;  //move down 10 cm
+
+
         // pre-define final handover position
-        x[0] = -0.25;
-        x[1] = -0.15;
-        x[2] =  0.02;
+        xf.resize(3);
+        xf[0] = -0.4;
+        xf[1] = -0.05;
+        xf[2] =  0.02;
 
         return true;
     }
@@ -404,21 +412,27 @@ public:
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
 
-            reachArmGiving(p, o, vcur);
+            reachArmGiving(p, o, xf, vcur);
 
         } else if (action == 0) {
             // just observe the action
             yInfo() << "I'm observing";
 
+            iarm->getPose(p,o);
+            // get current velocities
+            iarm->getTaskVelocities(vcur, wcur);
+
+            reachArmGiving(p, o, xi, vcur);
+
         } else 
             yInfo() << "Wrong action";
     }
 
-    void reachArmGiving(Vector position, Vector orientation, Vector velocity)
+    void reachArmGiving(Vector position, Vector orientation, Vector x_pos, Vector velocity)
     {
-        e[0] = x[0] - p[0];
-        e[1] = x[1] - p[1];
-        e[2] = x[2] - p[2];        
+        e[0] = x_pos[0] - p[0];
+        e[1] = x_pos[1] - p[1];
+        e[2] = x_pos[2] - p[2];        
 
         /*if (count == 3500 ){
             release("left");
@@ -454,7 +468,7 @@ public:
             vcur[2] = v_mag * unit_e[2];
             //iarm->setTaskVelocities(vcur, wcur);
         }
-        iarm->goToPose(x,o);
+        iarm->goToPose(x_pos,o);
         yInfo() << "v:" << v_mag;
 
     }
