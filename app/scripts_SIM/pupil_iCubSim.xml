@@ -19,4 +19,10 @@
       <protocol>tcp</protocol>
   </connection>
 
+  <connection>
+      <from>/hardcoded</from>
+      <to>/action</to>
+      <protocol>tcp</protocol>
+  </connection>
+
 </application>
