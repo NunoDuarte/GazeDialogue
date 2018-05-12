@@ -6,7 +6,7 @@ class Ball:
     def __init__(self):
         pass
 
-    def trackingRed(self, frame, pts, args):
+    def trackingRed(self, frame, pts):
         # blur the frame, and convert it to the HSV
         # color space
         output1 = frame.copy()
@@ -62,18 +62,6 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # # loop over the set of tracked points
-        # for i in range(1, len(pts)):
-        #     # if either of the tracked points are None, ignore
-        #     # them
-        #     if pts[i - 1] is None or pts[i] is None:
-        #         continue
-        #
-        #     # otherwise, compute the thickness of the line and
-        #     # draw the connecting lines
-        #     thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
-        #     cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
-
         # update the points queue
         pts.appendleft(center)
 
@@ -81,7 +69,7 @@ class Ball:
         # cv2.imshow("output1", np.hstack([frame, output1]))
         return frame, pts, ball
 
-    def trackingBlue(self, frame, pts, args):
+    def trackingBlue(self, frame, pts):
         # blur the frame, and convert it to the HSV
         # color space
         output1 = frame.copy()
@@ -137,18 +125,6 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # # loop over the set of tracked points
-        # for i in range(1, len(pts)):
-        #     # if either of the tracked points are None, ignore
-        #     # them
-        #     if pts[i - 1] is None or pts[i] is None:
-        #         continue
-        #
-        #     # otherwise, compute the thickness of the line and
-        #     # draw the connecting lines
-        #     thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
-        #     cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
-
         # update the points queue
         pts.appendleft(center)
 
@@ -156,7 +132,7 @@ class Ball:
         # cv2.imshow("output1", np.hstack([frame, output1]))
         return frame, pts, ball
 
-    def trackingGreen(self, frame, pts, args):
+    def trackingGreen(self, frame, pts):
         # blur the frame, and convert it to the HSV
         # color space
         output1 = frame.copy()
@@ -211,18 +187,6 @@ class Ball:
                 #           (0, 255, 255), 2)
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
-
-        # # loop over the set of tracked points
-        # for i in range(1, len(pts)):
-        #     # if either of the tracked points are None, ignore
-        #     # them
-        #     if pts[i - 1] is None or pts[i] is None:
-        #         continue
-        #
-        #     # otherwise, compute the thickness of the line and
-        #     # draw the connecting lines
-        #     thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
-        #     cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 
         # update the points queue
         pts.appendleft(center)
