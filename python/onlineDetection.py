@@ -104,15 +104,15 @@ while cv2.waitKey(1):
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            frame, pts, ballG = ballTracking.trackingGreen(frame, pts, args)
+            frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
             if ballG is not []:
-                ball.append([ballG, 1.111111111111111])
-            frame, pts, ballR = ballTracking.trackingRed(frame, pts, args)
+                ball.append([ballG, 1])
+            frame, pts, ballR = ballTracking.trackingRed(frame, pts)
             if ballR is not []:
-                ball.append([ballR, 1.222222222222222])
-            frame, pts, ballB = ballTracking.trackingBlue(frame, pts, args)
+                ball.append([ballR, 2])
+            frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
             if ballB is not [] and len(ballB) != 0:
-                ball.append([ballB, 1.333333333333333])
+                ball.append([ballB, 3])
 
             # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
             # labels = face.predict(frame, face_recognizer, faces, facesTrained)
@@ -130,7 +130,7 @@ while cv2.waitKey(1):
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], [], ball, [], fixation, [])
+                    mysample = gaze.record(sample[0][0], ball, [], fixation, [])
                     if len(mysample) is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)
