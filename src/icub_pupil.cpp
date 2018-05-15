@@ -24,6 +24,7 @@
 #include <fstream>
 
 #include "helpers.h"
+#include "CvHMM.h"
 
 #define NBSAMPLES 1
 
@@ -68,6 +69,13 @@ class ControlThread: public RateThread
     double v_mag;
     double acc_mag;
     double mag_e; 
+
+    // define matrixes for follower and leader
+    CvHMM hmmFG;
+    double *TRANSdataFG;
+    double *EMISdataFG;
+
+    CvHMM hmmFP;
 
 public:
     ControlThread(int period):RateThread(period){}
@@ -254,6 +262,52 @@ public:
         yInfo() << "1";
         act_probability.at<double>(0,0) = 0.5;
         act_probability.at<double>(1,0) = 0.5;
+
+        /*------------------------ FOLOWER GIVING MODEL ------------------------*/
+        TRANSdataFG = new double[16];        
+        TRANSdataFG[] = {0.968314321926489, 0.0209125475285171, 0.00697084917617237, 0.00380228136882129, 0.00638297872340426, 0.979574468085106, 0.00297872340425532, 0.0110638297872340, 0.0436507936507937, 0.0198412698412698, 0.922619047619048, 0.0138888888888889, 0.00295159386068477, 0.00118063754427391, 0.00118063754427391, 0.994687131050767};
+        cv::Mat TRANSFG = cv::Mat(4,4,CV_64F,TRANSdataFG).clone();
+
+        double EMISdataFG[] = {0.699680511182109, 0.0396166134185304, 0.122683706070288, 0.0217252396166134, 0.0319488817891374, 0.0843450479233227, 0.302240512117055, 0.186099679926840, 0.362597165066301, 0.0214906264288980, 0.0832190214906264, 0.0443529949702789, 0.619918699186992, 0.0752032520325203, 0.0894308943089431, 0.0182926829268293, 0.0406504065040650, 0.156504065040650, 0.181818181818182, 0.183175033921303, 0.244911804613297, 0.0135685210312076, 0.350746268656716, 0.0257801899592944};
+    cv::Mat EMISFG = cv::Mat(4,6,CV_64F,EMISdataFG).clone();
+
+        double INITdataFG[] = {1.0, 0.0, 0.0, 0.0};
+        cv::Mat INITFG = cv::Mat(1,6,CV_64F,INITdataFG).clone();
+
+        std::cout << "FG:";
+        hmmFG.printModel(TRANSFG,EMISFG,INITFG);
+
+        /*------------------------ FOLOWER PLACING MODEL ------------------------*/
+        TRANSdataFP[0] = 0.968184653774173;
+        TRANSdataFP[1] = 0.0143480973175296;       
+        TRANSdataFP[2] = 0.0162195882719900;       
+        TRANSdataFP[3] = 0.00124766063630692;       
+        TRANSdataFP[4] = 0.00898410504492053;       
+        TRANSdataFP[5] = 0.979267449896337;       
+        TRANSdataFP[6] = 0.0103662750518314;       
+        TRANSdataFP[7] = 0.00138217000691085;       
+        TRANSdataFP[8] = 0.0258843830888697;       
+        TRANSdataFP[9] = 0.0120793787748059;       
+        TRANSdataFP[10] = 0.958584987057809;       
+        TRANSdataFP[11] = 0.00345125107851596;       
+        TRANSdataFP[12] = 0.0179640718562874;       
+        TRANSdataFP[13] = 0.00598802395209581;       
+        TRANSdataFP[14] = 0.0419161676646707;       
+        TRANSdataFP[15] = 0.934131736526946;       
+
+        cv::Mat TRANSFP = cv::Mat(4,4,CV_64F,TRANSdataFP).clone();
+
+        double EMISdataFP[] = {0.754639175257732, 0.0130584192439863, 0.0192439862542955, 0.0219931271477663, 0.0371134020618557, 0.153951890034364,
+                              0.427316293929713, 0.0479233226837061, 0.00319488817891374, 0.0359424920127796, 0.159744408945687, 0.325878594249201,
+                              0.557013118062563, 0.0575176589303734, 0.0171543895055499, 0.0181634712411705, 0.0171543895055499, 0.332996972754793,
+                              0.725000000000000, 0.00312500000000000, 0.153125000000000, 0.00625000000000000, 0.0562500000000000, 0.0562500000000000};
+        cv::Mat EMISFP = cv::Mat(4,6,CV_64F,EMISdataFP).clone();
+
+        double INITdataFP[] = {1.0, 0.0, 0.0, 0.0};
+        cv::Mat INITFP = cv::Mat(1,6,CV_64F,INITdataFP).clone();
+
+        std::cout << "FP:";
+        hmmFP.printModel(TRANSFP,EMISFP,INITFP);
 
         return true;
     }
@@ -492,6 +546,9 @@ public:
 
             reachArmGiving(p, o, xf, vcur);
 
+            hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
+            gazeBehavior(pstates);
+
         } else if (action == 0) {
             // just observe the action
             yInfo() << "I'm observing";
@@ -502,8 +559,14 @@ public:
 
             reachArmGiving(p, o, xi, vcur);
 
-        } else 
+            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            gazeBehavior(pstates);
+
+        } else {
             yInfo() << "Wrong action";
+            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            gazeBehavior(pstates);
+        }
     }
 
     void reachArmGiving(Vector position, Vector orientation, Vector x_pos, Vector velocity)
@@ -552,7 +615,7 @@ public:
     }
 
     /***************************************************/
-    void gazeBehavior(int state)
+    void gazeBehavior(cv::Mat &state)
     {
 
         //igaze->lookAtFixationPoint(state);
