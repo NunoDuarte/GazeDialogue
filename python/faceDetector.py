@@ -6,7 +6,7 @@ import os
 class faceDetector:
 
     def __init__(self):
-        self.subjects = ["", "Giovanni", "Filomena"]
+        self.subjects = ["", "iCub"]
 
     def detecting(self, frame, anterior, faceCascade):
 
@@ -15,12 +15,13 @@ class faceDetector:
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (31, 31), 0)
-        thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+        thresh = cv2.threshold(blurred, 127, 255,cv2.THRESH_TOZERO)[1]
         facesDetect = faceCascade.detectMultiScale(
             thresh,
-            scaleFactor=1.2,
-            minNeighbors=3,
-            minSize=(30, 30)
+            scaleFactor=1.3,
+            minNeighbors=10,
+            minSize=(50, 50),
+	    maxSize=(100, 100)
         )
 
         # Draw a rectangle around the faces
