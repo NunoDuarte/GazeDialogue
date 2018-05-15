@@ -16,6 +16,7 @@ import csv
 import zmq
 import argparse
 import imutils
+import logging as log
 
 """
 Receive world camera data from Pupil using ZMQ.
@@ -24,7 +25,7 @@ Make sure the frame publisher plugin is loaded and configuredsource  to gray or 
 
 context = zmq.Context()
 # open a req port to talk to pupil
-addr = '127.0.0.1'  # remote ip or localhost
+addr = '10.0.3.20'  # remote ip or localhost
 req_port = "50020"  # same as in the pupil remote gui
 req = context.socket(zmq.REQ)
 req.connect("tcp://{}:{}".format(addr, req_port))
@@ -84,6 +85,22 @@ pts = deque(maxlen=args["buffer"])
 
 ballTracking = Ball()
 
+cascPath = "cascade-icub-60v60.xml"
+faceCascade = cv2.CascadeClassifier(cascPath)
+log.basicConfig(filename='faceDetected.log', level=log.INFO)
+anterior = 0
+face = faceDetector()
+
+print("Preparing Data...")
+knownFaces, knownLabels = face.prepare_training_data("training-data", faceCascade)
+print(knownFaces)
+print(knownLabels)
+print("Data prepared")
+
+# create our LBPH face recognizer
+face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+face_recognizer.train(knownFaces, np.array(knownLabels))
+
 gaze = gazeBehaviour(outlet)
 
 print("looking for an NormPose2IP stream...")
@@ -114,8 +131,8 @@ while cv2.waitKey(1):
             if ballB is not [] and len(ballB) != 0:
                 ball.append([ballB, 3])
 
-            # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
-            # labels = face.predict(frame, face_recognizer, faces, facesTrained)
+            anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
+            labels = face.predict(frame, face_recognizer, faces, facesTrained)
 
             sample, timestamp = inlet.pull_chunk()
             if sample:
@@ -130,7 +147,7 @@ while cv2.waitKey(1):
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], ball, [], fixation, [])
+                    mysample = gaze.record(sample[0][0], ball, faces, fixation, [])
                     if len(mysample) is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)

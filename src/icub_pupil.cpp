@@ -536,6 +536,8 @@ public:
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
+        yInfo() << act_probability.at<double>(0,0);
+        yInfo() << act_probability.at<double>(1,0);
 
         // make a decision based on the predictor's response
         if (action == 1){
