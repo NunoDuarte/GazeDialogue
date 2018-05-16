@@ -24,6 +24,7 @@
 #include <fstream>
 
 #include "helpers.h"
+#include "CvHMM.h"
 
 #define NBSAMPLES 1
 
@@ -68,6 +69,31 @@ class ControlThread: public RateThread
     double v_mag;
     double acc_mag;
     double mag_e; 
+
+    // define matrixes for follower and leader
+    CvHMM hmmFG;
+    double *TRANSdataFG;
+    cv::Mat TRANSFG;
+    double *EMISdataFG;
+    cv::Mat EMISFG;
+    cv::Mat INITFG;
+
+    CvHMM hmmFP;
+    double *TRANSdataFP;
+    cv::Mat TRANSFP;
+    double *EMISdataFP;
+    cv::Mat EMISFP;
+    cv::Mat INITFP;
+
+    // define the sequence of states
+    cv::Mat seq_mat;
+
+    // define the forward and backward probability matrix that are use to calculate the states
+    cv::Mat forward;
+    cv::Mat backward;
+
+    // output from decode
+    cv::Mat pstates;
 
 public:
     ControlThread(int period):RateThread(period){}
@@ -255,6 +281,116 @@ public:
         act_probability.at<double>(0,0) = 0.5;
         act_probability.at<double>(1,0) = 0.5;
 
+        /*------------------------ FOLOWER GIVING MODEL ------------------------*/
+        TRANSdataFG = new double[16];        
+        TRANSdataFG[0] = 0.968314321926489;
+        TRANSdataFG[1] = 0.0209125475285171;
+        TRANSdataFG[2] = 0.00697084917617237; 
+        TRANSdataFG[3] = 0.00380228136882129;
+        TRANSdataFG[4] = 0.00638297872340426;
+        TRANSdataFG[5] = 0.979574468085106;
+        TRANSdataFG[6] = 0.00297872340425532;
+        TRANSdataFG[7] = 0.0110638297872340; 
+        TRANSdataFG[8] = 0.0436507936507937; 
+        TRANSdataFG[9] = 0.0198412698412698;
+        TRANSdataFG[10] = 0.922619047619048;
+        TRANSdataFG[11] = 0.0138888888888889;
+        TRANSdataFG[12] = 0.00295159386068477;
+        TRANSdataFG[13] = 0.00118063754427391;
+        TRANSdataFG[14] = 0.00118063754427391;
+        TRANSdataFG[15] = 0.994687131050767;
+
+        TRANSFG = cv::Mat(4,4,CV_64F,TRANSdataFG).clone();  
+
+        EMISdataFG = new double[24];
+        EMISdataFG[0] = 0.699680511182109;
+        EMISdataFG[1] = 0.0396166134185304;
+        EMISdataFG[2] = 0.122683706070288;
+        EMISdataFG[3] = 0.0217252396166134;
+        EMISdataFG[4] = 0.0319488817891374;
+        EMISdataFG[5] = 0.0843450479233227;
+        EMISdataFG[6] = 0.302240512117055;
+        EMISdataFG[7] = 0.186099679926840;
+        EMISdataFG[8] = 0.362597165066301;  
+        EMISdataFG[9] = 0.0214906264288980;
+        EMISdataFG[10] = 0.0832190214906264;
+        EMISdataFG[11] = 0.0443529949702789;
+        EMISdataFG[12] = 0.619918699186992;
+        EMISdataFG[13] = 0.0752032520325203;
+        EMISdataFG[14] = 0.0894308943089431;
+        EMISdataFG[15] = 0.0182926829268293;
+        EMISdataFG[16] = 0.0406504065040650;
+        EMISdataFG[17] = 0.156504065040650;
+        EMISdataFG[18] = 0.181818181818182;
+        EMISdataFG[19] = 0.183175033921303;
+        EMISdataFG[20] = 0.244911804613297;
+        EMISdataFG[21] = 0.0135685210312076;
+        EMISdataFG[22] = 0.350746268656716;
+        EMISdataFG[23] = 0.0257801899592944;
+
+        EMISFG = cv::Mat(4,6,CV_64F,EMISdataFG).clone();
+
+        double INITdataFG[] = {1.0, 0.0, 0.0, 0.0};
+        INITFG = cv::Mat(1,6,CV_64F,INITdataFG).clone();
+
+        std::cout << "FG:";
+        hmmFG.printModel(TRANSFG,EMISFG,INITFG);
+
+        /*------------------------ FOLOWER PLACING MODEL ------------------------*/
+        TRANSdataFP = new double[16];
+        TRANSdataFP[0] = 0.968184653774173;
+        TRANSdataFP[1] = 0.0143480973175296;       
+        TRANSdataFP[2] = 0.0162195882719900;       
+        TRANSdataFP[3] = 0.00124766063630692;       
+        TRANSdataFP[4] = 0.00898410504492053;       
+        TRANSdataFP[5] = 0.979267449896337;       
+        TRANSdataFP[6] = 0.0103662750518314;       
+        TRANSdataFP[7] = 0.00138217000691085;       
+        TRANSdataFP[8] = 0.0258843830888697;       
+        TRANSdataFP[9] = 0.0120793787748059;       
+        TRANSdataFP[10] = 0.958584987057809;       
+        TRANSdataFP[11] = 0.00345125107851596;       
+        TRANSdataFP[12] = 0.0179640718562874;       
+        TRANSdataFP[13] = 0.00598802395209581;       
+        TRANSdataFP[14] = 0.0419161676646707;       
+        TRANSdataFP[15] = 0.934131736526946;       
+
+        TRANSFP = cv::Mat(4,4,CV_64F,TRANSdataFP).clone();
+
+        EMISdataFP = new double[24];        
+        EMISdataFP[0] = 0.754639175257732;
+        EMISdataFP[1] = 0.0130584192439863;
+        EMISdataFP[2] = 0.0192439862542955;
+        EMISdataFP[3] = 0.0219931271477663;
+        EMISdataFP[4] = 0.0371134020618557;
+        EMISdataFP[5] = 0.153951890034364;
+        EMISdataFP[6] = 0.427316293929713;
+        EMISdataFP[7] = 0.0479233226837061;
+        EMISdataFP[8] = 0.00319488817891374;
+        EMISdataFP[9] = 0.0359424920127796;
+        EMISdataFP[10] = 0.159744408945687;
+        EMISdataFP[11] = 0.325878594249201;
+        EMISdataFP[12] = 0.557013118062563,
+        EMISdataFP[13] = 0.0575176589303734;
+        EMISdataFP[14] = 0.0171543895055499;
+        EMISdataFP[15] = 0.0181634712411705;
+        EMISdataFP[16] = 0.0171543895055499;
+        EMISdataFP[17] = 0.332996972754793;
+        EMISdataFP[18] = 0.725000000000000;
+        EMISdataFP[19] = 0.00312500000000000;
+        EMISdataFP[20] = 0.153125000000000;
+        EMISdataFP[21] = 0.00625000000000000;
+        EMISdataFP[22] = 0.0562500000000000;
+        EMISdataFP[23] = 0.0562500000000000;
+
+        EMISFP = cv::Mat(4,6,CV_64F,EMISdataFP).clone();
+
+        double INITdataFP[] = {1.0, 0.0, 0.0, 0.0};
+        INITFP = cv::Mat(1,6,CV_64F,INITdataFP).clone();
+
+        std::cout << "FP:";
+        hmmFP.printModel(TRANSFP,EMISFP,INITFP);
+
         return true;
     }
 
@@ -296,16 +432,202 @@ public:
     }
 
     /***************************************************/
-    void fixate(const Vector &x)
+    void fixate(int maxState)
     {
-        // simply look at x,
-        // but when the movement is over
-        // ensure that we'll still be looking at x
 
-        igaze->lookAtFixationPoint(x);
-        //igaze->waitMotionDone();
-        //to track from now on
-        igaze->setTrackingMode(true);
+        switch(maxState) {
+            case 1 : {
+                        cout << '1' << endl; 
+                        Vector ang(3,0.0);
+                        ang[1]=-40.0;
+                        igaze->lookAtAbsAngles(ang);
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                if (pTarget->get(2).asInt()!=0)
+                                {
+                                    Vector px1(2);
+                                    std::string str1;
+                                    Vector px2(2);
+                                    std::string str2;
+                                    Vector px3(2);
+                                    std::string str3;
+                                    px1[0]=pTarget->get(0).asDouble();
+                                    px1[1]=pTarget->get(1).asDouble();
+                                    str1=pTarget->get(2).asString();
+                                    px2[0]=pTarget->get(3).asDouble();
+                                    px2[1]=pTarget->get(4).asDouble();
+                                    str2=pTarget->get(5).asString();
+                                    px3[0]=pTarget->get(6).asDouble();
+                                    px3[1]=pTarget->get(7).asDouble();
+                                    str3=pTarget->get(8).asString();
+
+                                    // track the moving target within the camera image
+                                    igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                    yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
+                                }
+                            }
+                        }
+                        break;
+                     }
+            case 2 : {
+                        cout << '2' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        ang[1]= 0.0;
+                        igaze->lookAtAbsAngles(ang);
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Human's face";
+
+                        Vector look = x;
+                        look[0] = -0.55;
+                        look[1] =  0.00;
+                        look[2] =  0.45;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
+                     }
+            case 3 : {
+                        cout << '3' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        ang[1]= 0.0;
+                        igaze->lookAtAbsAngles(ang);
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Human's hand";
+
+                        Vector look = x;
+                        look[0] = -0.55;
+                        look[1] =  0.00;
+                        look[2] =  0.25;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
+                     }
+            case 4 : {
+                        cout << '4' << endl; 
+                        break;
+
+                     }
+            case 5 : {
+                        cout << '5' << endl; 
+
+                        // make iCub look down
+                        Vector ang(3,0.0);
+                        ang[1]=-40.0;
+                        igaze->lookAtAbsAngles(ang);
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                if (pTarget->get(2).asInt()!=0)
+                                {
+                                    Vector px1(2);
+                                    std::string str1;
+                                    Vector px2(2);
+                                    std::string str2;
+                                    Vector px3(2);
+                                    std::string str3;
+                                    px1[0]=pTarget->get(0).asDouble();
+                                    px1[1]=pTarget->get(1).asDouble();
+                                    str1=pTarget->get(2).asString();
+                                    px2[0]=pTarget->get(3).asDouble();
+                                    px2[1]=pTarget->get(4).asDouble();
+                                    str2=pTarget->get(5).asString();
+                                    px3[0]=pTarget->get(6).asDouble();
+                                    px3[1]=pTarget->get(7).asDouble();
+                                    str3=pTarget->get(8).asString();
+
+                                    // track the moving target within the camera image
+                                    igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                    yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
+                                }
+                            }
+                        }
+                        break;
+                     }
+            case 6 : {
+                        cout << '6' << endl; 
+
+                        // make iCub look down
+                        Vector ang(3,0.0);
+                        ang[1]=-40.0;
+                        igaze->lookAtAbsAngles(ang);
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                if (pTarget->get(2).asInt()!=0)
+                                {
+                                    Vector px1(2);
+                                    std::string str1;
+                                    Vector px2(2);
+                                    std::string str2;
+                                    Vector px3(2);
+                                    std::string str3;
+                                    px1[0]=pTarget->get(0).asDouble();
+                                    px1[1]=pTarget->get(1).asDouble();
+                                    str1=pTarget->get(2).asString();
+                                    px2[0]=pTarget->get(3).asDouble();
+                                    px2[1]=pTarget->get(4).asDouble();
+                                    str2=pTarget->get(5).asString();
+                                    px3[0]=pTarget->get(6).asDouble();
+                                    px3[1]=pTarget->get(7).asDouble();
+                                    str3=pTarget->get(8).asString();
+
+                                    igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                    yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
+                                }
+                            }
+                        }
+                        break;
+                     }
+        }
+        yInfo() << "Which state was chosen?";
+        getchar();
     }
 
     void threadRelease()
@@ -477,16 +799,21 @@ public:
     void actionBehavior(int state)
     {
         // input: state of the human
+        //        logpseg -- irrelevant for now
         // output: behavior of robot
         int action;
+        double logpseq;
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
-        yInfo() << act_probability.at<double>(0,0);
-        yInfo() << act_probability.at<double>(1,0);
+        //yInfo() << act_probability.at<double>(0,0);
+        //yInfo() << act_probability.at<double>(1,0);
+
+        // add state to sequence of states
+        seq_mat.push_back(state);
 
         // make a decision based on the predictor's response
-        if (action == 0){
+        if (action == 1){
             // get current location
             iarm->getPose(p,o);
             // get current velocities
@@ -494,7 +821,10 @@ public:
 
             reachArmGiving(p, o, xf, vcur);
 
-        } else if (action == 1) {
+            hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
+            gazeBehavior(pstates);
+
+        } else if (action == 0) {
             // just observe the action
             yInfo() << "I'm observing";
 
@@ -504,8 +834,17 @@ public:
 
             reachArmGiving(p, o, xi, vcur);
 
-        } else 
+            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            gazeBehavior(pstates);
+
+        } else {
             yInfo() << "Wrong action";
+            //cout << "M = "<< endl << " "  << seq_mat << endl << endl;
+            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            //cout << "M = "<< endl << " "  << pstates << endl << endl;
+            //getchar();
+            gazeBehavior(pstates);
+        }
     }
 
     void reachArmGiving(Vector position, Vector orientation, Vector x_pos, Vector velocity)
@@ -554,13 +893,32 @@ public:
     }
 
     /***************************************************/
-    void gazeBehavior(int state)
+    void gazeBehavior(cv::Mat &state)
     {
+        // check all the state and take the highest probability one
+        double max = 0;   
+        int id = -1;
 
-        //igaze->lookAtFixationPoint(state);
-        //igaze->waitMotionDone();
-        //to track from now on
-        igaze->setTrackingMode(true);
+        int nRows = state.rows;
+        int nCols = state.cols;
+        cout << "MaxStates = "<< endl << " "  << state << endl << endl;
+
+        // we only want the last column
+        int i,j = nCols - 1;
+        double *p;
+        for( i = 0; i < nRows; ++i)
+        {   
+            // get the max probability and the state index
+            p = state.ptr<double>(i);
+            yInfo() << p[j];
+            if (max < p[j]) {
+                max = p[j];
+                id = i;
+            }
+        }
+        getchar();
+        // sending the highest probable state to the robot
+        fixate(id+1);
     }
 
     void run()
@@ -571,27 +929,27 @@ public:
         {
             if ( pupil(1) == 1){
                 yInfo() << "Teammate's Tower";
-                state = 4;
+                state = 5;
            
             }else if ( pupil(1) == 2) {
                 yInfo() << "My Tower";
-                state = 5;
+                state = 6;
                 
             }else if ( pupil(1) == 3) {
                 yInfo() << "Brick/Object";
-                state = 0;
+                state = 1;
   
             }else if ( pupil(1) == 4) {
                 yInfo() << "iCub's Face";
-                state = 1;
+                state = 2;
 
             }else if ( pupil(1) == 5) {
                 yInfo() << "iCub's Hand";
-                state = 2;
+                state = 3;
 
             }else if ( pupil(1) == 4) {
                 yInfo() << "Own's Hand";
-                state = 3;
+                state = 4;
                 
             } else {
                 yInfo() << "wrong state";
