@@ -437,7 +437,7 @@ public:
 
         switch(maxState) {
             case 1 : {
-                        cout << '1' << endl; // prints "1",
+                        cout << '1' << endl; 
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
                         igaze->lookAtAbsAngles(ang);
@@ -473,17 +473,22 @@ public:
                                     px3[1]=pTarget->get(7).asDouble();
                                     str3=pTarget->get(8).asString();
 
-                                    yInfo() << "Im in again !!!!!!\n";
                                     // track the moving target within the camera image
                                     igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at red object: "<<px2.toString(3,3);
+                                    yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
                                 }
                             }
                         }
                         break;
                      }
             case 2 : {
-                        cout << '2' << endl; // then prints "2"
+                        cout << '2' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        ang[1]= 0.0;
+                        igaze->lookAtAbsAngles(ang);
+
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's face";
@@ -500,7 +505,13 @@ public:
                         break;
                      }
             case 3 : {
-                        cout << '3' << endl; // prints "1",
+                        cout << '3' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        ang[1]= 0.0;
+                        igaze->lookAtAbsAngles(ang);
+
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's hand";
@@ -517,16 +528,16 @@ public:
                         break;
                      }
             case 4 : {
-                        cout << '4' << endl; // then prints "2"
+                        cout << '4' << endl; 
                         break;
 
                      }
             case 5 : {
-                        cout << '5' << endl; // prints "1",
+                        cout << '5' << endl; 
+
                         // make iCub look down
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
-                        //ang[2]=-20;
                         igaze->lookAtAbsAngles(ang);
 
                         double timeout = 10.0; 
@@ -560,21 +571,20 @@ public:
                                     px3[1]=pTarget->get(7).asDouble();
                                     str3=pTarget->get(8).asString();
 
-                                    yInfo() << "Im in again !!!!!!\n";
                                     // track the moving target within the camera image
                                     igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at green object: "<<px1.toString(3,3);
+                                    yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
                                 }
                             }
                         }
                         break;
                      }
             case 6 : {
-                        cout << '6' << endl; // then prints "2"
+                        cout << '6' << endl; 
+
                         // make iCub look down
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
-                        //ang[2]=-20;
                         igaze->lookAtAbsAngles(ang);
 
                         double timeout = 10.0; 
@@ -608,16 +618,15 @@ public:
                                     px3[1]=pTarget->get(7).asDouble();
                                     str3=pTarget->get(8).asString();
 
-                                    yInfo() << "Im in again !!!!!!\n";
                                     igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at blue object: "<<px3.toString(3,3);
+                                    yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
                                 }
                             }
                         }
                         break;
                      }
         }
-        yInfo() << "which state was chosen?";
+        yInfo() << "Which state was chosen?";
         getchar();
     }
 
@@ -797,8 +806,8 @@ public:
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
-        yInfo() << act_probability.at<double>(0,0);
-        yInfo() << act_probability.at<double>(1,0);
+        //yInfo() << act_probability.at<double>(0,0);
+        //yInfo() << act_probability.at<double>(1,0);
 
         // add state to sequence of states
         seq_mat.push_back(state);
@@ -812,10 +821,7 @@ public:
 
             reachArmGiving(p, o, xf, vcur);
 
-            cout << "Seq = "<< endl << " "  << seq_mat << endl << endl;
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
-            cout << "PStates = "<< endl << " "  << pstates << endl << endl;
-            getchar();
             gazeBehavior(pstates);
 
         } else if (action == 0) {
@@ -833,10 +839,10 @@ public:
 
         } else {
             yInfo() << "Wrong action";
-            cout << "M = "<< endl << " "  << seq_mat << endl << endl;
+            //cout << "M = "<< endl << " "  << seq_mat << endl << endl;
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
-            cout << "M = "<< endl << " "  << pstates << endl << endl;
-            getchar();
+            //cout << "M = "<< endl << " "  << pstates << endl << endl;
+            //getchar();
             gazeBehavior(pstates);
         }
     }
@@ -910,8 +916,8 @@ public:
                 id = i;
             }
         }
-        yInfo() << id << "\n";
         getchar();
+        // sending the highest probable state to the robot
         fixate(id+1);
     }
 
