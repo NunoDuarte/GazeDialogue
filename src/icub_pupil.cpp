@@ -73,9 +73,27 @@ class ControlThread: public RateThread
     // define matrixes for follower and leader
     CvHMM hmmFG;
     double *TRANSdataFG;
+    cv::Mat TRANSFG;
     double *EMISdataFG;
+    cv::Mat EMISFG;
+    cv::Mat INITFG;
 
     CvHMM hmmFP;
+    double *TRANSdataFP;
+    cv::Mat TRANSFP;
+    double *EMISdataFP;
+    cv::Mat EMISFP;
+    cv::Mat INITFP;
+
+    // define the sequence of states
+    cv::Mat seq_mat;
+
+    // define the forward and backward probability matrix that are use to calculate the states
+    cv::Mat forward;
+    cv::Mat backward;
+
+    // output from decode
+    cv::Mat pstates;
 
 public:
     ControlThread(int period):RateThread(period){}
@@ -265,19 +283,61 @@ public:
 
         /*------------------------ FOLOWER GIVING MODEL ------------------------*/
         TRANSdataFG = new double[16];        
-        TRANSdataFG[] = {0.968314321926489, 0.0209125475285171, 0.00697084917617237, 0.00380228136882129, 0.00638297872340426, 0.979574468085106, 0.00297872340425532, 0.0110638297872340, 0.0436507936507937, 0.0198412698412698, 0.922619047619048, 0.0138888888888889, 0.00295159386068477, 0.00118063754427391, 0.00118063754427391, 0.994687131050767};
-        cv::Mat TRANSFG = cv::Mat(4,4,CV_64F,TRANSdataFG).clone();
+        TRANSdataFG[0] = 0.968314321926489;
+        TRANSdataFG[1] = 0.0209125475285171;
+        TRANSdataFG[2] = 0.00697084917617237; 
+        TRANSdataFG[3] = 0.00380228136882129;
+        TRANSdataFG[4] = 0.00638297872340426;
+        TRANSdataFG[5] = 0.979574468085106;
+        TRANSdataFG[6] = 0.00297872340425532;
+        TRANSdataFG[7] = 0.0110638297872340; 
+        TRANSdataFG[8] = 0.0436507936507937; 
+        TRANSdataFG[9] = 0.0198412698412698;
+        TRANSdataFG[10] = 0.922619047619048;
+        TRANSdataFG[11] = 0.0138888888888889;
+        TRANSdataFG[12] = 0.00295159386068477;
+        TRANSdataFG[13] = 0.00118063754427391;
+        TRANSdataFG[14] = 0.00118063754427391;
+        TRANSdataFG[15] = 0.994687131050767;
 
-        double EMISdataFG[] = {0.699680511182109, 0.0396166134185304, 0.122683706070288, 0.0217252396166134, 0.0319488817891374, 0.0843450479233227, 0.302240512117055, 0.186099679926840, 0.362597165066301, 0.0214906264288980, 0.0832190214906264, 0.0443529949702789, 0.619918699186992, 0.0752032520325203, 0.0894308943089431, 0.0182926829268293, 0.0406504065040650, 0.156504065040650, 0.181818181818182, 0.183175033921303, 0.244911804613297, 0.0135685210312076, 0.350746268656716, 0.0257801899592944};
-    cv::Mat EMISFG = cv::Mat(4,6,CV_64F,EMISdataFG).clone();
+        TRANSFG = cv::Mat(4,4,CV_64F,TRANSdataFG).clone();  
+
+        EMISdataFG = new double[24];
+        EMISdataFG[0] = 0.699680511182109;
+        EMISdataFG[1] = 0.0396166134185304;
+        EMISdataFG[2] = 0.122683706070288;
+        EMISdataFG[3] = 0.0217252396166134;
+        EMISdataFG[4] = 0.0319488817891374;
+        EMISdataFG[5] = 0.0843450479233227;
+        EMISdataFG[6] = 0.302240512117055;
+        EMISdataFG[7] = 0.186099679926840;
+        EMISdataFG[8] = 0.362597165066301;  
+        EMISdataFG[9] = 0.0214906264288980;
+        EMISdataFG[10] = 0.0832190214906264;
+        EMISdataFG[11] = 0.0443529949702789;
+        EMISdataFG[12] = 0.619918699186992;
+        EMISdataFG[13] = 0.0752032520325203;
+        EMISdataFG[14] = 0.0894308943089431;
+        EMISdataFG[15] = 0.0182926829268293;
+        EMISdataFG[16] = 0.0406504065040650;
+        EMISdataFG[17] = 0.156504065040650;
+        EMISdataFG[18] = 0.181818181818182;
+        EMISdataFG[19] = 0.183175033921303;
+        EMISdataFG[20] = 0.244911804613297;
+        EMISdataFG[21] = 0.0135685210312076;
+        EMISdataFG[22] = 0.350746268656716;
+        EMISdataFG[23] = 0.0257801899592944;
+
+        EMISFG = cv::Mat(4,6,CV_64F,EMISdataFG).clone();
 
         double INITdataFG[] = {1.0, 0.0, 0.0, 0.0};
-        cv::Mat INITFG = cv::Mat(1,6,CV_64F,INITdataFG).clone();
+        INITFG = cv::Mat(1,6,CV_64F,INITdataFG).clone();
 
         std::cout << "FG:";
         hmmFG.printModel(TRANSFG,EMISFG,INITFG);
 
         /*------------------------ FOLOWER PLACING MODEL ------------------------*/
+        TRANSdataFP = new double[16];
         TRANSdataFP[0] = 0.968184653774173;
         TRANSdataFP[1] = 0.0143480973175296;       
         TRANSdataFP[2] = 0.0162195882719900;       
@@ -295,16 +355,38 @@ public:
         TRANSdataFP[14] = 0.0419161676646707;       
         TRANSdataFP[15] = 0.934131736526946;       
 
-        cv::Mat TRANSFP = cv::Mat(4,4,CV_64F,TRANSdataFP).clone();
+        TRANSFP = cv::Mat(4,4,CV_64F,TRANSdataFP).clone();
 
-        double EMISdataFP[] = {0.754639175257732, 0.0130584192439863, 0.0192439862542955, 0.0219931271477663, 0.0371134020618557, 0.153951890034364,
-                              0.427316293929713, 0.0479233226837061, 0.00319488817891374, 0.0359424920127796, 0.159744408945687, 0.325878594249201,
-                              0.557013118062563, 0.0575176589303734, 0.0171543895055499, 0.0181634712411705, 0.0171543895055499, 0.332996972754793,
-                              0.725000000000000, 0.00312500000000000, 0.153125000000000, 0.00625000000000000, 0.0562500000000000, 0.0562500000000000};
-        cv::Mat EMISFP = cv::Mat(4,6,CV_64F,EMISdataFP).clone();
+        EMISdataFP = new double[24];        
+        EMISdataFP[0] = 0.754639175257732;
+        EMISdataFP[1] = 0.0130584192439863;
+        EMISdataFP[2] = 0.0192439862542955;
+        EMISdataFP[3] = 0.0219931271477663;
+        EMISdataFP[4] = 0.0371134020618557;
+        EMISdataFP[5] = 0.153951890034364;
+        EMISdataFP[6] = 0.427316293929713;
+        EMISdataFP[7] = 0.0479233226837061;
+        EMISdataFP[8] = 0.00319488817891374;
+        EMISdataFP[9] = 0.0359424920127796;
+        EMISdataFP[10] = 0.159744408945687;
+        EMISdataFP[11] = 0.325878594249201;
+        EMISdataFP[12] = 0.557013118062563,
+        EMISdataFP[13] = 0.0575176589303734;
+        EMISdataFP[14] = 0.0171543895055499;
+        EMISdataFP[15] = 0.0181634712411705;
+        EMISdataFP[16] = 0.0171543895055499;
+        EMISdataFP[17] = 0.332996972754793;
+        EMISdataFP[18] = 0.725000000000000;
+        EMISdataFP[19] = 0.00312500000000000;
+        EMISdataFP[20] = 0.153125000000000;
+        EMISdataFP[21] = 0.00625000000000000;
+        EMISdataFP[22] = 0.0562500000000000;
+        EMISdataFP[23] = 0.0562500000000000;
+
+        EMISFP = cv::Mat(4,6,CV_64F,EMISdataFP).clone();
 
         double INITdataFP[] = {1.0, 0.0, 0.0, 0.0};
-        cv::Mat INITFP = cv::Mat(1,6,CV_64F,INITdataFP).clone();
+        INITFP = cv::Mat(1,6,CV_64F,INITdataFP).clone();
 
         std::cout << "FP:";
         hmmFP.printModel(TRANSFP,EMISFP,INITFP);
@@ -531,8 +613,10 @@ public:
     void actionBehavior(int state)
     {
         // input: state of the human
+        //        logpseg -- irrelevant for now
         // output: behavior of robot
         int action;
+        double logpseq;
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
