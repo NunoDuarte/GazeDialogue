@@ -28,10 +28,10 @@ class gazeBehaviour:
                     cH = face[1] + face[3]
 
                     if cX - 30 < fixation[0] < cW + 30 and cY - 30 < fixation[1] < cH + 30:
-                        mysample = [timestamp, 4+i, face[0], face[1]]
+                        mysample = [timestamp, 4, face[0], face[1]]
                         return mysample
 
-                    i = i+1
+
             mysample = []
         return mysample
 
