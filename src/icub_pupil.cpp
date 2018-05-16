@@ -813,7 +813,7 @@ public:
         seq_mat.push_back(state);
 
         // make a decision based on the predictor's response
-        if (action == 1){
+        if (action == 0){
             // get current location
             iarm->getPose(p,o);
             // get current velocities
@@ -824,7 +824,7 @@ public:
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
 
-        } else if (action == 0) {
+        } else if (action == 1) {
             // just observe the action
             yInfo() << "I'm observing";
 
