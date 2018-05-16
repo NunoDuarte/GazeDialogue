@@ -437,7 +437,7 @@ public:
 
         switch(maxState) {
             case 1 : {
-                        cout << '1'; // prints "1",
+                        cout << '1' << endl; // prints "1",
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
                         igaze->lookAtAbsAngles(ang);
@@ -480,9 +480,10 @@ public:
                                 }
                             }
                         }
+                        break;
                      }
             case 2 : {
-                        cout << '2'; // then prints "2"
+                        cout << '2' << endl; // then prints "2"
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's face";
@@ -496,9 +497,10 @@ public:
                         //igaze->waitMotionDone();
                         //to track from now on
                         igaze->setTrackingMode(true);
+                        break;
                      }
             case 3 : {
-                        cout << '3'; // prints "1",
+                        cout << '3' << endl; // prints "1",
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's hand";
@@ -512,14 +514,15 @@ public:
                         //igaze->waitMotionDone();
                         //to track from now on
                         igaze->setTrackingMode(true);
-
+                        break;
                      }
             case 4 : {
-                    cout << '4'; // then prints "2"
+                        cout << '4' << endl; // then prints "2"
+                        break;
 
                      }
             case 5 : {
-                        cout << '5'; // prints "1",
+                        cout << '5' << endl; // prints "1",
                         // make iCub look down
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
@@ -564,9 +567,10 @@ public:
                                 }
                             }
                         }
+                        break;
                      }
             case 6 : {
-                        cout << '6'; // then prints "2"
+                        cout << '6' << endl; // then prints "2"
                         // make iCub look down
                         Vector ang(3,0.0);
                         ang[1]=-40.0;
@@ -610,8 +614,11 @@ public:
                                 }
                             }
                         }
+                        break;
                      }
         }
+        yInfo() << "which state was chosen?";
+        getchar();
     }
 
     void threadRelease()
@@ -805,7 +812,10 @@ public:
 
             reachArmGiving(p, o, xf, vcur);
 
+            cout << "Seq = "<< endl << " "  << seq_mat << endl << endl;
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
+            cout << "PStates = "<< endl << " "  << pstates << endl << endl;
+            getchar();
             gazeBehavior(pstates);
 
         } else if (action == 0) {
@@ -823,7 +833,10 @@ public:
 
         } else {
             yInfo() << "Wrong action";
+            cout << "M = "<< endl << " "  << seq_mat << endl << endl;
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            cout << "M = "<< endl << " "  << pstates << endl << endl;
+            getchar();
             gazeBehavior(pstates);
         }
     }
@@ -880,13 +893,9 @@ public:
         double max = 0;   
         int id = -1;
 
-        // accept only char type matrices
-        CV_Assert(state.depth() == CV_8U);
-
-        int channels = state.channels();
-
         int nRows = state.rows;
-        int nCols = state.cols * channels;
+        int nCols = state.cols;
+        cout << "MaxStates = "<< endl << " "  << state << endl << endl;
 
         // we only want the last column
         int i,j = nCols - 1;
@@ -895,12 +904,15 @@ public:
         {   
             // get the max probability and the state index
             p = state.ptr<double>(i);
+            yInfo() << p[j];
             if (max < p[j]) {
                 max = p[j];
                 id = i;
             }
         }
-        fixate(i);
+        yInfo() << id << "\n";
+        getchar();
+        fixate(id+1);
     }
 
     void run()
