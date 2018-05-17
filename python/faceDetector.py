@@ -16,32 +16,34 @@ class faceDetector:
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (31, 31), 0)
-        thresh = cv2.threshold(blurred, 127, 255,cv2.THRESH_TOZERO)[1]
+        thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_TOZERO)[1]
         facesDetect = faceCascade.detectMultiScale(
             thresh,
-            scaleFactor=1.3,
-            minNeighbors=3,
-            minSize=(50, 50),
-            maxSize=(100, 100)
+            scaleFactor=1.2,
+            minNeighbors=10,
+            minSize=(20, 20),
         )
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in facesDetect:
-            #print(x,y,w,h)
+            # print(x,y,w,h)
             num_eyes = 0
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
             roi_gray = gray[y:y + h, x:x + w]
+            roi_color = frame[y:y + h, x:x + w]
             faces.append([x, y, w, h])
-            faceTrain.append(gray[y:y+w, x:x+h])
+            faceTrain.append(gray[y:y + w, x:x + h])
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
             for (ex, ey, ew, eh) in eyes:
-                cv2.rectangle(roi_gray, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
-                num_eyes = num_eyes + 1
-                print("hello")
-            if num_eyes != 1:
+                if len(eyes) == 2:
+                    cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
+                    num_eyes = num_eyes + 1
+                    #print("hello")
+            if num_eyes == 2:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            else:
                 faces = []
                 faceTrain = []
-            break
 
         if anterior != len(facesDetect):
             anterior = len(facesDetect)
