@@ -25,7 +25,7 @@ Make sure the frame publisher plugin is loaded and configuredsource  to gray or 
 
 context = zmq.Context()
 # open a req port to talk to pupil
-addr = '10.0.3.20'  # remote ip or localhost
+addr = '127.0.0.1'  # remote ip or localhost
 req_port = "50020"  # same as in the pupil remote gui
 req = context.socket(zmq.REQ)
 req.connect("tcp://{}:{}".format(addr, req_port))
@@ -93,8 +93,6 @@ face = faceDetector()
 
 print("Preparing Data...")
 knownFaces, knownLabels = face.prepare_training_data("training-data", faceCascade)
-print(knownFaces)
-print(knownLabels)
 print("Data prepared")
 
 # create our LBPH face recognizer
@@ -121,18 +119,21 @@ while cv2.waitKey(1):
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
-            if ballG is not []:
-                ball.append([ballG, 1])
-            frame, pts, ballR = ballTracking.trackingRed(frame, pts)
-            if ballR is not []:
-                ball.append([ballR, 2])
-            frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
-            if ballB is not [] and len(ballB) != 0:
-                ball.append([ballB, 3])
+            # frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
+            # if ballG is not []:
+            #     ball.append([ballG, 1])
+            # frame, pts, ballR = ballTracking.trackingRed(frame, pts)
+            # if ballR is not []:
+            #     ball.append([ballR, 2])
+            # frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
+            # if ballB is not [] and len(ballB) != 0:
+            #     ball.append([ballB, 3])
+            frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
+            if ballY is not [] and len(ballY) != 0:
+                ball.append([ballY, 4])
 
-            anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
-            labels = face.predict(frame, face_recognizer, faces, facesTrained)
+            # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
+            # labels = face.predict(frame, face_recognizer, faces, facesTrained)
 
             sample, timestamp = inlet.pull_chunk()
             if sample:
@@ -147,7 +148,7 @@ while cv2.waitKey(1):
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], ball, faces, fixation, [])
+                    mysample = gaze.record(sample[0][0], ball, [], fixation, [])
                     if len(mysample) is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)

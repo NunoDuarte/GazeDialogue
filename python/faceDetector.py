@@ -21,7 +21,7 @@ class faceDetector:
             scaleFactor=1.3,
             minNeighbors=10,
             minSize=(50, 50),
-	    maxSize=(100, 100)
+	        maxSize=(100, 100)
         )
 
         # Draw a rectangle around the faces
