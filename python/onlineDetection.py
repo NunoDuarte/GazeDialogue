@@ -132,8 +132,8 @@ while cv2.waitKey(1):
             if ballY is not [] and len(ballY) != 0:
                 ball.append([ballY, 4])
 
-            # anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
-            # labels = face.predict(frame, face_recognizer, faces, facesTrained)
+            anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
+            labels = face.predict(frame, face_recognizer, faces, facesTrained)
 
             sample, timestamp = inlet.pull_chunk()
             if sample:
@@ -148,7 +148,7 @@ while cv2.waitKey(1):
 
                 # check the gaze behaviour
                 if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], ball, [], fixation, [])
+                    mysample = gaze.record(sample[0][0], ball, faces, fixation, [])
                     if len(mysample) is not 0:
                         #print(mysample)
                         outlet.push_sample(mysample)
