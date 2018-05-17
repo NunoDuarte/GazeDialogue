@@ -26,9 +26,12 @@ class faceDetector:
 
         # Draw a rectangle around the faces
         for (x, y, w, h) in facesDetect:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            faces.append([x, y, w, h])
-            faceTrain.append(gray[y:y+w, x:x+h])
+            #print(x,y,w,h)
+            if x > 50 and x < 350 and y < 150:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                faces.append([x, y, w, h])
+                faceTrain.append(gray[y:y+w, x:x+h])
+                break
 
         if anterior != len(facesDetect):
             anterior = len(facesDetect)
