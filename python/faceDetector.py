@@ -19,9 +19,8 @@ class faceDetector:
         thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_TOZERO)[1]
         facesDetect = faceCascade.detectMultiScale(
             thresh,
-            scaleFactor=1.2,
-            minNeighbors=3,
-            minSize=(70, 70),
+            scaleFactor=1.1,
+            minNeighbors=1
         )
 
         # Draw a rectangle around the faces
@@ -44,7 +43,7 @@ class faceDetector:
             else:
                 faces = []
                 faceTrain = []
-            #break
+            break
 
         if anterior != len(facesDetect):
             anterior = len(facesDetect)
