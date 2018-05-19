@@ -111,7 +111,7 @@ ball = []
 while cv2.waitKey(1):
     topic, msg = recv_from_sub()
 
-    if topic == 'frame.world' and i % 4 == 0:
+    if topic == 'frame.world' and i % 5 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -119,18 +119,21 @@ while cv2.waitKey(1):
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            # frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
-            # if ballG is not []:
-            #     ball.append([ballG, 1])
-            # frame, pts, ballR = ballTracking.trackingRed(frame, pts)
-            # if ballR is not []:
-            #     ball.append([ballR, 2])
-            # frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
-            # if ballB is not [] and len(ballB) != 0:
-            #     ball.append([ballB, 3])
+            frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
+            if ballG is not []:
+                ball.append([ballG, 1])
+            frame, pts, ballR = ballTracking.trackingRed(frame, pts)
+            if ballR is not []:
+                ball.append([ballR, 2])
+            frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
+            if ballB is not [] and len(ballB) != 0:
+                ball.append([ballB, 3])
             frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
             if ballY is not [] and len(ballY) != 0:
                 ball.append([ballY, 4])
+            frame, pts, ballC = ballTracking.trackingCyan(frame, pts)
+            if ballC is not [] and len(ballC) != 0:
+                ball.append([ballC, 4])
 
             anterior, faces, facesTrained = face.detecting(frame, anterior, faceCascade)
             labels = face.predict(frame, face_recognizer, faces, facesTrained)

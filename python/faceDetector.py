@@ -20,8 +20,8 @@ class faceDetector:
         facesDetect = faceCascade.detectMultiScale(
             thresh,
             scaleFactor=1.2,
-            minNeighbors=10,
-            minSize=(20, 20),
+            minNeighbors=3,
+            minSize=(70, 70),
         )
 
         # Draw a rectangle around the faces
@@ -31,12 +31,12 @@ class faceDetector:
 
             roi_gray = gray[y:y + h, x:x + w]
             roi_color = frame[y:y + h, x:x + w]
-            faces.append([x, y, w, h])
-            faceTrain.append(gray[y:y + w, x:x + h])
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
             for (ex, ey, ew, eh) in eyes:
                 if len(eyes) == 2:
                     cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
+                    faces.append([x, y, w, h])
+                    faceTrain.append(gray[y:y + w, x:x + h])
                     num_eyes = num_eyes + 1
                     #print("hello")
             if num_eyes == 2:
@@ -44,6 +44,7 @@ class faceDetector:
             else:
                 faces = []
                 faceTrain = []
+            #break
 
         if anterior != len(facesDetect):
             anterior = len(facesDetect)
