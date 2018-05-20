@@ -439,8 +439,11 @@ public:
             case 1 : {
                         cout << '1' << endl; 
                         Vector ang(3,0.0);
-                        ang[1]=-40.0;
-                        igaze->lookAtAbsAngles(ang);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
 
                         double timeout = 10.0; 
                         bool done = false; 
@@ -455,28 +458,25 @@ public:
                         {
                             if (pTarget->size()>2)
                             {
-                                if (pTarget->get(2).asInt()!=0)
-                                {
-                                    Vector px1(2);
-                                    std::string str1;
-                                    Vector px2(2);
-                                    std::string str2;
-                                    Vector px3(2);
-                                    std::string str3;
-                                    px1[0]=pTarget->get(0).asDouble();
-                                    px1[1]=pTarget->get(1).asDouble();
-                                    str1=pTarget->get(2).asString();
-                                    px2[0]=pTarget->get(3).asDouble();
-                                    px2[1]=pTarget->get(4).asDouble();
-                                    str2=pTarget->get(5).asString();
-                                    px3[0]=pTarget->get(6).asDouble();
-                                    px3[1]=pTarget->get(7).asDouble();
-                                    str3=pTarget->get(8).asString();
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
 
-                                    // track the moving target within the camera image
-                                    igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
-                                }
+                                // track the moving target within the camera image
+                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
                             }
                         }
                         break;
@@ -553,28 +553,25 @@ public:
                         {
                             if (pTarget->size()>2)
                             {
-                                if (pTarget->get(2).asInt()!=0)
-                                {
-                                    Vector px1(2);
-                                    std::string str1;
-                                    Vector px2(2);
-                                    std::string str2;
-                                    Vector px3(2);
-                                    std::string str3;
-                                    px1[0]=pTarget->get(0).asDouble();
-                                    px1[1]=pTarget->get(1).asDouble();
-                                    str1=pTarget->get(2).asString();
-                                    px2[0]=pTarget->get(3).asDouble();
-                                    px2[1]=pTarget->get(4).asDouble();
-                                    str2=pTarget->get(5).asString();
-                                    px3[0]=pTarget->get(6).asDouble();
-                                    px3[1]=pTarget->get(7).asDouble();
-                                    str3=pTarget->get(8).asString();
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
 
-                                    // track the moving target within the camera image
-                                    igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
-                                }
+                                // track the moving target within the camera image
+                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
                             }
                         }
                         break;
@@ -600,27 +597,24 @@ public:
                         {
                             if (pTarget->size()>2)
                             {
-                                if (pTarget->get(2).asInt()!=0)
-                                {
-                                    Vector px1(2);
-                                    std::string str1;
-                                    Vector px2(2);
-                                    std::string str2;
-                                    Vector px3(2);
-                                    std::string str3;
-                                    px1[0]=pTarget->get(0).asDouble();
-                                    px1[1]=pTarget->get(1).asDouble();
-                                    str1=pTarget->get(2).asString();
-                                    px2[0]=pTarget->get(3).asDouble();
-                                    px2[1]=pTarget->get(4).asDouble();
-                                    str2=pTarget->get(5).asString();
-                                    px3[0]=pTarget->get(6).asDouble();
-                                    px3[1]=pTarget->get(7).asDouble();
-                                    str3=pTarget->get(8).asString();
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
 
-                                    igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                    yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
-                                }
+                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
                             }
                         }
                         break;
@@ -805,9 +799,10 @@ public:
         double logpseq;
 
         // call the predictor function
-        action = predictAL(act_probability, state, action);
+        //action = predictAL(act_probability, state, action);
         //yInfo() << act_probability.at<double>(0,0);
         //yInfo() << act_probability.at<double>(1,0);
+        action = 0;
 
         // add state to sequence of states
         seq_mat.push_back(state);
@@ -925,7 +920,7 @@ public:
     {
       	Vector pupil; string hand; Vector gaze;
         int state; // state the human is in
-        if (inPort.read(pupil))
+        /*if (inPort.read(pupil))
         {
             if ( pupil(1) == 1){
                 yInfo() << "Teammate's Tower";
@@ -960,7 +955,8 @@ public:
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
             }
-        } 
+        }*/  
+        actionBehavior(6);
     }
 };
 
