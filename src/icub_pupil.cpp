@@ -721,7 +721,7 @@ public:
         // we set up here the lists of joints we need to actuate
         // shoulders (3) + elbow + wrist (3)
         VectorOf<int> joints;
-        for (int i=0; i<15; i++){
+        for (int i=0; i<16; i++){
             joints.push_back(i);
         }
         // This option you will move each joint individually
@@ -741,22 +741,6 @@ public:
             yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
             ipos->positionMove(j,target[i]);
         }
-        // wait (with timeout) until the movement is completed
-        bool done=false;
-        double t0=Time::now();
-        while (!done && (Time::now()-t0 < 1.0))
-        {
-            yInfo()<<"Waiting...";
-            Time::delay(0.1);   // release the quantum to avoid starving resources
-            ipos->checkMotionDone(&done);
-        }
-
-        if (done)
-            yInfo()<<"Movement completed";
-        else
-            yWarning()<<"Timeout expired";
-
-        // wait until all fingers have attained their set-points
     }
 
     /***************************************************/
@@ -983,7 +967,7 @@ public:
         //action = predictAL(act_probability, state, action);
         //yInfo() << act_probability.at<double>(0,0);
         //yInfo() << act_probability.at<double>(1,0);
-        action = 0;
+        action = 1;
 
         // add state to sequence of states
         seq_mat.push_back(state);
@@ -1014,6 +998,9 @@ public:
             //closing back the hand
             moveFingers(_hand,thumb,1.0);
             moveFingers(_hand,fingers,0.5);
+            // go back to start position
+            x[1] =  -0.5; // to the left
+            startingArm(x);
 
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
@@ -1157,6 +1144,7 @@ public:
             }
         }*/  
         actionBehavior(6);
+        count++;
     }
 };
 
