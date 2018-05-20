@@ -50,6 +50,9 @@ class ControlThread: public RateThread
     int startup_ctxt_gaze;
     string _hand;
 
+    // we set up here the lists of joints we need to actuate
+    VectorOf<int> abduction,thumb,fingers;
+
     // position and orientation of the robot's arm
     Vector p, o;
     // current linear and angular velocities
@@ -395,6 +398,12 @@ public:
         // get arm in initial position
         x[1] =  -0.5; // to the left
         startingArm(x);
+    
+        // define the fingers joints
+        abduction.push_back(7);
+        thumb.push_back(8);
+        for (int i=9; i<16; i++)
+            fingers.push_back(i);
 
         getchar();
 
@@ -816,6 +825,64 @@ public:
         // wait until all fingers have attained their set-points
     }
 
+    /***************************************************/
+    void moveFingers(const string &hand, const VectorOf<int> &joints,
+                    const double fingers_closure)
+    {
+        // select the correct interface
+
+        // this should be in the beginning, where you initialize the necessary stuff
+        IControlLimits2   *ilim;
+        IPositionControl2 *ipos;
+        IEncoders         *ienc;
+        IControlMode2     *imod;
+
+        if (hand=="right")
+        {
+            drvHandR.view(ilim);
+            drvHandR.view(ipos);
+            drvHandR.view(imod);
+        }
+        else
+        {
+            drvHandL.view(ilim);
+            drvHandL.view(ipos);
+            drvHandL.view(imod);
+        }
+
+        // enforce [0,1] interval
+        double fingers_closure_sat=std::min(1.0,std::max(0.0,fingers_closure));
+
+        // move each finger first:
+        // if min_j and max_j are the minimum and maximum bounds of joint j,
+        // then we should move to min_j+fingers_closure_sat*(max_j-min_j)
+
+        // This option you will move each finger individually
+        for (size_t i=0; i<joints.size(); i++)
+        {
+            int j=joints[i];
+            yInfo()<<"j" << j;
+            // retrieve joint bounds
+            double min_j,max_j,range;
+            ilim->getLimits(j,&min_j,&max_j);
+            range=max_j-min_j;
+            // select target
+            double target;
+            target=min_j+fingers_closure_sat*(range);
+            // set control mode
+            imod->setControlMode(j,VOCAB_CM_POSITION);
+            // set up the speed in [deg/s]
+            ipos->setRefSpeed(j,30.0);
+            // set up max acceleration in [deg/s^2]
+            ipos->setRefAcceleration(j,100.0);
+
+            // yield the actual movement
+            yInfo()<<"Yielding new target: "<<target<<" [deg]";
+            ipos->positionMove(j,target);
+        }
+    }
+
+
     int predictAL(cv::Mat& act_prob, int cur_state, int cur_action){
         /***********************************************************************************
         act_prob is a 2x1 matrix with two probabilities, 
@@ -944,6 +1011,9 @@ public:
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
 
+            //closing back the hand
+            moveFingers(_hand,thumb,1.0);
+            moveFingers(_hand,fingers,0.5);
             reachArmGiving(p, o, xi, vcur);
 
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
@@ -1010,6 +1080,10 @@ public:
             //iarm->setTaskVelocities(vcur, wcur);
         }
         iarm->goToPose(x_pos,orientation);
+        // let's put the hand in the pre-grasp configuration
+        //moveFingers(_hand,abduction,0.8);
+        moveFingers("left", fingers,0.0);
+
         yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
         yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 
