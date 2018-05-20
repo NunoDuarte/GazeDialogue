@@ -64,7 +64,7 @@ class ControlThread: public RateThread
     float Vmax;
     float epsilon;
     int count;
-    Vector e;
+    Vector e, ed;
     Vector unit_e;
     double v_mag;
     double acc_mag;
@@ -258,6 +258,7 @@ public:
         epsilon     = 0.1; // 10 cm
 
         e.resize(3);
+        ed.resize(3);
         unit_e.resize(3);
         v_mag = 0;
         acc_mag = 0.01;
@@ -441,8 +442,8 @@ public:
 
         }
         if (hand == "left"){
-            Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
+            Rot(0,0)= 0.0; Rot(0,1)= 0.0; Rot(0,2)= -1.0;
+            Rot(1,0)= 1.0; Rot(1,1)= 0.0; Rot(1,2)= 0.0;
             Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
         }
 
@@ -667,6 +668,16 @@ public:
     {
         printf("ControlThread:stopping the robot\n");
 
+
+        vcur[0] = 0.0;
+        vcur[1] = 0.0;
+        vcur[2] = 0.0;
+        wcur[0] = 0.0;
+        wcur[1] = 0.0;
+        wcur[2] = 0.0;
+        iarm->setTaskVelocities(vcur, wcur);
+        iarm->stopControl();
+
         igaze->restoreContext(startup_ctxt_gaze);
         igaze->stopControl();
         drvGaze.close();
@@ -850,11 +861,12 @@ public:
         if (action == 0){
             // get current location
             iarm->getPose(p,o);
+            Vector od = o;
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
 
-            o = computeHandOrientationPassing("right"); //get default orientation
-            reachArmGiving(p, o, xf, vcur);
+            od = computeHandOrientationPassing("left"); //get default orientation
+            reachArmGiving(p, od, xf, vcur);
 
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
@@ -882,11 +894,14 @@ public:
         }
     }
 
-    void reachArmGiving(Vector position, Vector orientation, Vector x_pos, Vector velocity)
+    void reachArmGiving(Vector desired_p, Vector desired_o, Vector x_pos, Vector velocity)
     {
-        e[0] = x_pos[0] - p[0];
-        e[1] = x_pos[1] - p[1];
-        e[2] = x_pos[2] - p[2]; 
+        e[0] = x_pos[0] - desired_p[0];
+        e[1] = x_pos[1] - desired_p[1];
+        e[2] = x_pos[2] - desired_p[2]; 
+        ed[0] = o[0] - desired_o[0];
+        ed[1] = o[1] - desired_o[1];
+        ed[2] = o[2] - desired_o[2]; 
         yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
         /*if (count == 3500 ){
@@ -902,7 +917,10 @@ public:
             vcur[0] = v_mag * unit_e[0];
             vcur[1] = v_mag * unit_e[1];
             vcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            iarm->setTaskVelocities(vcur, wcur);
            /* if(!send_or){
                 send_or=1;
                 Vector o = computeHandOrientation("left");
@@ -914,17 +932,24 @@ public:
             vcur[0] = v_mag * unit_e[0];
             vcur[1] = v_mag * unit_e[1];
             vcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            iarm->setTaskVelocities(vcur, wcur);
         }else{
             v_mag = Vmax;
 
             vcur[0] = v_mag * unit_e[0];
             vcur[1] = v_mag * unit_e[1];
             vcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            iarm->setTaskVelocities(vcur, wcur);
         }
-        iarm->goToPose(x_pos,o);
-        yInfo() << "v:" << v_mag;
+        //iarm->goToPose(x_pos,orientation);
+        yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
+        yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 
     }
 
@@ -952,7 +977,6 @@ public:
                 id = i;
             }
         }
-        getchar();
         // sending the highest probable state to the robot
         fixate(id+1);
     }
