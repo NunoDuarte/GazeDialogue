@@ -392,6 +392,12 @@ public:
         std::cout << "FP:";
         hmmFP.printModel(TRANSFP,EMISFP,INITFP);
 
+        // get arm in initial position
+        x[1] =  -0.5; // to the left
+        startingArm(x);
+
+        getchar();
+
         return true;
     }
 
@@ -676,6 +682,72 @@ public:
         port.close();
         
         printf("Done, goodbye from ControlThread\n");
+    }
+
+/***************************************************/
+    void startingArm(const Vector &x)
+    {
+        string hand=(x[1]>=0.0?"right":"left");
+
+        // select the correct interface
+        IControlLimits2   *ilim1;
+        IPositionControl2 *ipos;
+        IEncoders         *ienc1;
+        IControlMode2     *imod1;
+
+        if (hand=="right")
+        {
+            drvHandR.view(ilim1);
+            drvHandR.view(ipos);
+            drvHandR.view(imod1);
+        }
+        else
+        {
+            drvHandL.view(ilim1);
+            drvHandL.view(ipos);
+            drvHandL.view(imod1);
+        }
+
+        double target[] = {-17, 20, 8, 41, 7, -21, -9, 48, 76, 31, 86, 58, 131, 54, 113, 164};
+        // we set up here the lists of joints we need to actuate
+        // shoulders (3) + elbow + wrist (3)
+        VectorOf<int> joints;
+        for (int i=0; i<15; i++){
+            joints.push_back(i);
+        }
+        // This option you will move each joint individually
+        for (size_t i=0; i<joints.size(); i++)
+        {
+            int j=joints[i];
+            // retrieve joint bounds
+            double min_j,max_j,range;
+            ilim1->getLimits(j,&min_j,&max_j);
+            // set control mode
+            imod1->setControlMode(j,VOCAB_CM_POSITION);
+            // set up the speed in [deg/s]
+            ipos->setRefSpeed(j,15.0);
+            // set up max acceleration in [deg/s^2]
+            ipos->setRefAcceleration(j,5.0);
+            // yield the actual movement
+            yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
+            ipos->positionMove(j,target[i]);
+        }
+        // wait (with timeout) until the movement is completed
+        bool done=false;
+        double t0=Time::now();
+        while (!done && (Time::now()-t0 < 1.0))
+        {
+            yInfo()<<"Waiting...";
+            Time::delay(0.1);   // release the quantum to avoid starving resources
+            ipos->checkMotionDone(&done);
+        }
+
+        if (done)
+            yInfo()<<"Movement completed";
+        else
+            yWarning()<<"Timeout expired";
+
+        // wait until all fingers have attained their set-points
     }
 
     /***************************************************/
