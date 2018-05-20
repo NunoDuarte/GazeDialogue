@@ -693,7 +693,7 @@ public:
         printf("Done, goodbye from ControlThread\n");
     }
 
-/***************************************************/
+    /***************************************************/
     void startingArm(const Vector &x)
     {
         string hand=(x[1]>=0.0?"right":"left");
@@ -1014,7 +1014,6 @@ public:
             //closing back the hand
             moveFingers(_hand,thumb,1.0);
             moveFingers(_hand,fingers,0.5);
-            reachArmGiving(p, o, xi, vcur);
 
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
