@@ -255,7 +255,7 @@ public:
         // initiate variables for giving action
         count       = 0;
         Vmax        = 0.02; // 0.5 m/s
-        epsilon     = 0.01; // 10 cm
+        epsilon     = 0.1; // 10 cm
 
         e.resize(3);
         unit_e.resize(3);
@@ -272,7 +272,7 @@ public:
         xf.resize(3);
         xf[0] = -0.4;
         xf[1] = -0.05;
-        xf[2] =  0.02;
+        xf[2] =  0.15;
 
         // initialize the act_probability
         yInfo() << "1";
@@ -633,7 +633,6 @@ public:
                      }
         }
         yInfo() << "Which state was chosen?";
-        getchar();
     }
 
     void threadRelease()
@@ -858,7 +857,8 @@ public:
     {
         e[0] = x_pos[0] - p[0];
         e[1] = x_pos[1] - p[1];
-        e[2] = x_pos[2] - p[2];        
+        e[2] = x_pos[2] - p[2]; 
+        yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
         /*if (count == 3500 ){
             release("left");
