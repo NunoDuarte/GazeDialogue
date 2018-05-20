@@ -486,8 +486,11 @@ public:
 
                         // look up if you haven't already
                         Vector ang(3,0.0);
-                        ang[1]= 0.0;
-                        igaze->lookAtAbsAngles(ang);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
@@ -509,8 +512,11 @@ public:
 
                         // look up if you haven't already
                         Vector ang(3,0.0);
-                        ang[1]= 0.0;
-                        igaze->lookAtAbsAngles(ang);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
@@ -537,8 +543,11 @@ public:
 
                         // make iCub look down
                         Vector ang(3,0.0);
-                        ang[1]=-40.0;
-                        igaze->lookAtAbsAngles(ang);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
 
                         double timeout = 10.0; 
                         bool done = false; 
@@ -581,8 +590,11 @@ public:
 
                         // make iCub look down
                         Vector ang(3,0.0);
-                        ang[1]=-40.0;
-                        igaze->lookAtAbsAngles(ang);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
 
                         double timeout = 10.0; 
                         bool done = false; 
