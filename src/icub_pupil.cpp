@@ -442,8 +442,8 @@ public:
 
         }
         if (hand == "left"){
-            Rot(0,0)= 0.0; Rot(0,1)= 0.0; Rot(0,2)= -1.0;
-            Rot(1,0)= 1.0; Rot(1,1)= 0.0; Rot(1,2)= 0.0;
+            Rot(0,0)= -1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
+            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
             Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
         }
 
@@ -668,14 +668,6 @@ public:
     {
         printf("ControlThread:stopping the robot\n");
 
-
-        vcur[0] = 0.0;
-        vcur[1] = 0.0;
-        vcur[2] = 0.0;
-        wcur[0] = 0.0;
-        wcur[1] = 0.0;
-        wcur[2] = 0.0;
-        iarm->setTaskVelocities(vcur, wcur);
         iarm->stopControl();
 
         igaze->restoreContext(startup_ctxt_gaze);
@@ -861,6 +853,7 @@ public:
         if (action == 0){
             // get current location
             iarm->getPose(p,o);
+            iarm->setPosePriority("orientation");
             Vector od = o;
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
@@ -894,14 +887,11 @@ public:
         }
     }
 
-    void reachArmGiving(Vector desired_p, Vector desired_o, Vector x_pos, Vector velocity)
+    void reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
     {
         e[0] = x_pos[0] - desired_p[0];
         e[1] = x_pos[1] - desired_p[1];
         e[2] = x_pos[2] - desired_p[2]; 
-        ed[0] = o[0] - desired_o[0];
-        ed[1] = o[1] - desired_o[1];
-        ed[2] = o[2] - desired_o[2]; 
         yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
         /*if (count == 3500 ){
@@ -920,7 +910,7 @@ public:
             wcur[0] = v_mag * unit_e[0];
             wcur[1] = v_mag * unit_e[1];
             wcur[2] = v_mag * unit_e[2];
-            iarm->setTaskVelocities(vcur, wcur);
+            //iarm->setTaskVelocities(vcur, wcur);
            /* if(!send_or){
                 send_or=1;
                 Vector o = computeHandOrientation("left");
@@ -935,7 +925,7 @@ public:
             wcur[0] = v_mag * unit_e[0];
             wcur[1] = v_mag * unit_e[1];
             wcur[2] = v_mag * unit_e[2];
-            iarm->setTaskVelocities(vcur, wcur);
+            //iarm->setTaskVelocities(vcur, wcur);
         }else{
             v_mag = Vmax;
 
@@ -945,9 +935,9 @@ public:
             wcur[0] = v_mag * unit_e[0];
             wcur[1] = v_mag * unit_e[1];
             wcur[2] = v_mag * unit_e[2];
-            iarm->setTaskVelocities(vcur, wcur);
+            //iarm->setTaskVelocities(vcur, wcur);
         }
-        //iarm->goToPose(x_pos,orientation);
+        iarm->goToPose(x_pos,orientation);
         yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
         yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 
@@ -1073,7 +1063,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>10)
             done=true;
     }
     
