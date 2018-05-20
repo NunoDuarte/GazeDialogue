@@ -193,7 +193,7 @@ public:
         cmd2.addString("sph");
         cmd2.addDouble(0.04); // radius 4 cm (made the ball smaller)
         // ball's position
-        cmd2.addDouble(-0.10);
+        cmd2.addDouble(0.10);
         cmd2.addDouble(0.59);
         cmd2.addDouble(0.3);
         // ball's colour
@@ -218,7 +218,7 @@ public:
         // ball's position
         cmd2.addDouble(0.0);
         cmd2.addDouble(0.48);
-        cmd2.addDouble(0.4);
+        cmd2.addDouble(0.3);
         // ball's colour
         cmd2.addDouble(1);
         cmd2.addDouble(0);
@@ -241,7 +241,7 @@ public:
         // ball's position
         cmd2.addDouble(0.0);
         cmd2.addDouble(0.48);
-        cmd2.addDouble(0.8);
+        cmd2.addDouble(0.5);
         // ball's colour
         cmd2.addDouble(0);
         cmd2.addDouble(1);
@@ -579,6 +579,28 @@ public:
                      }
             case 4 : {
                         cout << '4' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating at Own hand";
+
+                        Vector look = x;
+                        look[0] = -0.25;
+                        look[1] = -0.05;
+                        look[2] =  0.10;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
                         break;
 
                      }
@@ -964,10 +986,9 @@ public:
         double logpseq;
 
         // call the predictor function
-        //action = predictAL(act_probability, state, action);
+        action = predictAL(act_probability, state, action);
         //yInfo() << act_probability.at<double>(0,0);
         //yInfo() << act_probability.at<double>(1,0);
-        action = 1;
 
         // add state to sequence of states
         seq_mat.push_back(state);
@@ -1107,7 +1128,7 @@ public:
     {
       	Vector pupil; string hand; Vector gaze;
         int state; // state the human is in
-        /*if (inPort.read(pupil))
+        if (inPort.read(pupil))
         {
             if ( pupil(1) == 1){
                 yInfo() << "Teammate's Tower";
@@ -1142,9 +1163,7 @@ public:
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
             }
-        }*/  
-        actionBehavior(6);
-        count++;
+        }
     }
 };
 
