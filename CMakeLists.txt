@@ -43,9 +43,15 @@ target_link_libraries(${PROJECT_NAME}-main-follower ${OpenCV_LIBS})
 install(TARGETS ${PROJECT_NAME}-main-follower DESTINATION bin)
 
 # leader
-add_executable(${PROJECT_NAME}-main-leader ${CMAKE_SOURCE_DIR}/include/helpers.h 
-		               ${CMAKE_SOURCE_DIR}/src/icub_leader.cpp
-			       ${CMAKE_SOURCE_DIR}/src/helpers.cpp  
+add_executable(${PROJECT_NAME}-main-leader  
+		              	${CMAKE_SOURCE_DIR}/src/icub_leader.cpp
+				${CMAKE_SOURCE_DIR}/include/helpers.h
+			       	${CMAKE_SOURCE_DIR}/include/init.h
+				${CMAKE_SOURCE_DIR}/include/configure.h
+			    	${CMAKE_SOURCE_DIR}/include/compute.h
+			       	${CMAKE_SOURCE_DIR}/src/helpers.cpp
+			       	${CMAKE_SOURCE_DIR}/src/configure.cpp
+			       	${CMAKE_SOURCE_DIR}/src/compute.cpp
 				)
 
 target_link_libraries(${PROJECT_NAME}-main-leader ${YARP_LIBRARIES})

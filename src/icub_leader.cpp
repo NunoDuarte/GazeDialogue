@@ -23,7 +23,11 @@
 #include <sstream>
 #include <fstream>
 
-#include "helpers.h"
+#include "init.h"
+//#include "placing.h"
+//#include "passing.h"
+#include "configure.h"
+#include "compute.h"
 
 #define NBSAMPLES 1
 
