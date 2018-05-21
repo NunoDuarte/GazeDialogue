@@ -1001,6 +1001,10 @@ int main(int argc, char *argv[])
 
     objectLocation.close();
 
+    // configure the module
+    ResourceFinder rf;
+    rf.configure(argc,argv);
+
     ControlThread myThread(5); //period is 10ms
 
     myThread.start();

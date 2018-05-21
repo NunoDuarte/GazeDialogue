@@ -198,60 +198,23 @@ using namespace yarp::math;
             reply.addVocab(Vocab::encode("many"));
             reply.addString("Available commands:");
             reply.addString("- look_down");
-            reply.addString("- pass_to_the_left");
-            reply.addString("- place_ on_the_left");
-            reply.addString("- pass_to_the_center");
-            reply.addString("- place_on_the_center");
-            reply.addString("- pass_to_the_right");
-            reply.addString("- place_on_the_right");
+            reply.addString("- pass");
+            reply.addString("- place");
             reply.addString("- grasp_it");
             reply.addString("- quit");
         }
-/*        else if (cmd=="look_down")
+        else if (cmd=="look_down")
         {
             look_down();
             // we assume the robot is not moving now
             reply.addString("ack");
             reply.addString("Yep! I'm looking down now!");
         }
-
-        // LEFT ACTIONS
-        else if (cmd=="place_on_the_left")
+/*
+        // ACTIONS
+        else if (cmd=="pass")
         {
-            bool ok=placeLeft();
-            // we assume the robot is not moving now
-            if (ok)
-            {
-                reply.addString("ack");
-                reply.addString("Yeah! I did it! Maybe...");
-            }
-            else
-            {
-                reply.addString("nack");
-                reply.addString("There was a problem!");
-            }
-        }
-        else if (cmd=="pass_to_the_left")
-        {
-            bool ok=passLeft();
-            // we assume the robot is not moving now
-            if (ok)
-            {
-                // we assume the robot is not moving now
-                reply.addString("ack");
-                reply.addString("Yep! I'm passing to the left!");
-            }
-            else
-            {
-                reply.addString("nack");
-                reply.addString("There was a problem!");
-            }
-        }
-
-        // CENTER ACTIONS
-        else if (cmd=="pass_to_the_center")
-        {
-            bool ok=passCenter();
+            bool ok=pass();
             // we assume the robot is not moving now
             if (ok)
             {
@@ -265,42 +228,9 @@ using namespace yarp::math;
                 reply.addString("There was a problem!");
             }
         }
-        else if (cmd=="place_on_the_center")
+        else if (cmd=="place")
         {
-            bool ok=placeCenter();
-            // we assume the robot is not moving now
-            if (ok)
-            {
-                reply.addString("ack");
-                reply.addString("Yeah! I did it! Maybe...");
-            }
-            else
-            {
-                reply.addString("nack");
-                reply.addString("There was a problem!");
-            }
-        }
-
-        // RIGHT ACTIONS
-        else if (cmd=="pass_to_the_right")
-        {
-            bool ok=passRight();
-            // we assume the robot is not moving now
-            if (ok)
-            {
-                // we assume the robot is not moving now
-                reply.addString("ack");
-                reply.addString("Yep! I'm passing to the right!");
-            }
-            else
-            {
-                reply.addString("nack");
-                reply.addString("There was a problem!");
-            }
-        }
-        else if (cmd=="place_on_the_right")
-        {
-            bool ok=placeRight();
+            bool ok=place();
             // we assume the robot is not moving now
             if (ok)
             {
