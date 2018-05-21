@@ -24,7 +24,7 @@
 #include <fstream>
 
 #include "helpers.h"
-#include "CvHMM.h"
+#include "extras/CvHMM.h"
 
 #define NBSAMPLES 1
 

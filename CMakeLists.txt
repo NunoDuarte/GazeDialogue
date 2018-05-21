@@ -33,9 +33,10 @@ list( APPEND ThirdParty_LIBS ${OpenCV_LIBS} )
 endif( OpenCV_FOUND )
 
 # follower
-add_executable(${PROJECT_NAME}-main-follower ${CMAKE_SOURCE_DIR}/include/helpers.h 
-		               ${CMAKE_SOURCE_DIR}/src/icub_follower.cpp
-			       ${CMAKE_SOURCE_DIR}/src/helpers.cpp  
+add_executable(${PROJECT_NAME}-main-follower 
+		               	${CMAKE_SOURCE_DIR}/src/icub_follower.cpp
+				${CMAKE_SOURCE_DIR}/include/helpers.h 
+			       	${CMAKE_SOURCE_DIR}/src/extras/helpers.cpp  
 				)
 
 target_link_libraries(${PROJECT_NAME}-main-follower ${YARP_LIBRARIES})
@@ -49,9 +50,9 @@ add_executable(${PROJECT_NAME}-main-leader
 			       	${CMAKE_SOURCE_DIR}/include/init.h
 				${CMAKE_SOURCE_DIR}/include/configure.h
 			    	${CMAKE_SOURCE_DIR}/include/compute.h
-			       	${CMAKE_SOURCE_DIR}/src/helpers.cpp
-			       	${CMAKE_SOURCE_DIR}/src/configure.cpp
-			       	${CMAKE_SOURCE_DIR}/src/compute.cpp
+			       	${CMAKE_SOURCE_DIR}/src/extras/helpers.cpp
+			       	${CMAKE_SOURCE_DIR}/src/extras/configure.cpp
+			       	${CMAKE_SOURCE_DIR}/src/extras/compute.cpp
 				)
 
 target_link_libraries(${PROJECT_NAME}-main-leader ${YARP_LIBRARIES})
@@ -59,7 +60,7 @@ target_link_libraries(${PROJECT_NAME}-main-leader ${OpenCV_LIBS})
 install(TARGETS ${PROJECT_NAME}-main-leader DESTINATION bin)
 
 # detector
-add_executable(${PROJECT_NAME}-detector ${CMAKE_SOURCE_DIR}/src/detector.cpp)
+add_executable(${PROJECT_NAME}-detector ${CMAKE_SOURCE_DIR}/src/extras/detector.cpp)
 target_link_libraries(${PROJECT_NAME}-detector ${YARP_LIBRARIES})
 install(TARGETS ${PROJECT_NAME}-detector DESTINATION bin)
 
