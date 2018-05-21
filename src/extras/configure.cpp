@@ -16,160 +16,14 @@
 using namespace yarp::math;
 
 /***************************************************/
-    bool CtrlModule::configure(ResourceFinder &rf)
-    {
-        string robot=rf.check("robot",Value("icubSim")).asString();
 
-        /*if (!openCartesian(robot,"right_arm"))
-            return false;
-*/
-        if (!openCartesian(robot,"left_arm"))
-        {
-            drvArmR.close();
-            return false;
-        }
-
-        Property optGaze;
-        optGaze.put("device","gazecontrollerclient");
-        optGaze.put("remote","/iKinGazeCtrl");
-        optGaze.put("local","/gaze_client");
-
-        if (!drvGaze.open(optGaze)){
-            yError() << "Unable to open the Gaze controller";
-            return false;
-        }
-
-        // open a client interface to connect to the joint controller
-        Property optJoint;
-        optJoint.put("device","remote_controlboard");
-        optJoint.put("remote","/"+ robot +"/left_arm");
-        optJoint.put("local","/position/left_arm");
-
-        if (!drvHandL.open(optJoint))
-        {
-            yError()<<"Unable to connect to /"+ robot +"left_arm";
-            return false;
-        }
-
-        // open a client interface to connect to the joint controller
-        /*Property optJoint1;
-        optJoint1.put("device","remote_controlboard");
-        optJoint1.put("remote","/"+ robot +"/right_arm");
-        optJoint1.put("local","/position/right_arm");
-
-        if (!drvHandR.open(optJoint1))
-        {
-            yError()<<"Unable to connect to /"+ robot +"right_arm";
-            return false;
-        } */    
-
-        // save startup contexts
-        /*drvArmR.view(iarm);
-        drvArmR.view(ipos); //added this
-
-        iarm->storeContext(&startup_ctxt_arm_right);
-*/
-        drvArmL.view(iarm);
-        drvArmL.view(ipos); //added this
-
-        iarm->storeContext(&startup_ctxt_arm_left);
-        iarm->setPosePriority("position");
-
-        drvGaze.view(igaze);
-        igaze->storeContext(&startup_ctxt_gaze);
-
-        rpcPort.open("/service");
-        attach(rpcPort);
-
-        yInfo()<<"Begin moving arms to first initial position";
-        // GET ARMS IN THE CORRECT POSITION
-        Vector x(3);
-
-        //x[1] =  0.5; // to the right
-        //initArm(x, robot);
-        x[1] =  -0.5; // to the left
-        initArm(x, robot);
-
-        yInfo()<<"Finished moving the arms to initial position.";
-
-        // Only when the arms are in place do I generate the ball
-        Network yarp;
-        CtrlModule mod;
-
-        RpcClient objectLocation;
-        objectLocation.open("/objectBall");
-        
-        printf("Trying to connect to %s\n", "/icubSim/world");
-        yarp.connect("/objectBall","/icubSim/world");
-        Bottle reply;
-
-        Bottle cmd2;
-        // CREATE the sphere affected by gravity we will use
-        cmd2.addString("world");
-        cmd2.addString("mk"); 
-        cmd2.addString("sph");
-        cmd2.addDouble(0.04); // radius 4 cm (made the ball smaller)
-        // ball's position
-        cmd2.addDouble(-0.05);
-        cmd2.addDouble(0.69);
-        cmd2.addDouble(0.2);
-        // ball's colour
-        cmd2.addDouble(0);
-        cmd2.addDouble(0);
-        cmd2.addDouble(1);
-
-        printf("Sending message... %s\n", cmd2.toString().c_str());
-        objectLocation.write(cmd2,reply);
-        printf("Got response: %s\n", reply.toString().c_str());
-
-        objectLocation.close();
-
-        return true;
-    }
-
-    /***************************************************/
-    bool CtrlModule::openCartesian(const string &robot, const string &arm)
-    {
-        PolyDriver &drvArm=(arm=="right_arm"?drvArmR:drvArmL);
-
-        Property optArm;
-        optArm.put("device","cartesiancontrollerclient");
-        optArm.put("remote","/"+robot+"/cartesianController/"+arm);
-        optArm.put("local","/cartesian_client/"+arm);
-
-        // let's give the controller some time to warm up
-        bool ok=false;
-        double t0=Time::now();
-        while (Time::now()-t0<10.0)
-        {
-            // this might fail if controller
-            // is not connected to solver yet
-            if (drvArm.open(optArm))
-            {
-                //yInfo()<<"Openned";
-                ok=true;
-                break;
-            }
-
-            Time::delay(1.0);
-        }
-
-        if (!ok)
-        {
-            yError()<<"Unable to open the Cartesian Controller for "<<arm;
-            return false;
-        }
-        return true;
-    }
-
-    /***************************************************/
-    bool CtrlModule::interruptModule()
+    bool interruptModule()
     {
         return true;
     }
 
     /***************************************************/
-    bool CtrlModule::close()
+    bool close()
     {
         //drvArmR.view(iarm);
         //iarm->restoreContext(startup_ctxt_arm_right);
@@ -190,7 +44,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    bool CtrlModule::respond(const Bottle &command, Bottle &reply)
+    bool respond(const Bottle &command, Bottle &reply)
     {
         string cmd=command.get(0).asString();
         if (cmd=="help")
