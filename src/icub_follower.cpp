@@ -1002,7 +1002,7 @@ public:
             // get current velocities
             iarm->getTaskVelocities(vcur, wcur);
 
-            od = computeHandOrientationPassing("left"); //get default orientation
+            od = computeHandOrientationPassing(_hand); //get default orientation
             reachArmGiving(p, od, xf, vcur);
 
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
@@ -1026,6 +1026,10 @@ public:
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
 
+            count++; // count the number of times is giving
+            // alternative is getting the percentage of giving and when it is higher than
+            // 70% you can close the hand
+
         } else {
             yInfo() << "Wrong action";
             //cout << "M = "<< endl << " "  << seq_mat << endl << endl;
@@ -1043,9 +1047,6 @@ public:
         e[2] = x_pos[2] - desired_p[2]; 
         yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
-        /*if (count == 3500 ){
-            release("left");
-        }*/
         mag_e = magnitude(e);
         unit_e[0] = e[0]/mag_e;  // this gives us the orientation of the 
         unit_e[1] = e[1]/mag_e;  // equilibrium point
@@ -1087,9 +1088,15 @@ public:
             //iarm->setTaskVelocities(vcur, wcur);
         }
         iarm->goToPose(x_pos,orientation);
-        // let's put the hand in the pre-grasp configuration
-        //moveFingers(_hand,abduction,0.8);
-        moveFingers("left", fingers,0.0);
+
+        if (count < 20 ){
+            // let's put the hand in the pre-grasp configuration
+            moveFingers(_hand, fingers, 0.0);
+        } else {
+            //closing the hand
+            moveFingers(_hand, thumb,    1.0);
+            moveFingers(_hand, fingers,  0.5);
+        }
 
         yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
         yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    

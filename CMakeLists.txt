@@ -32,19 +32,30 @@ list( APPEND ThirdParty_LIBS ${OpenCV_LIBS} )
     include_directories( ${OpenCV_INCLUDE_DIRS} )
 endif( OpenCV_FOUND )
 
-add_executable(${PROJECT_NAME}-main ${CMAKE_SOURCE_DIR}/include/helpers.h 
-		               ${CMAKE_SOURCE_DIR}/src/icub_pupil.cpp
+# follower
+add_executable(${PROJECT_NAME}-main-follower ${CMAKE_SOURCE_DIR}/include/helpers.h 
+		               ${CMAKE_SOURCE_DIR}/src/icub_follower.cpp
 			       ${CMAKE_SOURCE_DIR}/src/helpers.cpp  
 				)
+
+target_link_libraries(${PROJECT_NAME}-main-follower ${YARP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-main-follower ${OpenCV_LIBS})
+install(TARGETS ${PROJECT_NAME}-main-follower DESTINATION bin)
+
+# leader
+add_executable(${PROJECT_NAME}-main-leader ${CMAKE_SOURCE_DIR}/include/helpers.h 
+		               ${CMAKE_SOURCE_DIR}/src/icub_leader.cpp
+			       ${CMAKE_SOURCE_DIR}/src/helpers.cpp  
+				)
+
+target_link_libraries(${PROJECT_NAME}-main-leader ${YARP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-main-leader ${OpenCV_LIBS})
+install(TARGETS ${PROJECT_NAME}-main-leader DESTINATION bin)
 
 # detector
 add_executable(${PROJECT_NAME}-detector ${CMAKE_SOURCE_DIR}/src/detector.cpp)
 target_link_libraries(${PROJECT_NAME}-detector ${YARP_LIBRARIES})
 install(TARGETS ${PROJECT_NAME}-detector DESTINATION bin)
-
-target_link_libraries(${PROJECT_NAME}-main ${YARP_LIBRARIES})
-target_link_libraries(${PROJECT_NAME}-main ${OpenCV_LIBS})
-install(TARGETS ${PROJECT_NAME}-main DESTINATION bin)
 
 # generate ad-hoc project to perform "make uninstall"
 icubcontrib_add_uninstall_target()
