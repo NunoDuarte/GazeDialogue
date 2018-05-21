@@ -26,7 +26,6 @@
 #include "init.h"
 //#include "placing.h"
 //#include "passing.h"
-#include "configure.h"
 #include "compute.h"
 
 #define NBSAMPLES 1
@@ -38,48 +37,8 @@ using namespace yarp::math;
 
 using namespace std;
 
-class ControlThread: public RateThread
-{
-    PolyDriver drvArmR, drvArmL, drvGaze, drvHandR, drvHandL;
 
-    ICartesianControl *iarm;
-    IGazeControl      *igaze;
-    ObjectRetriever object;
-    ActionRetriever act;
-    Port inPort;
-
-    BufferedPort<Bottle> port;
-
-    int startup_ctxt_gaze;
-    string _hand;
-
-    // we set up here the lists of joints we need to actuate
-    VectorOf<int> abduction,thumb,fingers;
-
-    // position and orientation of the robot's arm
-    Vector p, o;
-    // current linear and angular velocities
-    Vector vcur, wcur;
-    // 3d location in the 3d world reference frame
-    Vector x, xf, xi;
-
-    // Declare the probabilities of being giving or placing action
-    cv::Mat act_probability;
-
-    // calculte distances for giving action
-    float Vmax;
-    float epsilon;
-    int count;
-    Vector e, ed;
-    Vector unit_e;
-    double v_mag;
-    double acc_mag;
-    double mag_e; 
-
-public:
-    ControlThread(int period):RateThread(period){}
-
-    bool threadInit()
+    bool ControlThread::threadInit()
     {
         //initialize here variables
         printf("ControlThread:starting\n");
@@ -271,7 +230,7 @@ public:
         return true;
     }
 
-    bool openCartesian(const string &robot, const string &arm)
+    bool ControlThread::openCartesian(const string &robot, const string &arm)
     {
         PolyDriver &drvArm=(arm=="right_arm"?drvArmR:drvArmL);
 
@@ -304,7 +263,7 @@ public:
     }
 
     /***************************************************/
-    Vector computeHandOrientationPassing(const string &hand)
+    Vector ControlThread::computeHandOrientationPassing(const string &hand)
     {
         // we have to provide a 4x1 vector representing the
         // final orientation for the specified hand
@@ -331,13 +290,13 @@ public:
         return dcm2axis(Rot);
     }
 
-    float magnitude(Vector x)     //  <! Vector magnitude
+    float ControlThread::magnitude(Vector x)     //  <! Vector magnitude
     {
         return sqrt((x[0]*x[0])+(x[1]*x[1])+(x[2]*x[2]));
     }
 
     /***************************************************/
-    void fixate(int maxState)
+    void ControlThread::fixate(int maxState)
     {
 
         switch(maxState) {
@@ -562,7 +521,7 @@ public:
         yInfo() << "Which state was chosen?";
     }
 
-    void threadRelease()
+    void ControlThread::threadRelease()
     {
         printf("ControlThread:stopping the robot\n");
 
@@ -577,7 +536,7 @@ public:
     }
 
     /***************************************************/
-    void startingArm(const Vector &x)
+    void ControlThread::startingArm(const Vector &x)
     {
         string hand=(x[1]>=0.0?"right":"left");
 
@@ -627,7 +586,7 @@ public:
     }
 
     /***************************************************/
-    void initArm(const Vector &x)
+    void ControlThread::initArm(const Vector &x)
     {
         string hand=(x[1]>=0.0?"right":"left");
 
@@ -693,7 +652,7 @@ public:
     }
 
     /***************************************************/
-    void moveFingers(const string &hand, const VectorOf<int> &joints,
+    void ControlThread::moveFingers(const string &hand, const VectorOf<int> &joints,
                     const double fingers_closure)
     {
         // select the correct interface
@@ -749,7 +708,7 @@ public:
         }
     }
 
-    void reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
+    void ControlThread::reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
     {
         e[0] = x_pos[0] - desired_p[0];
         e[1] = x_pos[1] - desired_p[1];
@@ -813,7 +772,7 @@ public:
     }
 
     /***************************************************/
-    void release(string hand)
+    void ControlThread::release(string hand)
     {
         IControlLimits2   *ilim;
         IPositionControl2 *ipos;
@@ -875,7 +834,8 @@ public:
         // wait until all fingers have attained their set-points
     }
 
-    std::vector< std::vector<float> > loadDataFile(std::string file, bool convert = false)
+    std::vector< std::vector<float> > ControlThread::loadDataFile(std::string file, 
+                                                                    bool convert = false)
     {
         // Load the dataset from a file
         float valTmp;
@@ -955,11 +915,10 @@ public:
         return result;
     }    
 
-    void run()
+    void ControlThread::run()
     {
       	
     }
-};
 
 int main(int argc, char *argv[]) 
 {
@@ -1000,10 +959,6 @@ int main(int argc, char *argv[])
     printf("Got response: %s\n", reply.toString().c_str());
 
     objectLocation.close();
-
-    // configure the module
-    ResourceFinder rf;
-    rf.configure(argc,argv);
 
     ControlThread myThread(5); //period is 10ms
 

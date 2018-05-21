@@ -17,13 +17,13 @@ using namespace yarp::math;
 
 /***************************************************/
 
-    bool interruptModule()
+    bool ControlThread::interruptModule()
     {
         return true;
     }
 
     /***************************************************/
-    bool close()
+    bool ControlThread::close()
     {
         //drvArmR.view(iarm);
         //iarm->restoreContext(startup_ctxt_arm_right);
@@ -44,7 +44,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    bool respond(const Bottle &command, Bottle &reply)
+    bool ControlThread::respond(const Bottle &command, Bottle &reply)
     {
         string cmd=command.get(0).asString();
         if (cmd=="help")
@@ -125,18 +125,18 @@ using namespace yarp::math;
         }
         else
             // the father class already handles the "quit" command
-            return RFModule::respond(command,reply);
+            return respond(command,reply);
         return true;
     }
 
     /***************************************************/
-    double CtrlModule::getPeriod()
+    double ControlThread::getPeriod()
     {
         return 1.0;
     }
 
     /***************************************************/
-    bool CtrlModule::updateModule()
+    bool ControlThread::updateModule()
     {
         return true;
     }

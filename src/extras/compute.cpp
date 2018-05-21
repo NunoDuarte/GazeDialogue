@@ -19,7 +19,7 @@ using namespace yarp::math;
 
 
     /***************************************************/
-    void CtrlModule::fixate(const Vector &x)
+    void ControlThread::fixate(const Vector &x)
     {
         igaze->setSaccadesMode(true);  // this gives problem with waitMotionDone in simulation
         igaze->lookAtFixationPointSync(x);
@@ -33,7 +33,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    Vector CtrlModule::computeHandOrientation(const string &hand)
+    Vector ControlThread::computeHandOrientation(const string &hand)
     {
         // we have to provide a 4x1 vector representing the
         // final orientation for the specified hand, with
@@ -69,63 +69,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    Vector CtrlModule::computeHandOrientationRotate(bool giveObject)
-    {
-        // we have to provide a 4x1 vector representing the
-        // final orientation for the specified hand, with
-        // the palm pointing downward
-
-        Matrix Rot(3,3);
-        
-        if (_hand == "right"){
-            if (giveObject) {
-                Rot(0,0)= 0.0; Rot(0,1)= 0.0; Rot(0,2)=  1.0;
-                Rot(1,0)=-1.0; Rot(1,1)= 0.0; Rot(1,2)=  0.0;
-                Rot(2,0)= 0.0; Rot(2,1)= -1.0; Rot(2,2)= 0.0;
-            }
-            else{
-                Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-                Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
-                Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
-            }
-
-        }else{
-            yError() << "Wrong hand!";
-        }
-
-        return dcm2axis(Rot);
-    }
-
-    /***************************************************/
-    Vector CtrlModule::computeHandOrientationPassing(const string &hand)
-    {
-        // we have to provide a 4x1 vector representing the
-        // final orientation for the specified hand
-
-        Matrix Rot(3,3);
-
-        if (hand == "right"){
-            Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
-            Rot(2,0)= 0.0; Rot(2,1)= -1.0; Rot(2,2)= 0.0;
-
-        }
-        if (hand == "left"){
-            Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
-            Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
-        }
-
-        // add up a further slight rotation (30 deg) around -y:
-        // this will prevent the thumb from hitting the table
-        // create a rotation matrix
-        
-
-        return dcm2axis(Rot);
-    }
-
-    /***************************************************/
-    void CtrlModule::approachTargetWithHand(const string &hand,
+    void ControlThread::approachTargetWithHand(const string &hand,
                                 const Vector &x,
                                 const Vector &o, bool wait=true)
     {
@@ -197,76 +141,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    void CtrlModule::initArm(const Vector &x, string robot)
-    {
-        string hand=(x[1]>=0.0?"right":"left");
-
-        // select the correct interface
-        // this should be in the beginning, where you initialize the necessary stuff
-        IControlLimits2   *ilim;
-        IPositionControl2 *ipos;
-        IEncoders         *ienc;
-        IControlMode2     *imod;
-
-        if (hand=="right")
-        {
-            drvHandR.view(ilim);
-            drvHandR.view(ipos);
-            drvHandR.view(imod);
-        }
-        else
-        {
-            drvHandL.view(ilim);
-            drvHandL.view(ipos);
-            drvHandL.view(imod);
-        }
-
-        //double target[16] = {0, 90, 0, 20, 10, 0, 0, 50, 10, 0, 0, 0, 0, 0, 0, 0};   //icubSim
-        double target[16] = {0, 90, 0, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};   // icub
-
-        // we set up here the lists of joints we need to actuate
-        // shoulders (3) + elbow + wrist (3) + hand openning + thumb (3)
-        VectorOf<int> joints;
-        for (int i=0; i<16; i++){
-            joints.push_back(i);
-        }
-
-        // This option you will move each joint individually
-        for (size_t i=0; i<joints.size(); i++)
-        {
-            int j=joints[i];
-            // retrieve joint bounds
-            double min_j,max_j,range;
-            ilim->getLimits(j,&min_j,&max_j);
-            // set up the speed in [deg/s]
-            ipos->setRefSpeed(j,15.0);
-            // set up max acceleration in [deg/s^2]
-            ipos->setRefAcceleration(j,5.0);
-            // yield the actual movement
-            yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
-            imod->setControlMode(j,VOCAB_CM_POSITION);
-            ipos->positionMove(j,target[i]);
-        }
-        // wait (with timeout) until the movement is completed
-        bool done=false;
-        double t0=Time::now();
-        while (!done && (Time::now()-t0 < 1.0))
-        {
-            yInfo()<<"Waiting...";
-            Time::delay(0.1);   // release the quantum to avoid starving resources
-            ipos->checkMotionDone(&done);
-        }
-
-        if (done)
-            yInfo()<<"Movement completed";
-        else
-            yWarning()<<"Timeout expired";
-
-        // wait until all fingers have attained their set-points
-    }
-
-    /***************************************************/
-    void CtrlModule::changeDOFs()
+    void ControlThread::changeDOFs()
     {
         // select the correct interface
         if (_hand=="right")
@@ -293,7 +168,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    void CtrlModule::liftObject(const string &hand)
+    void ControlThread::liftObject(const string &hand)
     {
         // select the correct interface
         if (hand=="right")
@@ -321,81 +196,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    void CtrlModule::moveFingers(const string &hand,
-                     const VectorOf<int> &joints,
-                     const double fingers_closure)
-    {
-        // select the correct interface
-
-        // this should be in the beginning, where you initialize the necessary stuff
-        IControlLimits2   *ilim;
-        IPositionControl2 *ipos;
-        IEncoders         *ienc;
-        IControlMode2     *imod;
-
-        if (hand=="right")
-        {
-            drvHandR.view(ilim);
-            drvHandR.view(ipos);
-            drvHandR.view(imod);
-        }
-        else
-        {
-            drvHandL.view(ilim);
-            drvHandL.view(ipos);
-            drvHandL.view(imod);
-        }
-
-        // enforce [0,1] interval
-        double fingers_closure_sat=std::min(1.0,std::max(0.0,fingers_closure));
-
-        // move each finger first:
-        // if min_j and max_j are the minimum and maximum bounds of joint j,
-        // then we should move to min_j+fingers_closure_sat*(max_j-min_j)
-
-        // This option you will move each finger individually
-        for (size_t i=0; i<joints.size(); i++)
-        {
-            int j=joints[i];
-            yInfo()<<"j" << j;
-            // retrieve joint bounds
-            double min_j,max_j,range;
-            ilim->getLimits(j,&min_j,&max_j);
-            range=max_j-min_j;
-            // select target
-            double target;
-            target=min_j+fingers_closure_sat*(range);
-            // set control mode
-            imod->setControlMode(j,VOCAB_CM_POSITION);
-            // set up the speed in [deg/s]
-            ipos->setRefSpeed(j,30.0);
-            // set up max acceleration in [deg/s^2]
-            ipos->setRefAcceleration(j,100.0);
-
-            // yield the actual movement
-            yInfo()<<"Yielding new target: "<<target<<" [deg]";
-            ipos->positionMove(j,target);
-        }
-        // wait (with timeout) until the movement is completed
-        bool done=false;
-        double t0=Time::now();
-        while (!done && (Time::now()-t0 < 5.0))
-        {
-            yInfo()<<"Waiting...";
-            Time::delay(0.1);   // release the quantum to avoid starving resources
-            ipos->checkMotionDone(&done);
-        }
-
-        if (done)
-            yInfo()<<"Movement completed";
-        else
-            yWarning()<<"Timeout expired";
-
-        // wait until all fingers have attained their set-points
-    }
-
-    /***************************************************/
-    void CtrlModule::look_down()
+    void ControlThread::look_down()
     {
         // we ask the controller to keep the vergence
         // from now on fixed at 5.0 deg, which is the
@@ -417,7 +218,7 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    bool CtrlModule::grasp_it(const double fingers_closure)
+    bool ControlThread::grasp_it(const double fingers_closure)
     {
         Vector x;
         if (object.getLocation(x))

@@ -7,6 +7,7 @@
 #include <yarp/dev/all.h>
 #include <yarp/os/all.h>
 #include <yarp/sig/Vector.h>
+#include <opencv2/core/mat.hpp>               // add Mat variables from OpenCV
 
 #include "helpers.h"
 
@@ -20,35 +21,63 @@ using namespace yarp::sig;
 
 /***************************************************/
 
-class CtrlModule : public RFModule
+class ControlThread: public RateThread
 {
     protected:
-            PolyDriver drvArmR, drvArmL, drvGaze;
-            PolyDriver drvHandR, drvHandL;
-            PolyDriver drvTorso;
+
+            PolyDriver drvArmR, drvArmL, drvGaze, drvHandR, drvHandL;
+
             ICartesianControl *iarm;
+            IGazeControl      *igaze;
+
+            ObjectRetriever object;
+            ActionRetriever act;
+            Port inPort;
+
+            BufferedPort<Bottle> port;
+
+            int startup_ctxt_gaze;
+            string _hand;
+
+            // we set up here the lists of joints we need to actuate
+            VectorOf<int> abduction,thumb,fingers;
+
+            // position and orientation of the robot's arm
+            Vector p, o;
+            // current linear and angular velocities
+            Vector vcur, wcur;
+            // 3d location in the 3d world reference frame
+            Vector x, xf, xi;
+
+            // Declare the probabilities of being giving or placing action
+            cv::Mat act_probability;
+
+            // calculte distances for giving action
+            float Vmax;
+            float epsilon;
+            int count;
+            Vector e, ed;
+            Vector unit_e;
+            double v_mag;
+            double acc_mag;
+            double mag_e; 
+
+            PolyDriver drvTorso;
             IPositionControl2 *ipos;
             ICartesianControl *itorso;
-            IGazeControl      *igaze;
 
             int startup_ctxt_arm_right;
             int startup_ctxt_arm_left;
-            int startup_ctxt_gaze;
 
             RpcServer rpcPort;
-            ObjectRetriever object;
 
-            string _hand;
 
             void fixate(const Vector &x);
             void look_down();
             bool grasp_it(const double fingers_closure);
 
             Vector computeHandOrientation(const string &hand);
-            Vector computeHandOrientationPassing(const string &hand);
-            Vector computeHandOrientationRotate(bool giveObject);
 
-            void initArm(const Vector &x, string robot);
             void changeDOFs();
 
             void approachTargetWithHand(const string &hand,
@@ -57,13 +86,8 @@ class CtrlModule : public RFModule
 
 
             void liftObject(const string &hand);
-            void moveFingers(const string &hand,
-                     const VectorOf<int> &joints,
-                     const double fingers_closure);
 
             void home(const string &hand);
-
-            bool openCartesian(const string &robot, const string &arm);
 
             //bool placeLeft();
             //bool placeCenter();
@@ -78,12 +102,31 @@ class CtrlModule : public RFModule
             //bool goBackPass(Vector approach);
 
     public:
+
+            ControlThread(int period):RateThread(period){}
             bool configure(ResourceFinder &rf);
             bool interruptModule();
             bool close();
             bool respond(const Bottle &command, Bottle &reply);
             double getPeriod();
             bool updateModule();
+
+            bool threadInit();
+            bool openCartesian(const string &robot, const string &arm);
+            Vector computeHandOrientationPassing(const string &hand);
+            float magnitude(Vector x);
+            void fixate(int maxState);
+            void threadRelease();
+            void startingArm(const Vector &x);
+            void initArm(const Vector &x);
+            void moveFingers(const string &hand, const VectorOf<int> &joints,
+                    const double fingers_closure);
+            void reachArmGiving(Vector desired_p, Vector orientation, 
+                    Vector x_pos, Vector velocity);
+            void release(string hand);
+            std::vector< std::vector<float> > loadDataFile(std::string file, 
+                    bool convert);      
+            void run();
 
     private:
    
