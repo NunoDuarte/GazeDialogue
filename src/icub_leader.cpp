@@ -532,6 +532,68 @@ using namespace std;
     }
 
     /***************************************************/
+    bool ControlThread::place()
+    {
+        Vector x, o;
+        iarm->getPose(x,o); //get current position of hand
+        yInfo()<<"fixating at ("<<x.toString(3,3)<<")";
+
+        // select the correct interface
+        if (_hand=="right")
+            drvArmR.view(iarm);
+        else
+            drvArmL.view(iarm);
+
+	    // half point
+            Vector move = x;
+	    if (_hand == "right"){
+		    move[0] = -0.25;  //move forward 10 cm
+		    move[1] =  0.05;  //move left 20 cm
+		    move[2] =   0.1;  //move down 10 cm
+	    }else{
+		    move[0] = -0.25;  //move forward 10 cm
+		    move[1] = -0.05;  //move left 20 cm
+		    move[2] =   0.1;  //move down 10 cm
+	    }
+        
+        iarm->goToPose(move, o);
+
+	    // final end point
+	    if (_hand == "right"){
+		    move[0] = -0.30;  //move backwards 10 cm
+		    move[1] =  0.05;  //move right 20 cm
+		    move[2] =  0.02;  //move down 10 cm
+	    }else{
+		    move[0] = -0.35;  //move forward 10 cm
+		    move[1] = -0.05;  //move left 20 cm
+		    move[2] =  0.02;  //move down 10 cm
+	    }
+
+        // fixate the new end goal
+        igaze->lookAtFixationPoint(move);
+        yInfo()<<"fixating at ("<<move.toString(3,3)<<")";
+
+        o = computeHandOrientationPassing(_hand); //get default orientation
+        iarm->goToPose(move, o);
+
+        Time::delay(1.0);
+
+	    igaze->lookAtFixationPoint(move);
+
+        // we set up here the lists of joints we need to actuate
+        VectorOf<int> fingers;
+
+        for (int i=9; i<16; i++)
+            fingers.push_back(i);
+
+        // release
+        moveFingers(_hand,fingers,0.0);
+        yInfo()<<"released";
+
+        return true;        
+    }
+
+    /***************************************************/
     void ControlThread::arm(int maxState)
     {
 
@@ -580,7 +642,7 @@ using namespace std;
 
                         // get current location
                         iarm->getPose(p,o);
-                        iarm->setPosePriority("orientation");
+
                         Vector od = o;
                         // get current velocities
                         iarm->getTaskVelocities(vcur, wcur);
@@ -591,6 +653,12 @@ using namespace std;
                      }
             case 6 : {
                         cout << "My Tower" << endl; 
+
+                        // get current pose of hand 
+                        iarm->getPose(x,o);
+                        iarm->setPosePriority("orientation");
+
+                        place();
 
                         break;
                      }

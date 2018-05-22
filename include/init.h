@@ -95,7 +95,7 @@ class ControlThread: public RateThread
 
             void home(const string &hand);
 
-            //bool placeLeft();
+            bool place();
             //bool placeCenter();
             //bool placeRight();
             //bool release();
