@@ -112,6 +112,7 @@ class ControlThread: public RateThread
             Vector computeHandOrientationPassing(const string &hand);
             float magnitude(Vector x);
             void fixate(int maxState);
+            void arm(int maxState);
             void threadRelease();
             void startingArm(const Vector &x);
             void initArm(const Vector &x);

@@ -8,8 +8,6 @@
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
 #include <yarp/dev/GazeControl.h>             // gaze control
-#include <yarp/os/RpcServer.h>
-#include <yarp/os/RFModule.h>
 #include <yarp/dev/PolyDriver.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/math/Math.h>
@@ -248,9 +246,6 @@ using namespace std;
             reply.addString("nack");
             reply.addString("I don't see any object!");
         }   
-
-        // get current pose of hand 
-        iarm->getPose(x,o);
 
         // Select Action
         int num = 2; 
@@ -530,6 +525,73 @@ using namespace std;
                                 yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
                             }
                         }
+                        break;
+                     }
+        }
+        yInfo() << "Which state was chosen?";
+    }
+
+    /***************************************************/
+    void ControlThread::arm(int maxState)
+    {
+
+        switch(maxState) {
+            case 1 : {
+                        cout << "Brick" << endl; 
+
+                        break;
+                     }
+            case 2 : {
+                        cout << "Human's face" << endl; 
+                        // get current location
+                        iarm->getPose(p,o);
+                        iarm->setPosePriority("orientation");
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+
+                        break;
+                     }
+            case 3 : {
+                        cout << "Human's Hand" << endl; 
+
+                        // get current location
+                        iarm->getPose(p,o);
+                        iarm->setPosePriority("orientation");
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+
+                        break;
+                     }
+            case 4 : {
+                        cout << "Own Hand" << endl; 
+                        break;
+
+                     }
+            case 5 : {
+                        cout << "Teammates' Tower" << endl; 
+
+                        // get current location
+                        iarm->getPose(p,o);
+                        iarm->setPosePriority("orientation");
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+                        break;
+                     }
+            case 6 : {
+                        cout << "My Tower" << endl; 
+
                         break;
                      }
         }
@@ -936,39 +998,50 @@ using namespace std;
       	
         count++;
 
-        Vector look = p;
+        int look; // I need to change this to the correct type of variable
+        cv::Mat state;
+        /*int nRows = state.rows;
+        int nCols = state.cols;
+        cout << "MaxStates = "<< endl << " "  << state << endl << endl;
+
+        // we only want the last column
+        int i,j = nCols - 1;
+        double *p;
+        for( i = 0; i < nRows; ++i)
+        {   
+            // get the max probability and the state index
+            p = state.ptr<double>(i);
+            yInfo() << p[j];
+            if (max < p[j]) {
+                max = p[j];
+                id = i;
+            }
+        }*/
 
         // begin
         if (count < 1000){
-            look[0] = Eyes[0][1];
-            look[1] = Eyes[0][2];
-            look[2] = Eyes[0][3];
+            look = Eyes[0][1];
 
             fixate(look);
-            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
+            yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
         }else if (count > 1015 and count < 2000){
 
-            look[0] = Eyes[count-1000][1];
-            look[1] = Eyes[count-1000][2];
-            look[2] = Eyes[count-1000][3];
+            look = Eyes[count-1000][1];
 
             fixate(look);
-            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
-
-
+            yInfo()<<"fixating at ("<< look <<")";
+            arm(look);
 
 
         // finish
         }else if (count > 2000){
 
-            look[0] = Eyes[999][1];
-            look[1] = Eyes[999][2];
-            look[2] = Eyes[999][3];
+            look = Eyes[999][1];
 
             fixate(look);
-            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
+            yInfo()<<"fixating at ("<< look <<")";
         }
 
     }
