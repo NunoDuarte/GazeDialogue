@@ -77,6 +77,16 @@ class ControlThread: public RateThread
 
             RpcServer rpcPort;
 
+    public:
+
+            ControlThread(int period):RateThread(period){}
+            bool threadInit();
+            void run();
+            void threadRelease();
+
+            bool openCartesian(const string &robot, const string &arm);
+
+    private:
 
             void fixatePoint(const Vector &x);
             void look_down();
@@ -85,7 +95,6 @@ class ControlThread: public RateThread
             Vector computeHandOrientation(const string &hand);
 
             void changeDOFs();
-
             void approachTargetWithHand(const string &hand,
                                 const Vector &x,
                                 const Vector &o, bool wait);
@@ -93,51 +102,24 @@ class ControlThread: public RateThread
 
             void liftObject(const string &hand);
 
-            void home(const string &hand);
-
             bool place();
-            //bool placeCenter();
-            //bool placeRight();
-            //bool release();
-            //bool goBack(Vector approach);
 
-            //bool passLeft();
-            //bool passCenter();
-            //bool passRight();
-            //bool releasePass();
-            //bool goBackPass(Vector approach);
-
-            bool threadInit();
-            bool openCartesian(const string &robot, const string &arm);
             Vector computeHandOrientationPassing(const string &hand);
             float magnitude(Vector x);
             void fixate(int maxState);
             void arm(int maxState);
-            void threadRelease();
+            void release(string hand);
+
             void startingArm(const Vector &x);
             void initArm(const Vector &x);
             void moveFingers(const string &hand, const VectorOf<int> &joints,
                     const double fingers_closure);
+
             void reachArmGiving(Vector desired_p, Vector orientation, 
                     Vector x_pos, Vector velocity);
-            void release(string hand);
+
             std::vector< std::vector<float> > loadDataFile(std::string file, 
                     bool convert);      
-            void run();
-
-    public:
-
-            ControlThread(int period):RateThread(period){}
-
-            bool configure(ResourceFinder &rf);
-            bool interruptModule();
-            bool close();
-            bool respond(const Bottle &command, Bottle &reply);
-            double getPeriod();
-            bool updateModule();
-
-
-    private:
    
 };
 
