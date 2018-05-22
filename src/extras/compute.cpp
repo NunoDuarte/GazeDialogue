@@ -17,9 +17,14 @@ using namespace yarp::math;
 
 /***************************************************/
 
+    float ControlThread::magnitude(Vector x)     //  <! Vector magnitude
+    {
+        return sqrt((x[0]*x[0])+(x[1]*x[1])+(x[2]*x[2]));
+    }
+
 
     /***************************************************/
-    void ControlThread::fixate(const Vector &x)
+    void ControlThread::fixatePoint(const Vector &x)
     {
         igaze->setSaccadesMode(true);  // this gives problem with waitMotionDone in simulation
         igaze->lookAtFixationPointSync(x);
@@ -224,28 +229,6 @@ using namespace yarp::math;
     }
 
     /***************************************************/
-    void ControlThread::look_down()
-    {
-        // we ask the controller to keep the vergence
-        // from now on fixed at 5.0 deg, which is the
-        // configuration where we calibrated the stereo-vision;
-        // without that, we cannot retrieve good 3D positions
-        // with the real robot
-        Vector ang(3,0.0);
-        ang[1]=-40.0;
-        //ang[2]=-20;
-        igaze->lookAtAbsAngles(ang);
-
-        double timeout = 10.0; 
-        bool done = false; 
-        done = igaze->waitMotionDone(0.1,timeout); 
-        if(!done){
-            yWarning("Something went wrong with the initial approach, using timeout");
-            igaze->stopControl();
-        }
-    }
-
-    /***************************************************/
     bool ControlThread::grasp_it(const double fingers_closure)
     {
         Vector x;
@@ -261,7 +244,7 @@ using namespace yarp::math;
         else
             return false;
 
-        fixate(x);
+        fixatePoint(x);
         yInfo()<<"fixating at ("<<x.toString(3,3)<<")";
 
         Vector o=computeHandOrientationPassing(_hand);
@@ -279,7 +262,7 @@ using namespace yarp::math;
         moveFingers(_hand,fingers,0.0);
         yInfo()<<"prepared hand";
 
-        fixate(x);
+        fixatePoint(x);
         yInfo()<<"fixating at ("<<x.toString(3,3)<<")";
 
         approachTargetWithHand(_hand,x,o);
@@ -295,4 +278,549 @@ using namespace yarp::math;
         return true;
 
     }
+
+    /***************************************************/
+    void ControlThread::fixate(int maxState)
+    {
+
+        switch(maxState) {
+            case 1 : {
+                        cout << '1' << endl; 
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
+
+                                // track the moving target within the camera image
+                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
+                                yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
+                            }
+                        }
+                        break;
+                     }
+            case 2 : {
+                        cout << '2' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Human's face";
+
+                        Vector look = x;
+                        look[0] = -0.55;
+                        look[1] =  0.00;
+                        look[2] =  0.45;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
+                     }
+            case 3 : {
+                        cout << '3' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Human's hand";
+
+                        Vector look = x;
+                        look[0] = -0.55;
+                        look[1] =  0.00;
+                        look[2] =  0.25;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
+                     }
+            case 4 : {
+                        cout << '4' << endl; 
+
+                        // look up if you haven't already
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating at Own hand";
+
+                        Vector look = x;
+                        look[0] = -0.25;
+                        look[1] = -0.05;
+                        look[2] =  0.10;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
+
+                     }
+            case 5 : {
+                        cout << '5' << endl; 
+
+                        // make iCub look down
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
+
+                                // track the moving target within the camera image
+                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
+                                yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
+                            }
+                        }
+                        break;
+                     }
+            case 6 : {
+                        cout << '6' << endl; 
+
+                        // make iCub look down
+                        Vector ang(3,0.0);
+                        igaze->getAngles(ang);
+                        if (ang[1] > -30){
+                            ang[1]=-40.0;
+                            igaze->lookAtAbsAngles(ang);
+                        }
+
+                        double timeout = 10.0; 
+                        bool done = false; 
+                        done = igaze->waitMotionDone(0.1,timeout); 
+                        if(!done){
+                            yWarning("Something went wrong, using timeout");
+                            igaze->stopControl();
+                        }
+                        // look for red ball
+                        Bottle *pTarget=port.read(false);
+                        if (pTarget!=NULL)
+                        {
+                            if (pTarget->size()>2)
+                            {
+                                Vector px1(2);
+                                std::string str1;
+                                Vector px2(2);
+                                std::string str2;
+                                Vector px3(2);
+                                std::string str3;
+                                px1[0]=pTarget->get(0).asDouble();
+                                px1[1]=pTarget->get(1).asDouble();
+                                str1=pTarget->get(2).asString();
+                                px2[0]=pTarget->get(3).asDouble();
+                                px2[1]=pTarget->get(4).asDouble();
+                                str2=pTarget->get(5).asString();
+                                px3[0]=pTarget->get(6).asDouble();
+                                px3[1]=pTarget->get(7).asDouble();
+                                str3=pTarget->get(8).asString();
+
+                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
+                                yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
+                            }
+                        }
+                        break;
+                     }
+        }
+        yInfo() << "Which state was chosen?";
+    }
+
+    /***************************************************/
+    bool ControlThread::place()
+    {
+        Vector x, o;
+        iarm->getPose(x,o); //get current position of hand
+        yInfo()<<"fixating at ("<<x.toString(3,3)<<")";
+
+        // select the correct interface
+        if (_hand=="right")
+            drvArmR.view(iarm);
+        else
+            drvArmL.view(iarm);
+
+	    // half point
+            Vector move = x;
+	    if (_hand == "right"){
+		    move[0] = -0.25;  //move forward 10 cm
+		    move[1] =  0.05;  //move left 20 cm
+		    move[2] =   0.1;  //move down 10 cm
+	    }else{
+		    move[0] = -0.25;  //move forward 10 cm
+		    move[1] = -0.05;  //move left 20 cm
+		    move[2] =   0.1;  //move down 10 cm
+	    }
+        
+        iarm->goToPose(move, o);
+
+	    // final end point
+	    if (_hand == "right"){
+		    move[0] = -0.30;  //move backwards 10 cm
+		    move[1] =  0.05;  //move right 20 cm
+		    move[2] =  0.02;  //move down 10 cm
+	    }else{
+		    move[0] = -0.35;  //move forward 10 cm
+		    move[1] = -0.05;  //move left 20 cm
+		    move[2] =  0.02;  //move down 10 cm
+	    }
+
+        // fixate the new end goal
+        igaze->lookAtFixationPoint(move);
+        yInfo()<<"fixating at ("<<move.toString(3,3)<<")";
+
+        o = computeHandOrientationPassing(_hand); //get default orientation
+        iarm->goToPose(move, o);
+
+        Time::delay(1.0);
+
+	    igaze->lookAtFixationPoint(move);
+
+        // we set up here the lists of joints we need to actuate
+        VectorOf<int> fingers;
+
+        for (int i=9; i<16; i++)
+            fingers.push_back(i);
+
+        // release
+        moveFingers(_hand,fingers,0.0);
+        yInfo()<<"released";
+
+        return true;        
+    }
+
+    /***************************************************/
+    void ControlThread::arm(int maxState)
+    {
+
+        switch(maxState) {
+            case 1 : {
+                        cout << "Brick" << endl; 
+
+                        break;
+                     }
+            case 2 : {
+                        cout << "Human's face" << endl; 
+                        // get current location
+                        iarm->getPose(p,o);
+                        iarm->setPosePriority("orientation");
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+
+                        break;
+                     }
+            case 3 : {
+                        cout << "Human's Hand" << endl; 
+
+                        // get current location
+                        iarm->getPose(p,o);
+                        iarm->setPosePriority("orientation");
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+
+                        break;
+                     }
+            case 4 : {
+                        cout << "Own Hand" << endl; 
+                        break;
+
+                     }
+            case 5 : {
+                        cout << "Teammates' Tower" << endl; 
+
+                        // get current location
+                        iarm->getPose(p,o);
+
+                        Vector od = o;
+                        // get current velocities
+                        iarm->getTaskVelocities(vcur, wcur);
+
+                        od = computeHandOrientationPassing(_hand); //get default orientation
+                        reachArmGiving(p, od, xf, vcur);
+                        break;
+                     }
+            case 6 : {
+                        cout << "My Tower" << endl; 
+
+                        // get current pose of hand 
+                        iarm->getPose(x,o);
+                        iarm->setPosePriority("orientation");
+
+                        place();
+
+                        break;
+                     }
+        }
+        yInfo() << "Which state was chosen?";
+    }
+
+    /***************************************************/
+    void ControlThread::moveFingers(const string &hand, const VectorOf<int> &joints,
+                    const double fingers_closure)
+    {
+        // select the correct interface
+
+        // this should be in the beginning, where you initialize the necessary stuff
+        IControlLimits2   *ilim;
+        IPositionControl2 *ipos;
+        IEncoders         *ienc;
+        IControlMode2     *imod;
+
+        if (hand=="right")
+        {
+            drvHandR.view(ilim);
+            drvHandR.view(ipos);
+            drvHandR.view(imod);
+        }
+        else
+        {
+            drvHandL.view(ilim);
+            drvHandL.view(ipos);
+            drvHandL.view(imod);
+        }
+
+        // enforce [0,1] interval
+        double fingers_closure_sat=std::min(1.0,std::max(0.0,fingers_closure));
+
+        // move each finger first:
+        // if min_j and max_j are the minimum and maximum bounds of joint j,
+        // then we should move to min_j+fingers_closure_sat*(max_j-min_j)
+
+        // This option you will move each finger individually
+        for (size_t i=0; i<joints.size(); i++)
+        {
+            int j=joints[i];
+            yInfo()<<"j" << j;
+            // retrieve joint bounds
+            double min_j,max_j,range;
+            ilim->getLimits(j,&min_j,&max_j);
+            range=max_j-min_j;
+            // select target
+            double target;
+            target=min_j+fingers_closure_sat*(range);
+            // set control mode
+            imod->setControlMode(j,VOCAB_CM_POSITION);
+            // set up the speed in [deg/s]
+            ipos->setRefSpeed(j,30.0);
+            // set up max acceleration in [deg/s^2]
+            ipos->setRefAcceleration(j,100.0);
+
+            // yield the actual movement
+            yInfo()<<"Yielding new target: "<<target<<" [deg]";
+            ipos->positionMove(j,target);
+        }
+    }
+
+    void ControlThread::reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
+    {
+        e[0] = x_pos[0] - desired_p[0];
+        e[1] = x_pos[1] - desired_p[1];
+        e[2] = x_pos[2] - desired_p[2]; 
+        yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
+
+        mag_e = magnitude(e);
+        unit_e[0] = e[0]/mag_e;  // this gives us the orientation of the 
+        unit_e[1] = e[1]/mag_e;  // equilibrium point
+        unit_e[2] = e[2]/mag_e;
+
+        if( mag_e < epsilon ){
+            v_mag = 0.9*v_mag*mag_e/epsilon;
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+           /* if(!send_or){
+                send_or=1;
+                Vector o = computeHandOrientation("left");
+                approachTargetWithHand("left", x, o);
+            } */
+        }else if( mag_e > epsilon and magnitude(vcur) < Vmax){
+            v_mag+=acc_mag;   
+
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+        }else{
+            v_mag = Vmax;
+
+            vcur[0] = v_mag * unit_e[0];
+            vcur[1] = v_mag * unit_e[1];
+            vcur[2] = v_mag * unit_e[2];
+            wcur[0] = v_mag * unit_e[0];
+            wcur[1] = v_mag * unit_e[1];
+            wcur[2] = v_mag * unit_e[2];
+            //iarm->setTaskVelocities(vcur, wcur);
+        }
+        iarm->goToPose(x_pos,orientation);
+
+        if (count < 20 ){
+            // let's put the hand in the pre-grasp configuration
+            moveFingers(_hand, fingers, 0.0);
+        } else {
+            //closing the hand
+            moveFingers(_hand, thumb,    1.0);
+            moveFingers(_hand, fingers,  0.5);
+        }
+
+        yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
+        yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
+
+    }
+
+    /***************************************************/
+    void ControlThread::release(string hand)
+    {
+        IControlLimits2   *ilim;
+        IPositionControl2 *ipos;
+        IControlMode2     *imod;
+
+        if (hand=="right")
+        {
+            drvHandR.view(ilim);
+            drvHandR.view(ipos);
+            drvHandR.view(imod);
+        }
+        else
+        {
+            drvHandL.view(ilim);
+            drvHandL.view(ipos);
+            drvHandL.view(imod);
+        }
+
+        double target[16] = {0, 90, 0, 20, 10, 0, 0, 50, 10, 0, 0, 0, 0, 0, 0, 0};   //icubSim
+        //double target[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0};   // icub
+
+        // we set up here the lists of joints we need to actuate (just hand)
+        // shoulders (3) + elbow + wrist (3) + hand openning + thumb (3)
+        VectorOf<int> joints;
+        for (int i=0; i<16; i++){
+            joints.push_back(i);
+        }
+
+        // This option you will move each joint individually
+        for (size_t i=7; i<joints.size(); i++)
+        {
+            int j=joints[i];
+            // retrieve joint bounds
+            double min_j,max_j,range;
+            ilim->getLimits(j,&min_j,&max_j);
+            // set up the speed in [deg/s]
+            ipos->setRefSpeed(j,15.0);
+            // set up max acceleration in [deg/s^2]
+            ipos->setRefAcceleration(j,5.0);
+            // yield the actual movement
+            yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
+            imod->setControlMode(j,VOCAB_CM_POSITION);
+            ipos->positionMove(j,target[i]);
+        }
+        // wait (with timeout) until the movement is completed
+        bool done=false;
+        double t0=Time::now();
+        while (!done && (Time::now()-t0 < 1.0))
+        {
+            yInfo()<<"Waiting...";
+            Time::delay(0.1);   // release the quantum to avoid starving resources
+            ipos->checkMotionDone(&done);
+        }
+
+        if (done)
+            yInfo()<<"Movement completed";
+        else
+            yWarning()<<"Timeout expired";
+        // wait until all fingers have attained their set-points
+    }
+
 

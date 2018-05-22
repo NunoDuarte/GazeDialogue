@@ -78,7 +78,7 @@ class ControlThread: public RateThread
             RpcServer rpcPort;
 
 
-            void fixate(const Vector &x);
+            void fixatePoint(const Vector &x);
             void look_down();
             bool grasp_it(const double fingers_closure);
 

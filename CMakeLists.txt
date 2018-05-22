@@ -48,8 +48,10 @@ add_executable(${PROJECT_NAME}-main-leader
 		              	${CMAKE_SOURCE_DIR}/src/icub_leader.cpp
 				${CMAKE_SOURCE_DIR}/include/helpers.h
 			       	${CMAKE_SOURCE_DIR}/include/init.h
+			       	${CMAKE_SOURCE_DIR}/include/configure.h
 			    	${CMAKE_SOURCE_DIR}/include/compute.h
 			       	${CMAKE_SOURCE_DIR}/src/extras/helpers.cpp
+			       	${CMAKE_SOURCE_DIR}/src/extras/configure.cpp
 			       	${CMAKE_SOURCE_DIR}/src/extras/compute.cpp
 				)
 
