@@ -8,6 +8,8 @@
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
 #include <yarp/dev/GazeControl.h>             // gaze control
+#include <yarp/os/RpcServer.h>
+#include <yarp/os/RFModule.h>
 #include <yarp/dev/PolyDriver.h>
 #include <yarp/sig/Vector.h>
 #include <yarp/math/Math.h>
@@ -23,7 +25,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "init.h"
+//#include "init.h"
 //#include "placing.h"
 //#include "passing.h"
 #include "compute.h"
@@ -227,6 +229,47 @@ using namespace std;
 
         getchar();
 
+        // grasp the ball
+
+        // the "closure" accounts for how much we should
+        // close the fingers around the object:
+        // if closure == 0.0, the finger joints have to reach their minimum
+        // if closure == 1.0, the finger joints have to reach their maximum
+        double fingers_closure=0.5; // default value
+        bool ok=grasp_it(fingers_closure);
+        // we assume the robot is not moving now
+        if (ok)
+        {
+            reply.addString("ack");
+            reply.addString("Yeah! I did it! Maybe...");
+        }
+        else
+        {
+            reply.addString("nack");
+            reply.addString("I don't see any object!");
+        }   
+
+        // get current pose of hand 
+        iarm->getPose(x,o);
+
+        // Select Action
+        int num = 2; 
+
+        string Result; 
+        std::ostringstream Result_string;
+        Result_string << num;
+        Result = Result_string.str();
+        bool convert;
+
+        Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = true);  
+
+        if (act.getAction(action))
+        {
+            yInfo()<<" retrieved Action = ("<<action <<")";
+        }
+        else 
+            action = -1;     
+
         return true;
     }
 
@@ -260,34 +303,6 @@ using namespace std;
             return false;
         }
         return true;
-    }
-
-    /***************************************************/
-    Vector ControlThread::computeHandOrientationPassing(const string &hand)
-    {
-        // we have to provide a 4x1 vector representing the
-        // final orientation for the specified hand
-
-        Matrix Rot(3,3);
-
-        if (hand == "right"){
-            Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
-            Rot(2,0)= 0.0; Rot(2,1)= -1.0; Rot(2,2)= 0.0;
-
-        }
-        if (hand == "left"){
-            Rot(0,0)= -1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
-            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
-            Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
-        }
-
-        // add up a further slight rotation (30 deg) around -y:
-        // this will prevent the thumb from hitting the table
-        // create a rotation matrix
-        
-
-        return dcm2axis(Rot);
     }
 
     float ControlThread::magnitude(Vector x)     //  <! Vector magnitude
@@ -531,6 +546,7 @@ using namespace std;
         igaze->stopControl();
         drvGaze.close();
         port.close();
+        rpcPort.close();
         
         printf("Done, goodbye from ControlThread\n");
     }
@@ -918,6 +934,43 @@ using namespace std;
     void ControlThread::run()
     {
       	
+        count++;
+
+        Vector look = p;
+
+        // begin
+        if (count < 1000){
+            look[0] = Eyes[0][1];
+            look[1] = Eyes[0][2];
+            look[2] = Eyes[0][3];
+
+            fixate(look);
+            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
+
+        // duration of action
+        }else if (count > 1015 and count < 2000){
+
+            look[0] = Eyes[count-1000][1];
+            look[1] = Eyes[count-1000][2];
+            look[2] = Eyes[count-1000][3];
+
+            fixate(look);
+            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
+
+
+
+
+        // finish
+        }else if (count > 2000){
+
+            look[0] = Eyes[999][1];
+            look[1] = Eyes[999][2];
+            look[2] = Eyes[999][3];
+
+            fixate(look);
+            yInfo()<<"fixating at ("<<look.toString(3,3)<<")";
+        }
+
     }
 
 int main(int argc, char *argv[]) 

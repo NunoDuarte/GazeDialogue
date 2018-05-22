@@ -69,6 +69,34 @@ using namespace yarp::math;
     }
 
     /***************************************************/
+    Vector ControlThread::computeHandOrientationPassing(const string &hand)
+    {
+        // we have to provide a 4x1 vector representing the
+        // final orientation for the specified hand
+
+        Matrix Rot(3,3);
+
+        if (hand == "right"){
+            Rot(0,0)=-1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
+            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
+            Rot(2,0)= 0.0; Rot(2,1)= -1.0; Rot(2,2)= 0.0;
+
+        }
+        if (hand == "left"){
+            Rot(0,0)= -1.0; Rot(0,1)= 0.0; Rot(0,2)= 0.0;
+            Rot(1,0)= 0.0; Rot(1,1)= 0.0; Rot(1,2)= -1.0;
+            Rot(2,0)= 0.0; Rot(2,1)=-1.0; Rot(2,2)= 0.0;
+        }
+
+        // add up a further slight rotation (30 deg) around -y:
+        // this will prevent the thumb from hitting the table
+        // create a rotation matrix
+        
+
+        return dcm2axis(Rot);
+    }
+
+    /***************************************************/
     void ControlThread::approachTargetWithHand(const string &hand,
                                 const Vector &x,
                                 const Vector &o, bool wait=true)

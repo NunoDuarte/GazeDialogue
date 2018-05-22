@@ -31,13 +31,19 @@ class ControlThread: public RateThread
             IGazeControl      *igaze;
 
             ObjectRetriever object;
+
             ActionRetriever act;
+            int action;    
+
             Port inPort;
 
             BufferedPort<Bottle> port;
 
             int startup_ctxt_gaze;
             string _hand;
+    
+            // Load the data from the eyes
+            std::vector< std::vector<float> > Eyes;
 
             // we set up here the lists of joints we need to actuate
             VectorOf<int> abduction,thumb,fingers;
@@ -101,16 +107,6 @@ class ControlThread: public RateThread
             //bool releasePass();
             //bool goBackPass(Vector approach);
 
-    public:
-
-            ControlThread(int period):RateThread(period){}
-            bool configure(ResourceFinder &rf);
-            bool interruptModule();
-            bool close();
-            bool respond(const Bottle &command, Bottle &reply);
-            double getPeriod();
-            bool updateModule();
-
             bool threadInit();
             bool openCartesian(const string &robot, const string &arm);
             Vector computeHandOrientationPassing(const string &hand);
@@ -127,6 +123,18 @@ class ControlThread: public RateThread
             std::vector< std::vector<float> > loadDataFile(std::string file, 
                     bool convert);      
             void run();
+
+    public:
+
+            ControlThread(int period):RateThread(period){}
+
+            bool configure(ResourceFinder &rf);
+            bool interruptModule();
+            bool close();
+            bool respond(const Bottle &command, Bottle &reply);
+            double getPeriod();
+            bool updateModule();
+
 
     private:
    
