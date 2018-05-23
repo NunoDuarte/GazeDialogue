@@ -1,6 +1,6 @@
 <application>
 
-  <name>Pupil_iCubSim-follower</name>
+  <name>Pupil_iCubSim-leader</name>
 
   <dependencies>
       <port>/iKinGazeCtrl/rpc</port>

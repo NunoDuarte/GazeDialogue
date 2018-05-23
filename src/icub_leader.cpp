@@ -142,14 +142,14 @@ using namespace std;
         }*/
 
         // begin
-        if (count < 1000){
+        if (count < 1){
             look = Eyes[0][1];
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
-        }else if (count > 1015 and count < 2000){
+        }else if (count > 1 and count < 200){
 
             look = Eyes[count-1000][1];
 
