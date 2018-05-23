@@ -239,7 +239,7 @@ using namespace yarp::math;
         Result = Result_string.str();
         bool convert;
 
-        Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = true);  
+        Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = false);  
 
         if (act.getAction(action))
         {
