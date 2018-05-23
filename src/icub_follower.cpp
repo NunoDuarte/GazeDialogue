@@ -45,6 +45,8 @@ class ControlThread: public RateThread
     ActionRetriever act;
     Port inPort;
 
+    ofstream myfile;
+    ofstream myfile2;
     BufferedPort<Bottle> port;
 
     int startup_ctxt_gaze;
@@ -97,6 +99,7 @@ class ControlThread: public RateThread
 
     // output from decode
     cv::Mat pstates;
+    cv::Mat pstatescopy;
 
 public:
     ControlThread(int period):RateThread(period){}
@@ -253,6 +256,9 @@ public:
 
         objectLocation.close();
 
+        myfile.open ("log.txt");
+        myfile2.open ("log2.txt");
+    
         getchar();
 
         // initiate variables for giving action
@@ -397,7 +403,7 @@ public:
 
         // get arm in initial position
         x[1] =  -0.5; // to the left
-        startingArm(x);
+        //startingArm(x);
     
         // define the fingers joints
         abduction.push_back(7);
@@ -405,7 +411,7 @@ public:
         for (int i=9; i<16; i++)
             fingers.push_back(i);
 
-        getchar();
+        //getchar();
 
         return true;
     }
@@ -711,6 +717,10 @@ public:
         igaze->stopControl();
         drvGaze.close();
         port.close();
+
+        myfile << seq_mat;
+        myfile.close(); 
+        myfile2.close();
         
         printf("Done, goodbye from ControlThread\n");
     }
@@ -883,7 +893,7 @@ public:
             ipos->setRefAcceleration(j,100.0);
 
             // yield the actual movement
-            yInfo()<<"Yielding new target: "<<target<<" [deg]";
+            //yInfo()<<"Yielding new target: "<<target<<" [deg]";
             ipos->positionMove(j,target);
         }
     }
@@ -936,7 +946,7 @@ public:
         double deltalgc = 0.0;
         double deltalpc = 0.0;
         double treshold = 0.15;
-        double alfa = 0.01;//parameter of exponential moving average
+        double alfa = 0.1;//parameter of exponential moving average
 
         if(cur_state>=0 && cur_state<6)
         {
@@ -987,12 +997,13 @@ public:
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
-        //yInfo() << act_probability.at<double>(0,0);
-        //yInfo() << act_probability.at<double>(1,0);
+        myfile << act_probability;
+        //yInfo() << "predicting" << act_probability.at<double>(0,0);
+        //yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         // add state to sequence of states
         seq_mat.push_back(state);
-
+        
         // make a decision based on the predictor's response
         if (action == 0){
             // get current location
@@ -1004,7 +1015,7 @@ public:
 
             od = computeHandOrientationPassing(_hand); //get default orientation
             reachArmGiving(p, od, xf, vcur);
-
+            
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
 
@@ -1038,6 +1049,7 @@ public:
             //getchar();
             gazeBehavior(pstates);
         }
+        myfile2 << pstates;
     }
 
     void reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
@@ -1098,8 +1110,8 @@ public:
             moveFingers(_hand, fingers,  0.5);
         }
 
-        yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
-        yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
+        //yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
+        //yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 
     }
 
@@ -1137,35 +1149,36 @@ public:
         int state; // state the human is in
         if (inPort.read(pupil))
         {
-            if ( pupil(1) == 1){
-                yInfo() << "Teammate's Tower";
-                state = 5;
+            yInfo() << "Human";
+            if ( pupil(1) == 2){
+                yInfo() << "iCub's Tower";
+                state = 4;
            
-            }else if ( pupil(1) == 2) {
-                yInfo() << "My Tower";
-                state = 6;
+            }else if ( pupil(1) == 1) {
+                yInfo() << "Human Tower";
+                state = 5;
                 
             }else if ( pupil(1) == 3) {
                 yInfo() << "Brick/Object";
-                state = 1;
+                state = 0;
   
-            }else if ( pupil(1) == 4) {
+            }else if ( pupil(1) == 7) {
                 yInfo() << "iCub's Face";
-                state = 2;
+                state = 1;
 
             }else if ( pupil(1) == 5) {
                 yInfo() << "iCub's Hand";
-                state = 3;
+                state = 2;
 
             }else if ( pupil(1) == 4) {
-                yInfo() << "Own's Hand";
-                state = 4;
+                yInfo() << "Human's Hand";
+                state = 3;
                 
             } else {
                 yInfo() << "wrong state";
                 state = -1;            
             }
-        
+            state=5;
             if (state != -1){
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
@@ -1222,7 +1235,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>10)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     

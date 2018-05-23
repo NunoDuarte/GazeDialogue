@@ -8,6 +8,7 @@
 #include <yarp/os/all.h>
 #include <yarp/sig/Vector.h>
 #include <opencv2/core/mat.hpp>               // add Mat variables from OpenCV
+#include <iostream>
 
 #include "helpers.h"
 
