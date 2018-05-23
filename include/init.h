@@ -80,6 +80,7 @@ class ControlThread: public RateThread
 
             // grasp once
             bool grasp;
+            bool released;
 
     public:
 

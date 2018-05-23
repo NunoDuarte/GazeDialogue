@@ -208,12 +208,15 @@ using namespace yarp::math;
         // first, look down  
         look_down();
 
-        // initialize grasping counter
+        // initialize grasping and releasing counter
         grasp = false;
+        released = false;
 
         getchar();
         // Select Action
-        int num = 2; 
+        // giving  - 0
+        // placing - 1
+        int num = 1; 
 
         string Result; 
         std::ostringstream Result_string;

@@ -142,16 +142,16 @@ using namespace std;
         }*/
 
         // begin
-        if (count < 1){
-            look = Eyes[0][1];
+        if (count < 40){
+            look = Eyes[0][0];
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
-        }else if (count > 1 and count < 200){
+        }else if (count > 40 and count < 1000){
 
-            look = Eyes[count-1][1];
+            look = Eyes[count][0];
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -165,15 +165,16 @@ using namespace std;
             e[1] = xf[1] - p[1];
             e[2] = xf[2] - p[2];        
 
-            if (magnitude(e) < 0.1){
+            if (magnitude(e) < 0.1 and (not released)){
                 release("left");
+                released = true;
             }
 
 
         // finish
-        }else if (count > 2000){
+        }else if (count > 1000){
 
-            look = Eyes[999][1];
+            look = Eyes[999][0];
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -186,8 +187,9 @@ using namespace std;
             e[1] = xf[1] - p[1];
             e[2] = xf[2] - p[2];        
 
-            if (magnitude(e) < 0.1){
-                release("left");
+            if (magnitude(e) < 0.1 and (not released)){
+                release("left");    
+                released = true;
             }
         }
 
@@ -241,7 +243,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>100)
             done=true;
     }
     
