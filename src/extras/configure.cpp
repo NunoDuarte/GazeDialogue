@@ -208,26 +208,8 @@ using namespace yarp::math;
         // first, look down  
         look_down();
 
-        getchar();
-        // grasp the ball
-
-        // the "closure" accounts for how much we should
-        // close the fingers around the object:
-        // if closure == 0.0, the finger joints have to reach their minimum
-        // if closure == 1.0, the finger joints have to reach their maximum
-        double fingers_closure=0.5; // default value
-        bool ok=grasp_it(fingers_closure);
-        // we assume the robot is not moving now
-        if (ok)
-        {
-            reply.addString("ack");
-            reply.addString("Yeah! I did it! Maybe...");
-        }
-        else
-        {
-            reply.addString("nack");
-            reply.addString("I don't see any object!");
-        }   
+        // initialize grasping counter
+        grasp = false;
 
         getchar();
         // Select Action
@@ -308,7 +290,7 @@ using namespace yarp::math;
             drvHandL.view(imod1);
         }
 
-        double target[] = {-17, 20, 8, 41, 7, -21, -9, 48, 76, 31, 86, 58, 131, 54, 113, 164};
+        double target[] = {-17, 20, 8, 41, 7, -21, -9, 48, 0, 0, 0, 0, 0, 0, 0, 0};
         // we set up here the lists of joints we need to actuate
         // shoulders (3) + elbow + wrist (3)
         VectorOf<int> joints;

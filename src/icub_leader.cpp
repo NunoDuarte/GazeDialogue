@@ -159,22 +159,15 @@ using namespace std;
 
             // -------------//----------------------
             // get current location
-            /*iarm->getPose(p,o);
+            iarm->getPose(p,o);
 
-            // calculte distances
-            Vector e(3);
-            Vector unit_e(3);
-            static double v_mag=0;
-            double acc_mag=0.01;
-            double mag_e; 
+            e[0] = xf[0] - p[0];
+            e[1] = xf[1] - p[1];
+            e[2] = xf[2] - p[2];        
 
-            e[0] = x[0] - p[0];
-            e[1] = x[1] - p[1];
-            e[2] = x[2] - p[2];        
-
-            if (count == 3500 ){
-            release("left");
-            }*/
+            if (magnitude(e) < 0.1){
+                release("left");
+            }
 
 
         // finish
@@ -184,6 +177,18 @@ using namespace std;
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
+
+            // -------------//----------------------
+            // get current location
+            iarm->getPose(p,o);
+
+            e[0] = xf[0] - p[0];
+            e[1] = xf[1] - p[1];
+            e[2] = xf[2] - p[2];        
+
+            if (magnitude(e) < 0.1){
+                release("left");
+            }
         }
 
     }
@@ -236,7 +241,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>30)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     
