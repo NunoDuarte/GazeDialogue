@@ -1,0 +1,28 @@
+<application>
+
+  <name>Pupil_iCubSim-follower</name>
+
+  <dependencies>
+      <port>/iKinGazeCtrl/rpc</port>
+  </dependencies>
+
+  <module>
+      <name>pupil_tracker_iCub</name>
+      <parameters>--robot icubSim</parameters>
+      <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+      <node>localhost</node>
+  </module>
+
+  <connection>
+      <from>/location</from>
+      <to>/iCubSim/world</to>
+      <protocol>tcp</protocol>
+  </connection>
+
+  <connection>
+      <from>/action</from>
+      <to>/hardcoded</to>
+      <protocol>tcp</protocol>
+  </connection>
+
+</application>
