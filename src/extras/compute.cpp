@@ -229,6 +229,28 @@ using namespace yarp::math;
     }
 
     /***************************************************/
+    void ControlThread::look_down()
+    {
+        // we ask the controller to keep the vergence
+        // from now on fixed at 5.0 deg, which is the
+        // configuration where we calibrated the stereo-vision;
+        // without that, we cannot retrieve good 3D positions
+        // with the real robot
+        Vector ang(3,0.0);
+        ang[1]=-40.0;
+        //ang[2]=-20;
+        igaze->lookAtAbsAngles(ang);
+
+        double timeout = 10.0; 
+        bool done = false; 
+        done = igaze->waitMotionDone(0.1,timeout); 
+        if(!done){
+            yWarning("Something went wrong with the initial approach, using timeout");
+            igaze->stopControl();
+        }
+    }
+
+    /***************************************************/
     bool ControlThread::grasp_it(const double fingers_closure)
     {
         Vector x;

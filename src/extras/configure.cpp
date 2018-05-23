@@ -205,6 +205,10 @@ using namespace yarp::math;
 
         getchar();
 
+        // first, look down  
+        look_down();
+
+        getchar();
         // grasp the ball
 
         // the "closure" accounts for how much we should
@@ -225,6 +229,7 @@ using namespace yarp::math;
             reply.addString("I don't see any object!");
         }   
 
+        getchar();
         // Select Action
         int num = 2; 
 
