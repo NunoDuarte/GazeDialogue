@@ -15,7 +15,7 @@
 
   <connection>
       <from>/location</from>
-      <to>/iCubSim/world</to>
+      <to>/icubSim/world</to>
       <protocol>tcp</protocol>
   </connection>
 
