@@ -157,6 +157,25 @@ using namespace std;
             yInfo()<<"fixating at ("<< look <<")";
             arm(look);
 
+            // -------------//----------------------
+            // get current location
+            /*iarm->getPose(p,o);
+
+            // calculte distances
+            Vector e(3);
+            Vector unit_e(3);
+            static double v_mag=0;
+            double acc_mag=0.01;
+            double mag_e; 
+
+            e[0] = x[0] - p[0];
+            e[1] = x[1] - p[1];
+            e[2] = x[2] - p[2];        
+
+            if (count == 3500 ){
+            release("left");
+            }*/
+
 
         // finish
         }else if (count > 2000){
