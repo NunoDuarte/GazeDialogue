@@ -159,22 +159,15 @@ using namespace std;
 
             // -------------//----------------------
             // get current location
-            /*iarm->getPose(p,o);
+            iarm->getPose(p,o);
 
-            // calculte distances
-            Vector e(3);
-            Vector unit_e(3);
-            static double v_mag=0;
-            double acc_mag=0.01;
-            double mag_e; 
+            e[0] = xf[0] - p[0];
+            e[1] = xf[1] - p[1];
+            e[2] = xf[2] - p[2];        
 
-            e[0] = x[0] - p[0];
-            e[1] = x[1] - p[1];
-            e[2] = x[2] - p[2];        
-
-            if (count == 3500 ){
-            release("left");
-            }*/
+            if (magnitude(e)){
+                release("left");
+            }
 
 
         // finish
