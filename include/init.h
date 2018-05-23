@@ -77,6 +77,9 @@ class ControlThread: public RateThread
 
             RpcServer rpcPort;
 
+            // grasp once
+            bool grasp;
+
     public:
 
             ControlThread(int period):RateThread(period){}

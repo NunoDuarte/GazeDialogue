@@ -315,13 +315,6 @@ using namespace yarp::math;
                             igaze->lookAtAbsAngles(ang);
                         }
 
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
                         // look for red ball
                         Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
@@ -440,14 +433,6 @@ using namespace yarp::math;
                             ang[1]=-40.0;
                             igaze->lookAtAbsAngles(ang);
                         }
-
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
                         // look for red ball
                         Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
@@ -488,13 +473,6 @@ using namespace yarp::math;
                             igaze->lookAtAbsAngles(ang);
                         }
 
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
                         // look for red ball
                         Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
@@ -592,11 +570,34 @@ using namespace yarp::math;
     /***************************************************/
     void ControlThread::arm(int maxState)
     {
-
+        
         switch(maxState) {
             case 1 : {
                         cout << "Brick" << endl; 
+                        if (not grasp) {
+                            // grasp the ball
+                            Bottle reply;
+                            // the "closure" accounts for how much we should
+                            // close the fingers around the object:
+                            // if closure == 0.0, the finger joints have to reach their minimum
+                            // if closure == 1.0, the finger joints have to reach their maximum
+                            double fingers_closure=0.5; // default value
+                            bool ok=grasp_it(fingers_closure);
+                            // we assume the robot is not moving now
+                            if (ok)
+                            {
+                                reply.addString("ack");
+                                reply.addString("Yeah! I did it! Maybe...");
+                                yInfo() << "Yeah! I did it! Maybe...";
+                                grasp = true;
+                            }
+                            else
+                            {
+                                reply.addString("nack");
+                                reply.addString("I don't see any object!");
+                            }   
 
+                        }
                         break;
                      }
             case 2 : {

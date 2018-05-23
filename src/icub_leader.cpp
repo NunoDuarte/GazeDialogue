@@ -165,7 +165,7 @@ using namespace std;
             e[1] = xf[1] - p[1];
             e[2] = xf[2] - p[2];        
 
-            if (magnitude(e)){
+            if (magnitude(e) < 0.1){
                 release("left");
             }
 
@@ -177,6 +177,18 @@ using namespace std;
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
+
+            // -------------//----------------------
+            // get current location
+            iarm->getPose(p,o);
+
+            e[0] = xf[0] - p[0];
+            e[1] = xf[1] - p[1];
+            e[2] = xf[2] - p[2];        
+
+            if (magnitude(e) < 0.1){
+                release("left");
+            }
         }
 
     }
@@ -229,7 +241,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>30)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     
