@@ -1021,6 +1021,7 @@ public:
 
             od = computeHandOrientationPassing(_hand); //get default orientation
             reachArmGiving(p, od, xf, vcur);
+            count++; // count the number of times is giving
             
             hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
@@ -1043,7 +1044,6 @@ public:
             hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
             gazeBehavior(pstates);
 
-            count++; // count the number of times is giving
             // alternative is getting the percentage of giving and when it is higher than
             // 70% you can close the hand
 
