@@ -321,7 +321,7 @@ using namespace yarp::math;
 
                         Vector look = x;
                         look[0] =  -0.20;
-                        look[1] =  -0.05;
+                        look[1] =  -0.10;
                         look[2] =  -0.02;         
 
                         igaze->lookAtFixationPoint(look);
@@ -367,13 +367,13 @@ using namespace yarp::math;
 
                         Vector look = x;
 		                look[0] = -0.35;
-		                look[1] = -0.04;
+		                look[1] =  0.0;
 		                look[2] =  0.40;     
 
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
                         //to track from now on
-                        igaze->setTrackingMode(true);
+                        //igaze->setTrackingMode(true);
                         break;
                      }
             case 3 : {
@@ -393,7 +393,7 @@ using namespace yarp::math;
 
                         Vector look = x;
 		                look[0] = -0.35;
-		                look[1] = -0.04;
+		                look[1] =  0.10;
 		                look[2] =  0.20;    
 
                         igaze->lookAtFixationPoint(look);
@@ -406,12 +406,12 @@ using namespace yarp::math;
                         cout << '4' << endl; 
 
                         // look up if you haven't already
-                        Vector ang(3,0.0);
+                        /*Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
                             ang[1]=-40.0;
                             igaze->lookAtAbsAngles(ang);
-                        }
+                        }*/
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
@@ -433,12 +433,12 @@ using namespace yarp::math;
                         cout << '5' << endl; 
 
                         // make iCub look down
-                        Vector ang(3,0.0);
+                        /*Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
                             ang[1]=-70.0;
                             igaze->lookAtAbsAngles(ang);
-                        }
+                        }*/
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
@@ -452,7 +452,7 @@ using namespace yarp::math;
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
                         //to track from now on
-                        igaze->setTrackingMode(true);
+                        //igaze->setTrackingMode(true);
                         break;
                         // look for red ball
                         /*Bottle *pTarget=port.read(false);
@@ -506,7 +506,7 @@ using namespace yarp::math;
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
                         //to track from now on
-                        igaze->setTrackingMode(true);
+                        //igaze->setTrackingMode(true);
                         break;
                         // look for red ball
                         /*Bottle *pTarget=port.read(false);
@@ -537,7 +537,7 @@ using namespace yarp::math;
                         break;
                      }
         }
-        yInfo() << "Which state was chosen?";
+        //yInfo() << "Which state was chosen?";
     }
 
     /***************************************************/
@@ -695,7 +695,7 @@ using namespace yarp::math;
                         break;
                      }
         }
-        yInfo() << "Which state was chosen?";
+        //yInfo() << "Which state was chosen?";
     }
 
     /***************************************************/
@@ -750,7 +750,7 @@ using namespace yarp::math;
             ipos->setRefAcceleration(j,100.0);
 
             // yield the actual movement
-            yInfo()<<"Yielding new target: "<<target<<" [deg]";
+            //yInfo()<<"Yielding new target: "<<target<<" [deg]";
             ipos->positionMove(j,target);
         }
         // wait (with timeout) until the movement is completed
@@ -829,8 +829,8 @@ using namespace yarp::math;
             moveFingers(_hand, fingers,  0.5);
         }
 */
-        yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
-        yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
+        //yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
+        //yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 
     }
 
