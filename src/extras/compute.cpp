@@ -28,13 +28,13 @@ using namespace yarp::math;
     {
         igaze->setSaccadesMode(true);  // this gives problem with waitMotionDone in simulation
         igaze->lookAtFixationPointSync(x);
-        double timeout = 10.0; 
+        /*double timeout = 10.0; 
         bool done = false; 
         done = igaze->waitMotionDone(0.1,timeout); 
         if(!done){
             yWarning("Something went wrong with the initial approach, using timeout");
             igaze->stopControl();
-        }
+        }*/
     }
 
     /***************************************************/
@@ -380,12 +380,12 @@ using namespace yarp::math;
                         cout << '3' << endl; 
 
                         // look up if you haven't already
-                        Vector ang(3,0.0);
+                        /*Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
                             ang[1]=-40.0;
                             igaze->lookAtAbsAngles(ang);
-                        }
+                        }*/
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
@@ -445,7 +445,7 @@ using namespace yarp::math;
                         yInfo()<<"fixating the Teammates Tower";
 
                         Vector look = x;
-                        look[0] = -0.35;
+                        look[0] = -0.45;
                         look[1] =  0.00;
                         look[2] = -0.05;         
 
@@ -753,6 +753,22 @@ using namespace yarp::math;
             yInfo()<<"Yielding new target: "<<target<<" [deg]";
             ipos->positionMove(j,target);
         }
+        // wait (with timeout) until the movement is completed
+        bool done=false;
+        double t0=Time::now();
+        while (!done && (Time::now()-t0 < 5.0))
+        {
+            yInfo()<<"Waiting...";
+            Time::delay(0.1);   // release the quantum to avoid starving resources
+            ipos->checkMotionDone(&done);
+        }
+
+        if (done)
+            yInfo()<<"Movement completed";
+        else
+            yWarning()<<"Timeout expired";
+
+        // wait until all fingers have attained their set-points
     }
 
     void ControlThread::reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
