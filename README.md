@@ -12,7 +12,7 @@ sudo modprobe uvcvideo quirks=128
 
 # run on the real robot (without right arm)
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-iCubStartup:
+### iCubStartup:
 - iKinCartesianSolver -part left_arm
 - iKinGazeCtrl ...
 - wholeBodyDynamics     icubbrain1   -headV2 -autocorrect -no_right_arm
