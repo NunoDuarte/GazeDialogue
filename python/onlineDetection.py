@@ -119,9 +119,9 @@ while cv2.waitKey(1):
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
-            # frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
-            # if ballG is not [] and len(ballG) != 0:
-            #     ball.append([ballG, 1])
+            frame, pts, ballG = ballTracking.trackingGreen(frame, pts)
+            if ballG is not [] and len(ballG) != 0:
+                ball.append([ballG, 1])
             frame, pts, ballR = ballTracking.trackingRed(frame, pts)
             if ballR is not [] and len(ballR) != 0:
                 ball.append([ballR, 2])

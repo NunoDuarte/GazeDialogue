@@ -997,7 +997,7 @@ public:
 
         // call the predictor function
         action = predictAL(act_probability, state, action);
-        myfile << act_probability;
+        myfile << act_probability << "\n";
         //yInfo() << "predicting" << act_probability.at<double>(0,0);
         //yInfo() << "predicting" << act_probability.at<double>(1,0);
 
@@ -1049,7 +1049,7 @@ public:
             //getchar();
             gazeBehavior(pstates);
         }
-        myfile2 << pstates;
+        myfile2 << pstates << "\n";
     }
 
     void reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
@@ -1178,7 +1178,7 @@ public:
                 yInfo() << "wrong state";
                 state = -1;            
             }
-            state=5;
+            //state=5;
             if (state != -1){
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
