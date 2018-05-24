@@ -534,22 +534,14 @@ public:
             case 2 : {
                         cout << '2' << endl; 
 
-                        // look up if you haven't already
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-40.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
-
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's face";
 
                         Vector look = x;
-                        look[0] = -0.55;
-                        look[1] =  0.00;
-                        look[2] =  0.45;         
+		                look[0] = -0.35;
+		                look[1] = -0.04;
+		                look[2] =  0.40;     
 
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
@@ -561,21 +553,21 @@ public:
                         cout << '3' << endl; 
 
                         // look up if you haven't already
-                        Vector ang(3,0.0);
+                        /*Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
                             ang[1]=-40.0;
                             igaze->lookAtAbsAngles(ang);
-                        }
+                        }*/
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's hand";
 
                         Vector look = x;
-                        look[0] = -0.55;
-                        look[1] =  0.00;
-                        look[2] =  0.25;         
+		                look[0] = -0.35;
+		                look[1] = -0.04;
+		                look[2] =  0.20;    
 
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
@@ -617,19 +609,26 @@ public:
                         Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
-                            ang[1]=-40.0;
+                            ang[1]=-70.0;
                             igaze->lookAtAbsAngles(ang);
                         }
 
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Teammates Tower";
+
+                        Vector look = x;
+                        look[0] = -0.45;
+                        look[1] =  0.00;
+                        look[2] = -0.05;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
                         // look for red ball
-                        Bottle *pTarget=port.read(false);
+                        /*Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
                         {
                             if (pTarget->size()>2)
@@ -654,7 +653,7 @@ public:
                                 igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
                                 yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
                             }
-                        }
+                        }*/
                         break;
                      }
             case 6 : {
@@ -664,19 +663,26 @@ public:
                         Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
-                            ang[1]=-40.0;
+                            ang[1]=-70.0;
                             igaze->lookAtAbsAngles(ang);
                         }
 
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating My Tower";
+
+                        Vector look = x;
+                        look[0] = -0.20;
+                        look[1] =  0.00;
+                        look[2] = -0.05;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
                         // look for red ball
-                        Bottle *pTarget=port.read(false);
+                        /*Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
                         {
                             if (pTarget->size()>2)
@@ -700,7 +706,7 @@ public:
                                 igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
                                 yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
                             }
-                        }
+                        }*/
                         break;
                      }
         }
