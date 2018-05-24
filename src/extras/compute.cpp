@@ -237,7 +237,7 @@ using namespace yarp::math;
         // without that, we cannot retrieve good 3D positions
         // with the real robot
         Vector ang(3,0.0);
-        ang[1]=-40.0;
+        ang[1]=-70.0;
         //ang[2]=-20;
         igaze->lookAtAbsAngles(ang);
 
@@ -315,8 +315,22 @@ using namespace yarp::math;
                             igaze->lookAtAbsAngles(ang);
                         }
 
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Brick";
+
+                        Vector look = x;
+                        look[0] =  -0.20;
+                        look[1] =  -0.05;
+                        look[2] =  -0.02;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
                         // look for red ball
-                        Bottle *pTarget=port.read(false);
+                        /*Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
                         {
                             if (pTarget->size()>2)
@@ -341,28 +355,20 @@ using namespace yarp::math;
                                 igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
                                 yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
                             }
-                        }
+                        }*/
                         break;
                      }
             case 2 : {
                         cout << '2' << endl; 
-
-                        // look up if you haven't already
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-40.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
                         yInfo()<<"fixating the Human's face";
 
                         Vector look = x;
-                        look[0] = -0.55;
-                        look[1] =  0.00;
-                        look[2] =  0.45;         
+		                look[0] = -0.35;
+		                look[1] = -0.04;
+		                look[2] =  0.40;     
 
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
@@ -386,9 +392,9 @@ using namespace yarp::math;
                         yInfo()<<"fixating the Human's hand";
 
                         Vector look = x;
-                        look[0] = -0.55;
-                        look[1] =  0.00;
-                        look[2] =  0.25;         
+		                look[0] = -0.35;
+		                look[1] = -0.04;
+		                look[2] =  0.20;    
 
                         igaze->lookAtFixationPoint(look);
                         //igaze->waitMotionDone();
@@ -430,11 +436,26 @@ using namespace yarp::math;
                         Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
-                            ang[1]=-40.0;
+                            ang[1]=-70.0;
                             igaze->lookAtAbsAngles(ang);
                         }
+
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating the Teammates Tower";
+
+                        Vector look = x;
+                        look[0] = -0.35;
+                        look[1] =  0.00;
+                        look[2] = -0.05;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
                         // look for red ball
-                        Bottle *pTarget=port.read(false);
+                        /*Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
                         {
                             if (pTarget->size()>2)
@@ -459,7 +480,7 @@ using namespace yarp::math;
                                 igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
                                 yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
                             }
-                        }
+                        }*/
                         break;
                      }
             case 6 : {
@@ -469,12 +490,26 @@ using namespace yarp::math;
                         Vector ang(3,0.0);
                         igaze->getAngles(ang);
                         if (ang[1] > -30){
-                            ang[1]=-40.0;
+                            ang[1]=-70.0;
                             igaze->lookAtAbsAngles(ang);
                         }
 
+                        Vector x, o;
+                        iarm->getPose(x,o); //get current position of hand
+                        yInfo()<<"fixating My Tower";
+
+                        Vector look = x;
+                        look[0] = -0.20;
+                        look[1] =  0.00;
+                        look[2] = -0.05;         
+
+                        igaze->lookAtFixationPoint(look);
+                        //igaze->waitMotionDone();
+                        //to track from now on
+                        igaze->setTrackingMode(true);
+                        break;
                         // look for red ball
-                        Bottle *pTarget=port.read(false);
+                        /*Bottle *pTarget=port.read(false);
                         if (pTarget!=NULL)
                         {
                             if (pTarget->size()>2)
@@ -498,7 +533,7 @@ using namespace yarp::math;
                                 igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
                                 yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
                             }
-                        }
+                        }*/
                         break;
                      }
         }
@@ -769,7 +804,7 @@ using namespace yarp::math;
         }
         iarm->goToPose(x_pos,orientation);
 
-        if (count < 20 ){
+/*        if (count < 20 ){
             // let's put the hand in the pre-grasp configuration
             moveFingers(_hand, fingers, 0.0);
         } else {
@@ -777,7 +812,7 @@ using namespace yarp::math;
             moveFingers(_hand, thumb,    1.0);
             moveFingers(_hand, fingers,  0.5);
         }
-
+*/
         yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
         yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
 

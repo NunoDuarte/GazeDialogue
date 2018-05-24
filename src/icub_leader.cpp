@@ -142,14 +142,14 @@ using namespace std;
         }*/
 
         // begin
-        if (count < 40){
+        if (count < 38){
             look = Eyes[0][0];
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
-        }else if (count > 40 and count < 1000){
+        }else if (count > 38 and count < 1000){
 
             look = Eyes[count][0];
 
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>100)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     

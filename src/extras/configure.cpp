@@ -194,16 +194,14 @@ using namespace yarp::math;
         xf[2] =  0.15;
 
         // get arm in initial position
-        x[1] =  -0.5; // to the left
-        startingArm(x);
+        //x[1] =  -0.5; // to the left
+        //startingArm(x);
     
         // define the fingers joints
         abduction.push_back(7);
         thumb.push_back(8);
         for (int i=9; i<16; i++)
             fingers.push_back(i);
-
-        getchar();
 
         // first, look down  
         look_down();
@@ -212,11 +210,10 @@ using namespace yarp::math;
         grasp = false;
         released = false;
 
-        getchar();
         // Select Action
         // giving  - 0
         // placing - 1
-        int num = 1; 
+        int num = 0; 
 
         string Result; 
         std::ostringstream Result_string;
@@ -226,13 +223,13 @@ using namespace yarp::math;
 
         Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = false);  
 
-        if (act.getAction(action))
+/*        if (act.getAction(action))
         {
             yInfo()<<" retrieved Action = ("<<action <<")";
         }
         else 
             action = -1;     
-
+*/
         return true;
     }
 
