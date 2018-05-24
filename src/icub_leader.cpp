@@ -121,6 +121,7 @@ using namespace std;
       	
         count++;
 
+
         int look; // I need to change this to the correct type of variable
         cv::Mat state;
         /*int nRows = state.rows;
