@@ -20,3 +20,8 @@ Repository for the Modeling Human Gaze Behavior and Robot Application Project
 - fingersTuner          icub-laptop
 - imuFilter             pc104
 
+# run yarp from a different computer
+- yarp namespace /icub
+- yarp detect (to check you are connected)
+- gedit /home/nduarte/.config/yarp/_icub.conf
+- 'ip of computer you wish to connect' 10000 yarp 
