@@ -9,3 +9,14 @@ yarp connect /test/video /icubSim/texture/screen
 sudo rmmod uvcvideo
 sudo modprobe uvcvideo quirks=128 
 -> you can think of running a script instead of always needing to run this before turning it on
+
+# run on the real robot (without right arm)
+- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
+iCubStartup:
+- iKinCartesianSolver -part left_arm
+- iKinGazeCtrl ...
+- wholeBodyDynamics     icubbrain1   -headV2 -autocorrect -no_right_arm
+- gravityCompensator    icubbrain2   -headV2 -no_right_arm
+- fingersTuner          icub-laptop
+- imuFilter             pc104
+
