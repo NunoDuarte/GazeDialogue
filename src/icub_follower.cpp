@@ -110,7 +110,7 @@ public:
         printf("ControlThread:starting\n");
 
         // Open cartesian solver for right and left arm
-        string robot="icubSim";
+        string robot="icub";
 
         if (!openCartesian(robot,"left_arm"))
         {
@@ -148,7 +148,7 @@ public:
         // open a client interface to connect to the joint controller
         Property optJoint;
         optJoint.put("device","remote_controlboard");
-        optJoint.put("remote","/icubSim/left_arm");
+        optJoint.put("remote","/"+ robot +"/left_arm");
         optJoint.put("local","/position/left_arm");
 
         if (!drvHandL.open(optJoint))
@@ -158,22 +158,22 @@ public:
         }
 
         // open a client interface to connect to the joint controller
-        Property optJoint1;
+        /*Property optJoint1;
         optJoint1.put("device","remote_controlboard");
-        optJoint1.put("remote","/icubSim/right_arm");
+        optJoint1.put("remote","/"+ robot +"/right_arm");
         optJoint1.put("local","/position/right_arm");
 
         if (!drvHandR.open(optJoint1))
         {
             yError()<<"Unable to connect to /icubSim/right_arm";
             return false;
-        }
+        }*/
 
         yInfo()<<"Begin moving arms to first initial position";
         // GET ARMS IN THE CORRECT POSITION
         x.resize(3);
-        x[1] =  0.5; // to the right
-        initArm(x);
+        //x[1] =  0.5; // to the right
+        //initArm(x);
         x[1] =  -0.5; // to the left
         initArm(x);
 
@@ -1241,7 +1241,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>100)
             done=true;
     }
     
