@@ -168,7 +168,7 @@ public:
 	}
 
 	/*  Calculates the posterior state probabilities of a sequence of emissions */
-  static void decodeMR1(const cv::Mat &seq,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD)
+  static void decodeMR1(const cv::Mat &seq,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD, int cnt)
 	{
 		/*
 
@@ -181,7 +181,7 @@ public:
 		cv::Mat EMIS = _EMIS.clone();
 		cv::Mat INIT = _INIT.clone();
 		correctModel(TRANS,EMIS,INIT);
-		int T = seq.cols; // number of element per sequence
+		int T = cnt;//seq.cols; // number of element per sequence
 		int C = seq.rows; // number of sequences
 		int N = TRANS.rows; // number of states | also N = TRANS.cols | TRANS = A = {a_{i,j}} - NxN
 		int M = EMIS.cols; // number of observations | EMIS = B = {b_{j}(k)} - NxM
@@ -287,7 +287,7 @@ public:
 		logpseq = 0;
 	}
 
-	void decodeMR2(const cv::Mat &seqin,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD)
+	void decodeMR2(const cv::Mat &seq,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD, int cnt)
 	{
 	  /*
 			seq 1xT array of sequences of observations (states are 0-M)
@@ -304,12 +304,12 @@ public:
 			/* A Revealing Introduction to Hidden Markov Models, Mark Stamp */
 			// 1. Initialization
 		
-		cv::Mat seq = seqin.t();
+		//cv::Mat seq = seqin.t();
 		cv::Mat TRANS = _TRANS.clone();
 		cv::Mat EMIS = _EMIS.clone();
 		cv::Mat INIT = _INIT.clone();
 		//correctModel(TRANS,EMIS,INIT);
-		int T = seq.cols; // number of element per sequence
+		int T = cnt;//seq.cols; // number of element per sequence
 		int C = seq.rows; // number of sequences
 		int N = TRANS.rows; // number of states | also N = TRANS.cols | TRANS = A = {a_{i,j}} - NxN
 		int M = EMIS.cols; // number of observations | EMIS = B = {b_{j}(k)} - NxM
@@ -338,11 +338,15 @@ public:
 					intsum = 0;
 					for(int substate=0;substate<N;substate++)
 					{
+						//cout << "cp1\n";
 						intsum +=((double)FORWARD.at<double>(substate,count-1)) * ((double)TRANS.at<double>(substate,state));
+						//cout << "cp2\n";
 					}
 
 					pos = (int)(seq.at<double>(0,count-1));
+//cout << "cp3\n";
 					FORWARD.at<double>(state,count) = EMIS.at<double>(state,pos)*intsum;
+//cout << "cp4\n";
 
 					//cout << ""<<state<<"\n";
 					//cout << ""<<pos<<"\n";
@@ -393,7 +397,7 @@ public:
 	                        //cout << "B"<<BACKWARD.at<double>(substate,count+1)<<"\n";
 	                        //cout << "E"<<EMIS.at<double>(state,pos)<<"\n";
 						}
-						cout << "S"<<intsum<<"\n";
+						//cout << "S"<<intsum<<"\n";
 	                    BACKWARD.at<double>(state,count) = (1/S.at<double>(count+1)) * intsum;
 					}
 			}
@@ -415,6 +419,9 @@ public:
 						PSTATES.at<double>(substate,count) =PSTATES.at<double>(substate,count)/intsum;
 					}*/
 			}
+		TRANS.release();
+		EMIS.release();
+		INIT.release();
 
 	}
 

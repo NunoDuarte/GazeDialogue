@@ -92,6 +92,8 @@ class ControlThread: public RateThread
 
     // define the sequence of states
     cv::Mat seq_mat;
+    cv::Mat seq;
+int cnt;
 
     // define the forward and backward probability matrix that are use to calculate the states
     cv::Mat forward;
@@ -108,7 +110,9 @@ public:
     {
         //initialize here variables
         printf("ControlThread:starting\n");
-
+        seq = cv::Mat::zeros(cv::Size( 1000,1), CV_64FC1);
+seq=seq-1;
+        cnt=0;
         // Open cartesian solver for right and left arm
         string robot="icubSim";
 
@@ -848,7 +852,15 @@ public:
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         // add state to sequence of states
+        int rows = seq_mat.rows;
         seq_mat.push_back(state);
+        //seq = seq_mat.t();
+        seq.at<double>(0,cnt) = state;
+
+        cout << "M = " << endl;
+        for(int nu=0;nu<cnt;nu++) cout << " "  << seq.at<double>(0,nu);
+        cout << endl;
+        cnt++;
         
         // make a decision based on the predictor's response
         if (action == 0){
@@ -863,7 +875,7 @@ public:
             reachArmGiving(p, od, xf, vcur);
             count++; // count the number of times is giving
             
-            hmmFG.decodeMR2(seq_mat,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward);
+            hmmFG.decodeMR2(seq,TRANSFG,EMISFG,INITFG,logpseq,pstates,forward,backward,cnt);
             gazeBehavior(pstates);
 
         } else if (action == 1) {
@@ -881,7 +893,7 @@ public:
             x[1] =  -0.5; // to the left
             startingArm(x);
 
-            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
+            hmmFP.decodeMR2(seq,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward,cnt);
             gazeBehavior(pstates);
 
             // alternative is getting the percentage of giving and when it is higher than
@@ -889,10 +901,8 @@ public:
 
         } else {
             yInfo() << "Wrong action";
-            //cout << "M = "<< endl << " "  << seq_mat << endl << endl;
-            hmmFP.decodeMR2(seq_mat,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward);
-            //cout << "M = "<< endl << " "  << pstates << endl << endl;
-            //getchar();
+
+            hmmFP.decodeMR2(seq,TRANSFP,EMISFP,INITFP,logpseq,pstates,forward,backward,cnt);
             gazeBehavior(pstates);
         }
         //myfile2 << pstates << "\n";
@@ -1086,7 +1096,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>100)
+        if ((Time::now()-startTime)>30)
             done=true;
     }
     
