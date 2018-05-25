@@ -1189,7 +1189,9 @@ public:
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
             }
-        }
+        }//if (inPort.timeout(5)){
+         //   yInfo() << "Exceeded the 5 ms of the thread frequency - output: no action";
+        //}
     }
 };
 

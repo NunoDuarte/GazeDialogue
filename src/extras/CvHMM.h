@@ -287,7 +287,7 @@ public:
 		logpseq = 0;
 	}
 
-	void decodeMR2(const cv::Mat &seq,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD)
+	void decodeMR2(const cv::Mat &seqin,const cv::Mat &_TRANS,const cv::Mat &_EMIS, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, cv::Mat &FORWARD, cv::Mat &BACKWARD)
 	{
 	  /*
 			seq 1xT array of sequences of observations (states are 0-M)
@@ -303,6 +303,8 @@ public:
 
 			/* A Revealing Introduction to Hidden Markov Models, Mark Stamp */
 			// 1. Initialization
+		
+		cv::Mat seq = seqin.t();
 		cv::Mat TRANS = _TRANS.clone();
 		cv::Mat EMIS = _EMIS.clone();
 		cv::Mat INIT = _INIT.clone();
