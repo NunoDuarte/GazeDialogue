@@ -110,7 +110,7 @@ public:
         printf("ControlThread:starting\n");
 
         // Open cartesian solver for right and left arm
-        string robot="icub";
+        string robot="icubSim";
 
         if (!openCartesian(robot,"left_arm"))
         {
@@ -488,55 +488,10 @@ public:
         switch(maxState) {
             case 1 : {
                         cout << '1' << endl; 
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-40.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
-
-                        double timeout = 10.0; 
-                        bool done = false; 
-                        done = igaze->waitMotionDone(0.1,timeout); 
-                        if(!done){
-                            yWarning("Something went wrong, using timeout");
-                            igaze->stopControl();
-                        }
-                        // look for red ball
-                        Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                // track the moving target within the camera image
-                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
-                            }
-                        }
-                        break;
-                     }
-            case 2 : {
-                        cout << '2' << endl; 
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
-                        yInfo()<<"fixating the Human's face";
+                        yInfo() << "fixating the Human's face";
 
                         Vector look = x;
 		                look[0] = -0.35;
@@ -549,20 +504,12 @@ public:
                         igaze->setTrackingMode(true);
                         break;
                      }
-            case 3 : {
-                        cout << '3' << endl; 
-
-                        // look up if you haven't already
-                        /*Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-40.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }*/
+            case 2 : {
+                        cout << '2' << endl; 
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
-                        yInfo()<<"fixating the Human's hand";
+                        yInfo() << "fixating the Human's hand";
 
                         Vector look = x;
 		                look[0] = -0.35;
@@ -570,52 +517,14 @@ public:
 		                look[2] =  0.20;    
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        igaze->setTrackingMode(true);
                         break;
                      }
-            case 4 : {
-                        cout << '4' << endl; 
-
-                        // look up if you haven't already
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-40.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
+            case 3 : {
+                        cout << '3' << endl; 
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
-                        yInfo()<<"fixating at Own hand";
-
-                        Vector look = x;
-                        look[0] = -0.25;
-                        look[1] = -0.05;
-                        look[2] =  0.10;         
-
-                        igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        igaze->setTrackingMode(true);
-                        break;
-
-                     }
-            case 5 : {
-                        cout << '5' << endl; 
-
-                        // make iCub look down
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-70.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
-
-                        Vector x, o;
-                        iarm->getPose(x,o); //get current position of hand
-                        yInfo()<<"fixating the Teammates Tower";
+                        yInfo() << "fixating the Teammates Tower";
 
                         Vector look = x;
                         look[0] = -0.45;
@@ -623,53 +532,14 @@ public:
                         look[2] = -0.05;         
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        igaze->setTrackingMode(true);
-                        break;
-                        // look for red ball
-                        /*Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                // track the moving target within the camera image
-                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
-                            }
-                        }*/
                         break;
                      }
-            case 6 : {
-                        cout << '6' << endl; 
-
-                        // make iCub look down
-                        Vector ang(3,0.0);
-                        igaze->getAngles(ang);
-                        if (ang[1] > -30){
-                            ang[1]=-70.0;
-                            igaze->lookAtAbsAngles(ang);
-                        }
+            case 4 : {
+                        cout << '4' << endl; 
 
                         Vector x, o;
                         iarm->getPose(x,o); //get current position of hand
-                        yInfo()<<"fixating My Tower";
+                        yInfo() << "fixating My Tower";
 
                         Vector look = x;
                         look[0] = -0.20;
@@ -677,40 +547,9 @@ public:
                         look[2] = -0.05;         
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        igaze->setTrackingMode(true);
-                        break;
-                        // look for red ball
-                        /*Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
-                            }
-                        }*/
                         break;
                      }
         }
-        yInfo() << "Which state was chosen?";
     }
 
     void threadRelease()
@@ -725,6 +564,7 @@ public:
         port.close();
 
         myfile << seq_mat;
+        myfile2 << pstates << "\n";
         myfile.close(); 
         myfile2.close();
         
@@ -776,7 +616,7 @@ public:
             // set up max acceleration in [deg/s^2]
             ipos->setRefAcceleration(j,5.0);
             // yield the actual movement
-            yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
+            //yInfo()<<"Yielding new target: "<<target[i]<<" [deg]";
             ipos->positionMove(j,target[i]);
         }
     }
@@ -883,7 +723,7 @@ public:
         for (size_t i=0; i<joints.size(); i++)
         {
             int j=joints[i];
-            yInfo()<<"j" << j;
+            //yInfo()<<"j" << j;
             // retrieve joint bounds
             double min_j,max_j,range;
             ilim->getLimits(j,&min_j,&max_j);
@@ -1004,8 +844,8 @@ public:
         // call the predictor function
         action = predictAL(act_probability, state, action);
         myfile << act_probability << "\n";
-        //yInfo() << "predicting" << act_probability.at<double>(0,0);
-        //yInfo() << "predicting" << act_probability.at<double>(1,0);
+        yInfo() << "predicting" << act_probability.at<double>(0,0);
+        yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         // add state to sequence of states
         seq_mat.push_back(state);
@@ -1055,7 +895,7 @@ public:
             //getchar();
             gazeBehavior(pstates);
         }
-        myfile2 << pstates << "\n";
+        //myfile2 << pstates << "\n";
     }
 
     void reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
@@ -1130,7 +970,9 @@ public:
 
         int nRows = state.rows;
         int nCols = state.cols;
-        cout << "MaxStates = "<< endl << " "  << state << endl << endl;
+        yInfo() << "nRows" << nRows;
+        yInfo() << "nCols" << nCols;
+        //cout << "MaxStates = "<< endl << " "  << state << endl << endl;
 
         // we only want the last column
         int i,j = nCols - 1;
@@ -1146,6 +988,7 @@ public:
             }
         }
         // sending the highest probable state to the robot
+        yInfo() << "fixate" << id+1;
         fixate(id+1);
     }
 
