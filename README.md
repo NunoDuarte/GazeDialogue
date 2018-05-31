@@ -1,4 +1,4 @@
-# gazePupil_iCubSIM
+# gazePupil_iCub
 Repository for the Modeling Human Gaze Behavior and Robot Application Project
 
 # read camera output
