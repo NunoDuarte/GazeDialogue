@@ -22,6 +22,7 @@
 #include <complex>
 #include <sstream>
 #include <fstream>
+#include <time.h>
 
 #include "helpers.h"
 #include "extras/CvHMM.h"
@@ -48,6 +49,9 @@ class ControlThread: public RateThread
     ofstream myfile;
     ofstream myfile2;
     BufferedPort<Bottle> port;
+
+    time_t timer1;       // define time variable 1
+    time_t timer2;       // define time variable 2
 
     int startup_ctxt_gaze;
     string _hand;
@@ -92,8 +96,9 @@ class ControlThread: public RateThread
 
     // define the sequence of states
     cv::Mat seq_mat;
+    cv::Mat seq_mat_wTime;
     cv::Mat seq;
-int cnt;
+    int cnt;
 
     // define the forward and backward probability matrix that are use to calculate the states
     cv::Mat forward;
@@ -111,7 +116,7 @@ public:
         //initialize here variables
         printf("ControlThread:starting\n");
         seq = cv::Mat::zeros(cv::Size( 1000,1), CV_64FC1);
-seq=seq-1;
+        seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
         string robot="icubSim";
@@ -417,6 +422,8 @@ seq=seq-1;
 
         //getchar();
 
+        time(&timer1);           // get current time
+
         return true;
     }
 
@@ -568,6 +575,7 @@ seq=seq-1;
         port.close();
 
         myfile << seq_mat;
+        myfile << seq_mat_wTime;
         myfile2 << pstates << "\n";
         myfile.close(); 
         myfile2.close();
@@ -851,11 +859,19 @@ seq=seq-1;
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
+        time(&timer2);           // get current time
+        float diffTime = timer2 - timer1;
+
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);
+        
         //seq = seq_mat.t();
         seq.at<double>(0,cnt) = state;
+
+        // store timestamp of the specific state
+        seq_mat_wTime.at<double>(0,cnt) = state;
+        seq_mat_wTime.at<double>(1,cnt) = diffTime;
 
         cout << "M = " << endl;
         for(int nu=0;nu<cnt;nu++) cout << " "  << seq.at<double>(0,nu);
@@ -1088,8 +1104,8 @@ int main(int argc, char *argv[])
 
     objectLocation.close();
 
-    ControlThread myThread(5); //period is 10ms
-
+    ControlThread myThread(5); //period is 5ms
+    
     myThread.start();
 
     bool done=false;
