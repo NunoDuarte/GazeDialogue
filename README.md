@@ -15,8 +15,8 @@ Repository for the Modeling Human Gaze Behavior and Robot Application Project
 ### iCubStartup:
 - iKinCartesianSolver -part left_arm
 - iKinGazeCtrl ...
-- wholeBodyDynamics     icubbrain1   -headV2 -autocorrect -no_right_arm
-- gravityCompensator    icubbrain2   -headV2 -no_right_arm
+- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
+- gravityCompensator    icubbrain2   --headV2 --no_right_arm
 - fingersTuner          icub-laptop
 - imuFilter             pc104
 
