@@ -1,6 +1,18 @@
 # gazePupil_iCub
 Repository for the Modeling Human Gaze Behavior and Robot Application Project
 
+## Robot as a Leader
+1. placing action is in the module simHHItoiCub-left 
+- look_down
+- grasp_it (/hardcoded)
+- place_on_the_center
+2. giving action it is icub_leader.cpp
+- look_down is automatic
+- grasp_it is when for the first time the iCub looks at the brick (red ball)
+- giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+
+## Robot as a Follower
+
 # read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
