@@ -1,4 +1,4 @@
-# gazePupil_iCub
+# Repository for the Modeling Human Gaze Behavior and Robot Application Project (gazePupil_iCub)
 Repository for the Modeling Human Gaze Behavior and Robot Application Project
 
 ## Robot as a Leader
