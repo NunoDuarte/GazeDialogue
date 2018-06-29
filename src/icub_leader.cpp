@@ -416,6 +416,10 @@ using namespace std;
         }
 
         // mutual model
+        double logpseq;
+
+        seq.at<double>(0,count) = state;
+        mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,cnt);
         
 
     }

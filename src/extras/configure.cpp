@@ -21,8 +21,11 @@ using namespace yarp::math;
         //initialize here variables
         printf("ControlThread:starting\n");
 
+        seq = cv::Mat::zeros(cv::Size( 1000,1), CV_64FC1);
+        seq=seq-1;
+
         // Open cartesian solver for right and left arm
-        string robot="icub";
+        string robot="icubSim";
 
         if (!openCartesian(robot,"left_arm"))
         {
@@ -251,13 +254,14 @@ using namespace yarp::math;
         TRANSLGahon = cv::Mat(4,4,CV_64F,TRANSdataLGahon).clone();
 
         double INITdataLG[] = {1.0, 0.0, 0.0, 0.0};
-        INITLG = cv::Mat(1,6,CV_64F,INITdataLG).clone();
+        INITLG = cv::Mat(1,4,CV_64F,INITdataLG).clone();
 
         std::cout << "LG:";
         mcLG.printModel(TRANSLGbhon,TRANSLGahon,INITLG);
 
         /*------------------------ LEADER PLACING MODEL ------------------------*/
 
+        getchar();
 
         // initialize grasping and releasing counter
         grasp = false;
@@ -274,7 +278,7 @@ using namespace yarp::math;
         Result = Result_string.str();
         bool convert;
 
-        Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = false);  
+        //Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = false);  
 
 /*        if (act.getAction(action))
         {
@@ -283,7 +287,6 @@ using namespace yarp::math;
         else 
             action = -1;     
 */
-
 
         myfile.open ("log.txt");
         myfile2.open ("log2.txt");
