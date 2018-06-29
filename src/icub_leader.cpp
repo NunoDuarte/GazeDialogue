@@ -26,6 +26,7 @@
 
 //#include "init.h"
 #include "compute.h"
+#include "extras/CvMC.h"
 
 #define NBSAMPLES 1
 
@@ -365,7 +366,7 @@ using namespace std;
 
         // begin
         if (count < 38){
-            look = Eyes[0][0];
+            look = 1;       // look at brick
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -414,6 +415,9 @@ using namespace std;
                 released = true;
             }
         }
+
+        // mutual model
+        
 
     }
 
