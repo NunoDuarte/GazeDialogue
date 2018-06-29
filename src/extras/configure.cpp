@@ -206,6 +206,11 @@ using namespace yarp::math;
         // first, look down  
         look_down();
 
+        // initialize the act_probability
+        act_probability = cv::Mat(2,1, CV_64F);
+        act_probability.at<double>(0,0) = 0.5;
+        act_probability.at<double>(1,0) = 0.5;
+
         // initialize grasping and releasing counter
         grasp = false;
         released = false;
@@ -230,6 +235,11 @@ using namespace yarp::math;
         else 
             action = -1;     
 */
+
+
+        myfile.open ("log.txt");
+        myfile2.open ("log2.txt");
+
         return true;
     }
 

@@ -329,34 +329,6 @@ using namespace yarp::math;
                         //to track from now on
                         igaze->setTrackingMode(true);
                         break;
-                        // look for red ball
-                        /*Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                // track the moving target within the camera image
-                                igaze->lookAtMonoPixel(0,px2); // 0: left image, 1: for right
-                                yInfo()<<"gazing at Brick: "<<px2.toString(3,3);
-                            }
-                        }*/
-                        break;
                      }
             case 2 : {
                         cout << '2' << endl; 
@@ -371,9 +343,6 @@ using namespace yarp::math;
 		                look[2] =  0.40;     
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        //igaze->setTrackingMode(true);
                         break;
                      }
             case 3 : {
@@ -397,8 +366,6 @@ using namespace yarp::math;
 		                look[2] =  0.20;    
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
                         igaze->setTrackingMode(true);
                         break;
                      }
@@ -450,37 +417,6 @@ using namespace yarp::math;
                         look[2] = -0.05;         
 
                         igaze->lookAtFixationPoint(look);
-                        //igaze->waitMotionDone();
-                        //to track from now on
-                        //igaze->setTrackingMode(true);
-                        break;
-                        // look for red ball
-                        /*Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                // track the moving target within the camera image
-                                igaze->lookAtMonoPixel(0,px1); // 0: left image, 1: for right
-                                yInfo()<<"gazing at Teammate's Tower: "<<px1.toString(3,3);
-                            }
-                        }*/
                         break;
                      }
             case 6 : {
@@ -508,36 +444,8 @@ using namespace yarp::math;
                         //to track from now on
                         //igaze->setTrackingMode(true);
                         break;
-                        // look for red ball
-                        /*Bottle *pTarget=port.read(false);
-                        if (pTarget!=NULL)
-                        {
-                            if (pTarget->size()>2)
-                            {
-                                Vector px1(2);
-                                std::string str1;
-                                Vector px2(2);
-                                std::string str2;
-                                Vector px3(2);
-                                std::string str3;
-                                px1[0]=pTarget->get(0).asDouble();
-                                px1[1]=pTarget->get(1).asDouble();
-                                str1=pTarget->get(2).asString();
-                                px2[0]=pTarget->get(3).asDouble();
-                                px2[1]=pTarget->get(4).asDouble();
-                                str2=pTarget->get(5).asString();
-                                px3[0]=pTarget->get(6).asDouble();
-                                px3[1]=pTarget->get(7).asDouble();
-                                str3=pTarget->get(8).asString();
-
-                                igaze->lookAtMonoPixel(0,px3); // 0: left image, 1: for right
-                                yInfo()<<"gazing at My Tower: "<<px3.toString(3,3);
-                            }
-                        }*/
-                        break;
                      }
         }
-        //yInfo() << "Which state was chosen?";
     }
 
     /***************************************************/
@@ -695,7 +603,6 @@ using namespace yarp::math;
                         break;
                      }
         }
-        //yInfo() << "Which state was chosen?";
     }
 
     /***************************************************/

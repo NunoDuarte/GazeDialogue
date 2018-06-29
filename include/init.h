@@ -9,7 +9,16 @@
 #include <yarp/sig/Vector.h>
 #include <opencv2/core/mat.hpp>               // add Mat variables from OpenCV
 #include <iostream>
+#include <fstream>                            // add libraries to define output files
 
+#define NBSAMPLES 1
+
+using namespace yarp::os;
+using namespace yarp::dev;
+using namespace yarp::sig;
+using namespace yarp::math;
+
+using namespace std;
 #include "helpers.h"
 
 /***************************************************/
@@ -38,7 +47,13 @@ class ControlThread: public RateThread
 
             Port inPort;
 
+            //BufferedPort<Bottle> port;
+            ofstream myfile;
+            ofstream myfile2;
             BufferedPort<Bottle> port;
+
+            time_t timer1;       // define time variable 1
+            time_t timer2;       // define time variable 2
 
             int startup_ctxt_gaze;
             string _hand;
@@ -58,6 +73,15 @@ class ControlThread: public RateThread
 
             // Declare the probabilities of being giving or placing action
             cv::Mat act_probability;
+
+            // define the sequence of states
+            cv::Mat seq_mat;
+            cv::Mat seq_mat_wTime;
+            cv::Mat seq;
+            int cnt;
+
+            // output from decode
+            cv::Mat pstates;
 
             // calculte distances for giving action
             float Vmax;
@@ -120,12 +144,19 @@ class ControlThread: public RateThread
             void moveFingers(const string &hand, const VectorOf<int> &joints,
                     const double fingers_closure);
 
-            void reachArmGiving(Vector desired_p, Vector orientation, 
-                    Vector x_pos, Vector velocity);
+            //void reachArmGiving(Vector desired_p, Vector orientation, 
+            //        Vector x_pos, Vector velocity);
 
             std::vector< std::vector<float> > loadDataFile(std::string file, 
                     bool convert);      
+
+            int predictAL(cv::Mat& act_prob, int cur_state, int cur_action);
+            void actionBehavior(int state);
+            void reachArmGiving(Vector desired_p, Vector orientation, 
+                    Vector x_pos, Vector velocity);
+            void gazeBehavior(cv::Mat &state);
    
+
 };
 
 #endif
