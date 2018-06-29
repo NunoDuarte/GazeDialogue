@@ -26,7 +26,6 @@
 
 //#include "init.h"
 #include "compute.h"
-#include "extras/CvMC.h"
 
 #define NBSAMPLES 1
 

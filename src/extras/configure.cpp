@@ -211,6 +211,54 @@ using namespace yarp::math;
         act_probability.at<double>(0,0) = 0.5;
         act_probability.at<double>(1,0) = 0.5;
 
+        /*------------------------ LEADER GIVING MODEL ------------------------*/
+        TRANSdataLGbhon = new double[16];        
+        TRANSdataLGbhon[0] = 0.969052224371373;
+        TRANSdataLGbhon[1] = 0.021276595744681;
+        TRANSdataLGbhon[2] = 0.007092198581560; 
+        TRANSdataLGbhon[3] = 0.001934235976789;
+        TRANSdataLGbhon[4] = 0.005853219270599;
+        TRANSdataLGbhon[5] = 0.986492570914003;
+        TRANSdataLGbhon[6] = 0.003151733453399;
+        TRANSdataLGbhon[7] = 0.003151733453399; 
+        TRANSdataLGbhon[8] = 0.044585987261146; 
+        TRANSdataLGbhon[9] = 0.021231422505308;
+        TRANSdataLGbhon[10] = 0.923566878980892;
+        TRANSdataLGbhon[11] = 0.010615711252654;
+        TRANSdataLGbhon[12] = 0.008968609865471;
+        TRANSdataLGbhon[13] = 0.004484304932735;
+        TRANSdataLGbhon[14] = 0.002242152466368;
+        TRANSdataLGbhon[15] = 0.966367713004484;
+        TRANSLGbhon = cv::Mat(4,4,CV_64F,TRANSdataLGbhon).clone();  
+
+        TRANSdataLGahon = new double[16];
+        TRANSdataLGahon[0] = 0.833333333333333;
+        TRANSdataLGahon[1] = 0.0;       
+        TRANSdataLGahon[2] = 0.0;       
+        TRANSdataLGahon[3] = 0.100000000000000;       
+        TRANSdataLGahon[4] = 0.015151515151515;       
+        TRANSdataLGahon[5] = 0.840909090909091;       
+        TRANSdataLGahon[6] = 0.0;       
+        TRANSdataLGahon[7] = 0.143939393939394;       
+        TRANSdataLGahon[8] = 0.030303030303030;       
+        TRANSdataLGahon[9] = 0.0;       
+        TRANSdataLGahon[10] = 0.909090909090909;       
+        TRANSdataLGahon[11] = 0.060606060606061;       
+        TRANSdataLGahon[12] = 7.936507936507937e-04;       
+        TRANSdataLGahon[13] = 0.0;       
+        TRANSdataLGahon[14] = 7.936507936507937e-04;       
+        TRANSdataLGahon[15] = 0.995238095238095;      
+        TRANSLGahon = cv::Mat(4,4,CV_64F,TRANSdataLGahon).clone();
+
+        double INITdataLG[] = {1.0, 0.0, 0.0, 0.0};
+        INITLG = cv::Mat(1,6,CV_64F,INITdataLG).clone();
+
+        std::cout << "LG:";
+        mcLG.printModel(TRANSLGbhon,TRANSLGahon,INITLG);
+
+        /*------------------------ LEADER PLACING MODEL ------------------------*/
+
+
         // initialize grasping and releasing counter
         grasp = false;
         released = false;

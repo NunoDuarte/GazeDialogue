@@ -20,6 +20,7 @@ using namespace yarp::math;
 
 using namespace std;
 #include "helpers.h"
+#include "extras/CvMC.h"
 
 /***************************************************/
 
@@ -73,6 +74,16 @@ class ControlThread: public RateThread
 
             // Declare the probabilities of being giving or placing action
             cv::Mat act_probability;
+
+            // define matrixes for the leader
+            CvMC mcLG;
+            double *TRANSdataLGbhon;
+            cv::Mat TRANSLGbhon;
+
+            double *TRANSdataLGahon;
+            cv::Mat TRANSLGahon;
+
+            cv::Mat INITLG;
 
             // define the sequence of states
             cv::Mat seq_mat;

@@ -170,20 +170,20 @@ public:
 
 	}
 
-	static void printModel(const cv::Mat &TRANS,const cv::Mat &EMIS,const cv::Mat &INIT)
+	static void printModel(const cv::Mat &TRANSb,const cv::Mat &TRANSa,const cv::Mat &INIT)
 	{
-		std::cout << "\nTRANS: \n";
-		for (int r=0;r<TRANS.rows;r++)
+		std::cout << "\nTRANSb: \n";
+		for (int r=0;r<TRANSb.rows;r++)
 		{
-			for (int c=0;c<TRANS.cols;c++)
-				std::cout << TRANS.at<double>(r,c) << " ";
+			for (int c=0;c<TRANSb.cols;c++)
+				std::cout << TRANSb.at<double>(r,c) << " ";
 			std::cout << "\n";
 		}
-		std::cout << "\nEMIS: \n";
-		for (int r=0;r<EMIS.rows;r++)
+		std::cout << "\nTRANSa: \n";
+		for (int r=0;r<TRANSa.rows;r++)
 		{
-			for (int c=0;c<EMIS.cols;c++)
-				std::cout << EMIS.at<double>(r,c) << " ";
+			for (int c=0;c<TRANSa.cols;c++)
+				std::cout << TRANSa.at<double>(r,c) << " ";
 			std::cout << "\n";
 		}
 		std::cout << "\nINIT: \n";
@@ -197,4 +197,4 @@ public:
 	}
 };
 
-#endif CVMC_H
+#endif
