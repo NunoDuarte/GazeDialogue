@@ -26,6 +26,7 @@
 #ifndef CVMC_H
 #define CVMC_H
 
+#include <opencv/cv.hpp>
 using namespace std;
 
 class CvMC {
@@ -57,7 +58,8 @@ public:
 		int N = TRANSb.rows; 	// number of states | also N = TRANS.cols | 
 					// TRANS = A = {a_{i,j}} - NxN
 		cv::Mat currStateProb = TRANSb.row(seq.at<double>(0,cnt));
-		//cv::sortIdx(source, dst, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
+		cv::Mat dst; // supposedly it is distribution?!
+		cv::sortIdx(currStateProb, dst, CV_SORT_ASCENDING);
 
 
 		TRANSb.release();
