@@ -78,6 +78,10 @@ public:
 			cout << sortInd.at<int>(c) << " ";
 		cout << "\n";
 
+		// generate random number (0.0 - 1.0)
+		double rnd_numb = static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
+
+		
 		getchar();
 
 		
