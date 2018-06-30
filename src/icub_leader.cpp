@@ -117,7 +117,7 @@ using namespace std;
         return result;
     }    
 
-    int ControlThread::predictAL(cv::Mat& act_prob, int cur_state, int cur_action){
+    int ControlThread::predictFollower(cv::Mat& act_prob, int cur_state, int cur_action){
         /***********************************************************************************
         act_prob is a 2x1 matrix with two probabilities, 
             <0,0> is probability for giving, and 
@@ -214,7 +214,7 @@ using namespace std;
         double logpseq;
 
         // call the predictor function
-        action = predictAL(act_probability, state, action);
+        action = predictFollower(act_probability, state, action);
         //myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
@@ -364,8 +364,20 @@ using namespace std;
         int look; // I need to change this to the correct type of variable
 
         // begin
-/*        if (count < 38){
-            look = 1;       // look at brick
+
+        // mutual model
+        double logpseq;
+        if (count == 1){ state = 0;}
+        seq.at<double>(0,count) = state;
+        double next_state;
+        next_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
+        state = next_state;
+        //if (count % 100 == 1){ getchar();}
+
+        if (count < 38){
+
+            // start by looking at Brick
+            look = 1;       
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -373,7 +385,7 @@ using namespace std;
         // duration of action
         }else if (count > 38 and count < 1000){
 
-            look = Eyes[count][0];
+            look = state;
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -396,7 +408,8 @@ using namespace std;
         // finish
         }else if (count > 1000){
 
-            look = Eyes[999][0];
+            // finish by looking at Follower's Hand
+            look = 3;
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
@@ -414,18 +427,8 @@ using namespace std;
                 released = true;
             }
         }
-*/
-        // mutual model
-        double logpseq;
-        if (count == 1){ state = 0;}
-        seq.at<double>(0,count) = state;
-        //yInfo() << "State";
-        //yInfo() << state;
-        double next_state;
-        next_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
-        state = next_state;
-        //if (count % 100 == 1){ getchar();}
 
+        // save to output file - increment all for reading purposes
         myfile << state + 1 << ", ";
     }
 

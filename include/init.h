@@ -164,7 +164,7 @@ class ControlThread: public RateThread
             std::vector< std::vector<float> > loadDataFile(std::string file, 
                     bool convert);      
 
-            int predictAL(cv::Mat& act_prob, int cur_state, int cur_action);
+            int predictFollower(cv::Mat& act_prob, int cur_state, int cur_action);
             void actionBehavior(int state);
             void reachArmGiving(Vector desired_p, Vector orientation, 
                     Vector x_pos, Vector velocity);
