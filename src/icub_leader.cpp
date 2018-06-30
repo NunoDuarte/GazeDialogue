@@ -224,11 +224,9 @@ using namespace std;
 
         // add state to sequence of states
         int rows = seq_mat.rows;
-        seq_mat.push_back(state);
-        
+        seq_mat.push_back(state);      
         //seq = seq_mat.t();
         seq.at<double>(0,cnt) = state;
-
         // store timestamp of the specific state
         seq_mat_wTime.at<double>(0,cnt) = state;
         seq_mat_wTime.at<double>(1,cnt) = diffTime;

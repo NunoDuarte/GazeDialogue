@@ -22,8 +22,9 @@ using namespace yarp::math;
         printf("ControlThread:starting\n");
 
         seq = cv::Mat::zeros(cv::Size( 100000,1), CV_64FC1);
+        seq_mat_wTime = cv::Mat::zeros(cv::Size( 2,10000), CV_64FC1);
         seq=seq-1;
-
+        cnt=0;
         // Open cartesian solver for right and left arm
         string robot="icubSim";
 
@@ -327,6 +328,8 @@ using namespace yarp::math;
         else 
             action = -1;     
 */
+        time(&timer1);           // get current time
+
         myfile.open ("log.txt");
         myfile << "[";
         myfile2.open ("log2.txt");
