@@ -318,8 +318,12 @@ using namespace std;
     {
       	Vector pupil; string hand; Vector gaze;
         // state the human is in
-        /*if (inPort.read(pupil))
+
+        Bottle *b = inPort.read(false);
+        if (b != NULL)
         {
+            yInfo() << b;
+            //pupil = b->get(1);
             yInfo() << "Human";
             if ( pupil(1) == 2){
                 yInfo() << "iCub's Tower";
@@ -354,9 +358,9 @@ using namespace std;
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
             }
-        }*///if (inPort.timeout(5)){
-         //   yInfo() << "Exceeded the 5 ms of the thread frequency - output: no action";
-        //}
+        }else{
+            yInfo() << "Exceeded the 0.1 ms of the thread frequency - output: no action";
+        }
       	
         count++;
 

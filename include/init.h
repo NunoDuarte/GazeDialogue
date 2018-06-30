@@ -46,9 +46,8 @@ class ControlThread: public RateThread
             ActionRetriever act;
             int action;    
 
-            Port inPort;
+            BufferedPort<Bottle> inPort;
 
-            //BufferedPort<Bottle> port;
             ofstream myfile;
             ofstream myfile2;
             BufferedPort<Bottle> port;
