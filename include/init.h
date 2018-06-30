@@ -72,6 +72,9 @@ class ControlThread: public RateThread
             // 3d location in the 3d world reference frame
             Vector x, xf, xi;
 
+            // initialize the state of the leader
+            int state;
+
             // Declare the probabilities of being giving or placing action
             cv::Mat act_probability;
 

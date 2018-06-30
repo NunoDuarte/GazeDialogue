@@ -33,7 +33,7 @@ class CvMC {
 public:
 	CvMC(){};
 
-	void mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt)
+	int mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt)
 	{
 	  /*
 			seq 1xT array of sequences of observations (states are 0-M)
@@ -70,31 +70,39 @@ public:
 		cv::sort(currStateProb, sortProb, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
 		cv::sortIdx(currStateProb, sortInd, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
 
-		cout << "\nOrdered: \n";
+/*		cout << "\nOrdered: \n";
 		for (int c=0;c<sortProb.cols;c++)
 			cout << sortProb.at<double>(c) << " ";
 		cout << "\n";
 		for (int c=0;c<sortInd.cols;c++)
 			cout << sortInd.at<int>(c) << " ";
 		cout << "\n";
-
+*/
 		// generate random number (0.0 - 1.0)
 		double rnd_numb = static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
-
+		yInfo() << rnd_numb;
 		// go through the values of probabilities to find the correct state
 		double sum = 0.0;
 		double trans_state_prob = 0.0;
 
+		int ind;
+		bool in = false;
 		for (int j=0; j<currStateProb.cols;j++){
 			sum = sum + sortProb.at<double>(j);
+			yInfo() << "sum" << sum;
 			// if sum is bigger than random number
-			if (sum > rnd_numb){
+			if (sum > rnd_numb and in == false){
 				trans_state_prob = sortProb.at<double>(j);
-				break;
+				ind = j;
+				in = true;
 			}
 		}
- 
-		getchar();
+ 		yInfo() << "ind" << ind;
+		// get index of the state
+		double next_state = sortInd.at<int>(ind);
+		yInfo() << next_state;
+		// add next state to the sequence
+		return next_state;
 
 		
 

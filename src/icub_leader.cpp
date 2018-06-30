@@ -317,7 +317,7 @@ using namespace std;
     void ControlThread::run()
     {
       	Vector pupil; string hand; Vector gaze;
-        int state; // state the human is in
+        // state the human is in
         /*if (inPort.read(pupil))
         {
             yInfo() << "Human";
@@ -364,7 +364,7 @@ using namespace std;
         int look; // I need to change this to the correct type of variable
 
         // begin
-        if (count < 38){
+/*        if (count < 38){
             look = 1;       // look at brick
 
             fixate(look);
@@ -414,14 +414,17 @@ using namespace std;
                 released = true;
             }
         }
-
+*/
         // mutual model
         double logpseq;
-        state = 0;
+        if (count == 1){ state = 0;}
         seq.at<double>(0,count) = state;
-        mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
-        
-
+        yInfo() << "State";
+        yInfo() << state;
+        double next_state;
+        next_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
+        state = next_state;
+        if (count % 100 == 1){ getchar();}
     }
 
 int main(int argc, char *argv[]) 
