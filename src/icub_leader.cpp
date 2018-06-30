@@ -316,36 +316,37 @@ using namespace std;
 
     void ControlThread::run()
     {
-      	Vector pupil; string hand; Vector gaze;
+      	double pupil; string hand; Vector gaze;
         // state the human is in
 
         Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
-            //pupil = b->get(1);
+            pupil = b->get(1).asDouble();
+            yInfo() << "pupil" << pupil;
             yInfo() << "Human";
-            if ( pupil(1) == 2){
+            if ( pupil == 2){
                 yInfo() << "iCub's Tower";
                 state = 4;
            
-            }else if ( pupil(1) == 1) {
+            }else if ( pupil == 1) {
                 yInfo() << "Human Tower";
                 state = 5;
                 
-            }else if ( pupil(1) == 3) {
+            }else if ( pupil == 3) {
                 yInfo() << "Brick/Object";
                 state = 0;
   
-            }else if ( pupil(1) == 7) {
+            }else if ( pupil == 7) {
                 yInfo() << "iCub's Face";
                 state = 1;
 
-            }else if ( pupil(1) == 5) {
+            }else if ( pupil == 5) {
                 yInfo() << "iCub's Hand";
                 state = 2;
 
-            }else if ( pupil(1) == 4) {
+            }else if ( pupil == 4) {
                 yInfo() << "Human's Hand";
                 state = 3;
                 
@@ -362,7 +363,7 @@ using namespace std;
             yInfo() << "Exceeded the 0.1 ms of the thread frequency - output: no action";
         }
       	
-        count++;
+        /*count++;
 
 
         int look; // I need to change this to the correct type of variable
@@ -433,7 +434,7 @@ using namespace std;
         }
 
         // save to output file - increment all for reading purposes
-        myfile << state + 1 << ", ";
+        myfile << state + 1 << ", ";*/
     }
 
 int main(int argc, char *argv[]) 
