@@ -276,7 +276,7 @@ using namespace std;
             // 70% you can close the hand
 
         } else {
-            yInfo() << "Wrong action";
+            yInfo() << "I don't know yet";
 
             gazeBehavior(pstates);
         }
@@ -346,12 +346,12 @@ using namespace std;
                 yInfo() << "iCub's Hand";
                 state = 2;
 
-            }else if ( pupil == 4) {
+            }else if (pupil == 4) {
                 yInfo() << "Human's Hand";
                 state = 3;
                 
             } else {
-                yInfo() << "wrong state";
+                yInfo() << "no state";
                 state = -1;            
             }
             //state=5;
