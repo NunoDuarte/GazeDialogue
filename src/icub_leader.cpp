@@ -419,12 +419,14 @@ using namespace std;
         double logpseq;
         if (count == 1){ state = 0;}
         seq.at<double>(0,count) = state;
-        yInfo() << "State";
-        yInfo() << state;
+        //yInfo() << "State";
+        //yInfo() << state;
         double next_state;
         next_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
         state = next_state;
-        if (count % 100 == 1){ getchar();}
+        //if (count % 100 == 1){ getchar();}
+
+        myfile << state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
@@ -475,7 +477,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>20)
             done=true;
     }
     

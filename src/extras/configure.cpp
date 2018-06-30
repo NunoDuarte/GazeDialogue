@@ -328,6 +328,7 @@ using namespace yarp::math;
             action = -1;     
 */
         myfile.open ("log.txt");
+        myfile << "[";
         myfile2.open ("log2.txt");
 
         return true;
@@ -485,6 +486,9 @@ using namespace yarp::math;
     void ControlThread::threadRelease()
     {
         printf("ControlThread:stopping the robot\n");
+
+        myfile << "];";
+        myfile.close();
 
         iarm->stopControl();
 
