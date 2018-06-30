@@ -57,9 +57,30 @@ public:
 		int C = seq.rows; 	// number of sequences
 		int N = TRANSb.rows; 	// number of states | also N = TRANS.cols | 
 					// TRANS = A = {a_{i,j}} - NxN
-		cv::Mat currStateProb = TRANSb.row(seq.at<double>(0,cnt));
-		cv::Mat dst; // supposedly it is distribution?!
-		cv::sortIdx(currStateProb, dst, CV_SORT_ASCENDING);
+		cv::Mat currStateProb = TRANSb.row(seq.at<double>(0,cnt)), sortInd;
+
+		cout << "\ncurrStateProb: \n";
+		for (int c=0;c<currStateProb.cols;c++)
+			cout << currStateProb.at<double>(c) << " ";
+		cout << "\n";
+
+		cv::Mat sortProb; // supposedly it is distribution?!
+
+		// sort the currStateProb - the probabilities
+		cv::sort(currStateProb, sortProb, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
+		cv::sortIdx(currStateProb, sortInd, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
+
+		cout << "\nOrdered: \n";
+		for (int c=0;c<sortProb.cols;c++)
+			cout << sortProb.at<double>(c) << " ";
+		cout << "\n";
+		for (int c=0;c<sortInd.cols;c++)
+			cout << sortInd.at<int>(c) << " ";
+		cout << "\n";
+
+		getchar();
+
+		
 
 
 		TRANSb.release();

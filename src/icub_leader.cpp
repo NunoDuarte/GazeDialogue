@@ -318,7 +318,7 @@ using namespace std;
     {
       	Vector pupil; string hand; Vector gaze;
         int state; // state the human is in
-        if (inPort.read(pupil))
+        /*if (inPort.read(pupil))
         {
             yInfo() << "Human";
             if ( pupil(1) == 2){
@@ -354,7 +354,7 @@ using namespace std;
                 // if you observe the human looking at one of the states then act
                 actionBehavior(state);
             }
-        }//if (inPort.timeout(5)){
+        }*///if (inPort.timeout(5)){
          //   yInfo() << "Exceeded the 5 ms of the thread frequency - output: no action";
         //}
       	
@@ -417,9 +417,9 @@ using namespace std;
 
         // mutual model
         double logpseq;
-
+        state = 0;
         seq.at<double>(0,count) = state;
-        mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,cnt);
+        mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
         
 
     }
