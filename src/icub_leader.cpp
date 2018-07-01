@@ -238,7 +238,7 @@ using namespace std;
 
 
         // Generate Next State
-        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
+        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
         if (count < 50){
 
