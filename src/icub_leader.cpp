@@ -36,87 +36,6 @@ using namespace yarp::math;
 
 using namespace std;
 
-    std::vector< std::vector<float> > ControlThread::loadDataFile(std::string file, 
-                                                                    bool convert = false)
-    {
-        // Load the dataset from a file
-        float valTmp;
-        char tmp[1024];
-        unsigned int l=0, c=0;
-        // initialize the vector size
-        std::vector< std::vector<float> > result(
-                1001,
-                std::vector<float>(4)); 
-
-        yInfo() << "loading file: " << file;
-        std::ifstream f(file.c_str());
-
-        if (f.is_open()){
-            // Get number of rows
-            while(!f.eof()){ 
-                f.getline(tmp,1024);
-                l++;
-                if (l==1)
-                {
-                    // Get number of columns
-                    std::istringstream strm;
-                    strm.str(tmp); 
-                    while (strm >> valTmp)
-                    c++;
-                }
-            }
-            l--;
-            f.clear();
-            f.seekg(0); // returns to beginning of the file
-
-            // for head and arm data
-            if (not convert) {
-                for(unsigned int i=0;i<l;i++){ 
-                    f.getline(tmp,1024);
-                    std::istringstream strm;
-                    strm.str(tmp); 
-                    for(unsigned int j=0;j<c;j++){
-                        strm >> result[i][j];
-                        //printf("%f ",result[i][j]);
-                    }
-                    //printf("\n");
-                }
-            // for eyes data
-            } else {
-                for(unsigned int i=0;i<l;i++){ 
-                    f.getline(tmp,1024);
-                    std::istringstream strm;
-                    strm.str(tmp); 
-                    for(unsigned int j=0;j<c;j++){
-                        strm >> result[i][j];
-                        if (j == 1){
-                            if (result[i][j] == 1){
-                                result[i][1] = -0.55;
-                                result[i][2] =  0.00;
-                                result[i][3] =  0.45;                    
-                            }else if (result[i][j] == 2){
-                                result[i][1] = -0.35;  //move forward 10 cm
-                                result[i][2] = -0.19;  //move left 20 cm
-                                result[i][3] =  0.02;  //move down 10 cm
-                            }else if (result[i][j] == 3){
-                                result[i][1] = -0.25;
-                                result[i][2] =  0.30;
-                                result[i][3] =  0.45;                
-                            }
-                        }else{
-                            continue;//printf("%f ", float(result[i][j]));
-                        }
-                    }
-                    printf("\n");
-                }
-            }
-        }else{
-            std::cout  << std::endl << "Error opening file " << std::endl; 
-        }
-        f.close();
-        return result;
-    }    
-
     int ControlThread::predictFollower(cv::Mat& act_prob, int cur_state, int cur_action){
         /***********************************************************************************
         act_prob is a 2x1 matrix with two probabilities, 
@@ -125,7 +44,7 @@ using namespace std;
         This value (as argument) containes the current probabilities 
             for the two actions that are updated within the function.
 
-        cur_state is 0-5 integer representing the loeaders focuse of attention. 
+        cur_state is 0-3 integer representing the leaders focus of attention. 
             0 - TM face 
             1 - TM hand 
             2 - TM tower 
@@ -273,27 +192,18 @@ using namespace std;
     void ControlThread::run()
     {
       	double pupil; string hand; Vector gaze;
-        // state the human is in
+        // state the human is in (as a follower)
 
         Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
             pupil = b->get(1).asDouble();
-            yInfo() << "pupil" << pupil;
-            yInfo() << "Human";
+            yInfo() << "Human is looking at: ";
             if ( pupil == 2){
                 yInfo() << "iCub's Tower";
-                state = 4;
-           
-            }else if ( pupil == 1) {
-                yInfo() << "Human Tower";
-                state = 5;
-                
-            }else if ( pupil == 3) {
-                yInfo() << "Brick/Object";
-                state = 0;
-  
+                state = 3;
+
             }else if ( pupil == 7) {
                 yInfo() << "iCub's Face";
                 state = 1;
@@ -301,13 +211,13 @@ using namespace std;
             }else if ( pupil == 5) {
                 yInfo() << "iCub's Hand";
                 state = 2;
-
-            }else if (pupil == 4) {
-                yInfo() << "Human's Hand";
-                state = 3;
-                
+           
+            }else if ( pupil == 1) {
+                yInfo() << "Human Tower";
+                state = 4;
+         
             } else {
-                yInfo() << "no state";
+                yInfo() << "Nothing";
                 state = -1;            
             }
             //state=5;
