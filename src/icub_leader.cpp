@@ -65,9 +65,9 @@ using namespace std;
         alfa - a parameter for moving average filtering a = (1-alfa)*a+alfa*new_val;
         *************************************************************************************/
         double APdataL[] = {0.495, 0.505,
-                          0.617, 0.383,
-                          0.293, 0.706,
-                          0.844, 0.156};
+                            0.617, 0.383,
+                            0.293, 0.706,
+                            0.844, 0.156};
         cv::Mat APL = cv::Mat(4,2,CV_64F,APdataL).clone();
 
         int new_action;//0-giving 1-placing -1-uncertain
@@ -162,25 +162,21 @@ using namespace std;
 
             od = computeHandOrientationPassing(_hand); //get default orientation
             reachArmGiving(p, od, xf, vcur);
-            
 
+            // check if it is time to release the object
+            iarm->getPose(p,o);
+
+            e[0] = xf[0] - p[0];
+            e[1] = xf[1] - p[1];
+            e[2] = xf[2] - p[2];        
+
+            if (magnitude(e) < 0.1 and (not released)){
+                release("left");
+                released = true;
+            }
 
         } else if (action == 1) {
-            // just observe the action
-            yInfo() << "I'm observing";
-
-            iarm->getPose(p,o);
-            // get current velocities
-            iarm->getTaskVelocities(vcur, wcur);
-
-            //closing back the hand
-            moveFingers(_hand,thumb,1.0);
-            moveFingers(_hand,fingers,0.5);
-            // go back to start position
-            x[1] =  -0.5; // to the left
-            startingArm(x);
-
-
+            yInfo() << "He thinks it is the wrong action";
 
         } else {
             yInfo() << "I don't know yet";
@@ -250,28 +246,14 @@ using namespace std;
             int look = 1;       
 
             fixate(look);
+            arm(look);
             yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
         }else{
 
             fixate(state+1);
-
             yInfo() << "fixating at (" << state+1 << ")";
-            arm(state+1);
-
-            // -------------//----------------------
-            // get current location
-            iarm->getPose(p,o);
-
-            e[0] = xf[0] - p[0];
-            e[1] = xf[1] - p[1];
-            e[2] = xf[2] - p[2];        
-
-            if (magnitude(e) < 0.1 and (not released)){
-                release("left");
-                released = true;
-            }
         }
 
 
@@ -319,7 +301,7 @@ int main(int argc, char *argv[])
 
     objectLocation.close();
 
-    ControlThread myThread(5); //period is 10ms
+    ControlThread myThread(10); //period is 10ms
 
     myThread.start();
 
@@ -327,7 +309,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>20)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     
