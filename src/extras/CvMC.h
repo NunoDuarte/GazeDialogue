@@ -33,7 +33,7 @@ class CvMC {
 public:
 	CvMC(){};
 
-	int mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt)
+	int mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt, bool released)
 	{
 	  /*
 			seq 1xT array of sequences of observations (states are 0-M)
@@ -57,7 +57,12 @@ public:
 		int C = seq.rows; 	// number of sequences
 		int N = TRANSb.rows; 	// number of states | also N = TRANS.cols | 
 					// TRANS = A = {a_{i,j}} - NxN
-		cv::Mat currStateProb = TRANSb.row(seq.at<double>(0,cnt)), sortInd;
+
+		cv::Mat currStateProb, sortInd;
+		if (released)
+			currStateProb = TRANSa.row(seq.at<double>(0,cnt));
+		else
+			currStateProb = TRANSb.row(seq.at<double>(0,cnt));
 
 		cout << "\ncurrStateProb: \n";
 		for (int c=0;c<currStateProb.cols;c++)

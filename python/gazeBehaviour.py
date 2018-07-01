@@ -7,7 +7,7 @@ class gazeBehaviour:
         pass
 
     def record(self, timestamp, allBalls, faces, fixation, labels):
-        epsilon = 5  # the threshold in pixels allowed
+        epsilon = 8  # the threshold in pixels allowed
 
         for ball in allBalls:
             if (len(ball[0]) == 1):

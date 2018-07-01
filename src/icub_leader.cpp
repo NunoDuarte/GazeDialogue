@@ -79,7 +79,7 @@ using namespace std;
         double deltalgc = 0.0;
         double deltalpc = 0.0;
         double treshold = 0.15;
-        double alfa = 0.1;//parameter of exponential moving average
+        double alfa = 0.05;//parameter of exponential moving average
 
         if(cur_state>=0 && cur_state<6)
         {
@@ -238,7 +238,7 @@ using namespace std;
 
 
         // Generate Next State
-        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
+        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
         if (count < 50){
 
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
 
     objectLocation.close();
 
-    ControlThread myThread(10); //period is 10ms
+    ControlThread myThread(100); //period is 10ms
 
     myThread.start();
 
@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>100)
             done=true;
     }
     
