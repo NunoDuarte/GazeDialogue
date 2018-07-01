@@ -308,26 +308,6 @@ using namespace yarp::math;
         grasp = false;
         released = false;
 
-        // Select Action
-        // giving  - 0
-        // placing - 1
-        int num = 0; 
-
-        string Result; 
-        std::ostringstream Result_string;
-        Result_string << num;
-        Result = Result_string.str();
-        bool convert;
-
-        //Eyes = loadDataFile("gazeBehavior_" + Result + ".txt", convert = false);  
-
-/*        if (act.getAction(action))
-        {
-            yInfo()<<" retrieved Action = ("<<action <<")";
-        }
-        else 
-            action = -1;     
-*/
         time(&timer1);           // get current time
 
         myfile.open ("log.txt");
