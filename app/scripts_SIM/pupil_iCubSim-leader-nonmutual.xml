@@ -1,6 +1,6 @@
 <application>
 
-  <name>Pupil_iCubSim-follower</name>
+  <name>Pupil_iCubSim-leader-nonmutual</name>
 
   <dependencies>
       <port>/iKinGazeCtrl/rpc</port>
@@ -14,8 +14,14 @@
   </module>
 
   <connection>
-      <from>/pupil_gaze_tracker</from>
-      <to>/read_pupil</to>
+      <from>/location</from>
+      <to>/icubSim/world</to>
+      <protocol>tcp</protocol>
+  </connection>
+
+  <connection>
+      <from>/action</from>
+      <to>/hardcoded</to>
       <protocol>tcp</protocol>
   </connection>
 
