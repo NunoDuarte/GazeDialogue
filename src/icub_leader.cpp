@@ -126,12 +126,10 @@ using namespace std;
             for the two actions that are updated within the function.
 
         cur_state is 0-5 integer representing the loeaders focuse of attention. 
-            0 - brick 
-            1 - TM face 
-            2 - TM hand 
-            3 - Own hand 
-            4 - TM tower 
-            5 - Own tower
+            0 - TM face 
+            1 - TM hand 
+            2 - TM tower 
+            3 - Own tower
 
         cur_action //0-giving 1-placing -1-uncertain
 
@@ -147,13 +145,11 @@ using namespace std;
             as 0-giving 1-placing -1-uncertain
         alfa - a parameter for moving average filtering a = (1-alfa)*a+alfa*new_val;
         *************************************************************************************/
-        double APdataL[] = {0.495420313454101, 0.504579686545899,
-                          0.840179238237491, 0.159820761762509,
-                          0.931922196796339, 0.0680778032036613,
-                          0.520000000000000, 0.480000000000000,
-                          0.748014440433213, 0.251985559566787,
-                          0.186659772492244, 0.813340227507756};
-        cv::Mat APL = cv::Mat(6,2,CV_64F,APdataL).clone();
+        double APdataL[] = {0.495, 0.505,
+                          0.617, 0.383,
+                          0.293, 0.706,
+                          0.844, 0.156};
+        cv::Mat APL = cv::Mat(4,2,CV_64F,APdataL).clone();
 
         int new_action;//0-giving 1-placing -1-uncertain
 
@@ -247,10 +243,8 @@ using namespace std;
 
             od = computeHandOrientationPassing(_hand); //get default orientation
             reachArmGiving(p, od, xf, vcur);
-            count++; // count the number of times is giving
             
 
-            gazeBehavior(pstates);
 
         } else if (action == 1) {
             // just observe the action
@@ -268,48 +262,12 @@ using namespace std;
             startingArm(x);
 
 
-            gazeBehavior(pstates);
-
-            // alternative is getting the percentage of giving and when it is higher than
-            // 70% you can close the hand
 
         } else {
             yInfo() << "I don't know yet";
 
-            gazeBehavior(pstates);
         }
         //myfile2 << pstates << "\n";
-    }
-
-    /***************************************************/
-    void ControlThread::gazeBehavior(cv::Mat &state)
-    {
-        // check all the state and take the highest probability one
-        double max = 0;   
-        int id = -1;
-
-        int nRows = state.rows;
-        int nCols = state.cols;
-        yInfo() << "nRows" << nRows;
-        yInfo() << "nCols" << nCols;
-        //cout << "MaxStates = "<< endl << " "  << state << endl << endl;
-
-        // we only want the last column
-        int i,j = nCols - 1;
-        double *p;
-        for( i = 0; i < nRows; ++i)
-        {   
-            // get the max probability and the state index
-            p = state.ptr<double>(i);
-            yInfo() << p[j];
-            if (max < p[j]) {
-                max = p[j];
-                id = i;
-            }
-        }
-        // sending the highest probable state to the robot
-        yInfo() << "fixate" << id+1;
-        fixate(id+1);
     }
 
     void ControlThread::run()
@@ -361,38 +319,36 @@ using namespace std;
             yInfo() << "Exceeded the 0.1 ms of the thread frequency - output: no action";
         }
       	
-        /*count++;
+        count++;
 
-
-        int look; // I need to change this to the correct type of variable
-
-        // begin
-
-        // mutual model
+        // Mutual Alignment Model
         double logpseq;
+        
+        // Initialize the state
         if (count == 1){ state = 0;}
-        seq.at<double>(0,count) = state;
-        double next_state;
-        next_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
-        state = next_state;
-        //if (count % 100 == 1){ getchar();}
 
-        if (count < 38){
+        // Add to Sequence
+        seq.at<double>(0,count) = state;
+
+
+        // Generate Next State
+        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count);
+
+        if (count < 50){
 
             // start by looking at Brick
-            look = 1;       
+            int look = 1;       
 
             fixate(look);
             yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
-        }else if (count > 38 and count < 1000){
+        }else{
 
-            look = state;
+            fixate(state+1);
 
-            fixate(look);
-            yInfo()<<"fixating at ("<< look <<")";
-            arm(look);
+            yInfo() << "fixating at (" << state+1 << ")";
+            arm(state+1);
 
             // -------------//----------------------
             // get current location
@@ -406,33 +362,11 @@ using namespace std;
                 release("left");
                 released = true;
             }
-
-
-        // finish
-        }else if (count > 1000){
-
-            // finish by looking at Follower's Hand
-            look = 3;
-
-            fixate(look);
-            yInfo()<<"fixating at ("<< look <<")";
-
-            // -------------//----------------------
-            // get current location
-            iarm->getPose(p,o);
-
-            e[0] = xf[0] - p[0];
-            e[1] = xf[1] - p[1];
-            e[2] = xf[2] - p[2];        
-
-            if (magnitude(e) < 0.1 and (not released)){
-                release("left");    
-                released = true;
-            }
         }
 
+
         // save to output file - increment all for reading purposes
-        myfile << state + 1 << ", ";*/
+        myfile << state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
