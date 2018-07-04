@@ -685,60 +685,7 @@ using namespace yarp::math;
         e[2] = x_pos[2] - desired_p[2]; 
         yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
-        mag_e = magnitude(e);
-        unit_e[0] = e[0]/mag_e;  // this gives us the orientation of the 
-        unit_e[1] = e[1]/mag_e;  // equilibrium point
-        unit_e[2] = e[2]/mag_e;
-
-        if( mag_e < epsilon ){
-            v_mag = 0.9*v_mag*mag_e/epsilon;
-            vcur[0] = v_mag * unit_e[0];
-            vcur[1] = v_mag * unit_e[1];
-            vcur[2] = v_mag * unit_e[2];
-            wcur[0] = v_mag * unit_e[0];
-            wcur[1] = v_mag * unit_e[1];
-            wcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
-           /* if(!send_or){
-                send_or=1;
-                Vector o = computeHandOrientation("left");
-                approachTargetWithHand("left", x, o);
-            } */
-        }else if( mag_e > epsilon and magnitude(vcur) < Vmax){
-            v_mag+=acc_mag;   
-
-            vcur[0] = v_mag * unit_e[0];
-            vcur[1] = v_mag * unit_e[1];
-            vcur[2] = v_mag * unit_e[2];
-            wcur[0] = v_mag * unit_e[0];
-            wcur[1] = v_mag * unit_e[1];
-            wcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
-        }else{
-            v_mag = Vmax;
-
-            vcur[0] = v_mag * unit_e[0];
-            vcur[1] = v_mag * unit_e[1];
-            vcur[2] = v_mag * unit_e[2];
-            wcur[0] = v_mag * unit_e[0];
-            wcur[1] = v_mag * unit_e[1];
-            wcur[2] = v_mag * unit_e[2];
-            //iarm->setTaskVelocities(vcur, wcur);
-        }
         iarm->goToPose(x_pos,orientation);
-
-/*        if (count < 20 ){
-            // let's put the hand in the pre-grasp configuration
-            moveFingers(_hand, fingers, 0.0);
-        } else {
-            //closing the hand
-            moveFingers(_hand, thumb,    1.0);
-            moveFingers(_hand, fingers,  0.5);
-        }
-*/
-        //yInfo() << "v[0]:" << vcur[0] << "v[1]" << vcur[1] << "v[2]" << vcur[2];    
-        //yInfo() << "w[0]:" << wcur[0] << "w[1]" << wcur[1] << "w[2]" << wcur[2];    
-
     }
 
     /***************************************************/

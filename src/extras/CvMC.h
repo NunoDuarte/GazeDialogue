@@ -85,20 +85,21 @@ public:
 */
 		// generate random number (0.0 - 1.0)
 		double rnd_numb = static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
-		//yInfo() << rnd_numb;
+		yInfo() << rnd_numb;
 		// go through the values of probabilities to find the correct state
 		double sum = 0.0;
 		double trans_state_prob = 0.0;
 
 		int ind;
 		bool in = false;
-		for (int j=0; j<=currStateProb.cols;j++){
+		for (int j=0; j<currStateProb.cols;j++){
 			sum = sum + sortProb.at<double>(j);
 			//yInfo() << "sum" << sum;
 			// if sum is bigger than random number
 			if (sum > rnd_numb and in == false){
 				trans_state_prob = sortProb.at<double>(j);
 				ind = j;
+				//yInfo() << j;
 				in = true;
 			}
 		}
