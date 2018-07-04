@@ -222,7 +222,7 @@ using namespace std;
                 actionBehavior(state);
             }
         }else{
-            //yInfo() << "Exceeded the 0.1 ms of the thread frequency - output: no action";
+            yInfo() << "NO Human Data";
         }
       	
         count++;
