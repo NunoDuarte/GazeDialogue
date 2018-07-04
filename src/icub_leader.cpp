@@ -81,7 +81,7 @@ using namespace std;
         double treshold = 0.15;
         double alfa = 0.05;//parameter of exponential moving average
 
-        if(cur_state>=0 && cur_state<6)
+        if(cur_state>=0 && cur_state<4)
         {
             prob_G = APL.at<double>(cur_state,0);
             prob_P = APL.at<double>(cur_state,1);
@@ -129,7 +129,7 @@ using namespace std;
         double logpseq;
 
         // call the predictor function
-        action = predictFollower(act_probability, state, action);
+        action = predictFollower(act_probability, state-1, action);
         //myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
@@ -146,10 +146,10 @@ using namespace std;
         seq_mat_wTime.at<double>(0,cnt) = state;
         seq_mat_wTime.at<double>(1,cnt) = diffTime;
 
+        cnt++;
         cout << "M = " << endl;
         for(int nu=0;nu<cnt;nu++) cout << " "  << seq.at<double>(0,nu);
         cout << endl;
-        cnt++;
         
         // make a decision based on the predictor's response
         if (action == 0){
@@ -161,7 +161,8 @@ using namespace std;
             iarm->getTaskVelocities(vcur, wcur);
 
             od = computeHandOrientationPassing(_hand); //get default orientation
-            reachArmGiving(p, od, xf, vcur);
+            Fcounter++;
+            reachArmGiving(p, od, xf, Fcounter);
 
             // check if it is time to release the object
             iarm->getPose(p,o);
@@ -177,9 +178,17 @@ using namespace std;
 
         } else if (action == 1) {
             yInfo() << "He thinks it is the wrong action";
+            // go back to start position
+            iarm->getPose(p,o);
+            iarm->setPosePriority("orientation");
+            Vector od = o;
+
+            Bcounter--;
+            reachArmGiving(p, od, xi, Bcounter);
 
         } else {
             yInfo() << "I don't know yet";
+            iarm->stopControl();
 
         }
         //myfile2 << pstates << "\n";

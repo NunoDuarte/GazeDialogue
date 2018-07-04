@@ -119,6 +119,10 @@ class ControlThread: public RateThread
             bool grasp;
             bool released;
 
+            // increase or decrease the velocity of the arm
+            int Fcounter;
+            int Bcounter;
+
     public:
 
             ControlThread(int period):RateThread(period){}
@@ -166,7 +170,7 @@ class ControlThread: public RateThread
             int predictFollower(cv::Mat& act_prob, int cur_state, int cur_action);
             void actionBehavior(int state);
             void reachArmGiving(Vector desired_p, Vector orientation, 
-                    Vector x_pos, Vector velocity);
+                    Vector x_pos, int counter);
             void gazeBehavior(cv::Mat &state);
    
 

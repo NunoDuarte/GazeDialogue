@@ -553,7 +553,7 @@ using namespace yarp::math;
                         iarm->getTaskVelocities(vcur, wcur);
 
                         od = computeHandOrientationPassing(_hand); //get default orientation
-                        reachArmGiving(p, od, xf, vcur);
+                        //reachArmGiving(p, od, xf);
 
                         break;
                      }
@@ -568,7 +568,7 @@ using namespace yarp::math;
                         iarm->getTaskVelocities(vcur, wcur);
 
                         od = computeHandOrientationPassing(_hand); //get default orientation
-                        reachArmGiving(p, od, xf, vcur);
+                        //reachArmGiving(p, od, xf);
 
                         break;
                      }
@@ -588,7 +588,7 @@ using namespace yarp::math;
                         iarm->getTaskVelocities(vcur, wcur);
 
                         od = computeHandOrientationPassing(_hand); //get default orientation
-                        reachArmGiving(p, od, xf, vcur);
+                        //reachArmGiving(p, od, xf);
                         break;
                      }
             case 6 : {
@@ -678,14 +678,15 @@ using namespace yarp::math;
         // wait until all fingers have attained their set-points
     }
 
-    void ControlThread::reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, Vector velocity)
+    void ControlThread::reachArmGiving(Vector desired_p, Vector orientation, Vector x_pos, int counter)
     {
         e[0] = x_pos[0] - desired_p[0];
         e[1] = x_pos[1] - desired_p[1];
         e[2] = x_pos[2] - desired_p[2]; 
-        yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
+        //yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
-        iarm->setTrajTime(5);
+        
+        iarm->setTrajTime(10-0.01*counter);
         iarm->goToPose(x_pos,orientation);
     }
 

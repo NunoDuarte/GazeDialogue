@@ -307,6 +307,10 @@ using namespace yarp::math;
         // initialize grasping and releasing counter
         grasp = false;
         released = false;
+        
+        // initialize the counters
+        Fcounter = 0;
+        Bcounter = 0;
 
         time(&timer1);           // get current time
 

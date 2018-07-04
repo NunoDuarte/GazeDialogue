@@ -64,11 +64,11 @@ public:
 		else
 			currStateProb = TRANSb.row(seq.at<double>(0,cnt));
 
-		cout << "\ncurrStateProb: \n";
+/*		cout << "\ncurrStateProb: \n";
 		for (int c=0;c<currStateProb.cols;c++)
 			cout << currStateProb.at<double>(c) << " ";
 		cout << "\n";
-
+*/
 		cv::Mat sortProb; // supposedly it is distribution?!
 
 		// sort the currStateProb - the probabilities
@@ -85,7 +85,7 @@ public:
 */
 		// generate random number (0.0 - 1.0)
 		double rnd_numb = static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
-		yInfo() << rnd_numb;
+		//yInfo() << rnd_numb;
 		// go through the values of probabilities to find the correct state
 		double sum = 0.0;
 		double trans_state_prob = 0.0;
