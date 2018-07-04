@@ -685,6 +685,7 @@ using namespace yarp::math;
         e[2] = x_pos[2] - desired_p[2]; 
         yInfo() << "e[0]:" << e[0] << "e[1]" << e[1] << "e[2]" << e[2];       
 
+        iarm->setTrajTime(5);
         iarm->goToPose(x_pos,orientation);
     }
 
