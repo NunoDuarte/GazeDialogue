@@ -217,7 +217,7 @@ using namespace yarp::math;
 
         /*------------------------ LEADER GIVING MODEL ------------------------*/
         TRANSdataLGbhon = new double[36];        
-        TRANSdataLGbhon[0] = 0.986088379705401;
+        TRANSdataLGbhon[0] = 0.986088379705401 + 0.003809523809524;
         TRANSdataLGbhon[1] = 0.001636661211129;
         TRANSdataLGbhon[2] = 0.004500818330606;
         TRANSdataLGbhon[3] = 0.001636661211129;
@@ -231,7 +231,7 @@ using namespace yarp::math;
         TRANSdataLGbhon[11] = 0.0;
         TRANSdataLGbhon[12] = 0.0; //0.001762114537445; // don't go back to brick
         TRANSdataLGbhon[13] = 0.021145374449339;
-        TRANSdataLGbhon[14] = 0.971806167400881;
+        TRANSdataLGbhon[14] = 0.971806167400881 + 0.001762114537445;
         TRANSdataLGbhon[15] = 8.810572687224670e-04;
         TRANSdataLGbhon[16] = 0.004405286343612;
         TRANSdataLGbhon[17] = 0.0;
@@ -245,14 +245,14 @@ using namespace yarp::math;
         TRANSdataLGbhon[25] = 0.014492753623188;
         TRANSdataLGbhon[26] = 0.043478260869565;
         TRANSdataLGbhon[27] = 0.003623188405797;
-        TRANSdataLGbhon[28] = 0.923913043478261;
+        TRANSdataLGbhon[28] = 0.923913043478261 + 0.007246376811594;
         TRANSdataLGbhon[29] = 0.007246376811594;
         TRANSdataLGbhon[30] = 0.0; //0.056603773584906; // don't go back to brick
         TRANSdataLGbhon[31] = 0.003144654088050;
         TRANSdataLGbhon[32] = 0.003144654088050;
         TRANSdataLGbhon[33] = 0.012578616352201;
         TRANSdataLGbhon[34] = 0.0;
-        TRANSdataLGbhon[35] = 0.924528301886793;
+        TRANSdataLGbhon[35] = 0.924528301886793 + 0.056603773584906;
         TRANSLGbhon = cv::Mat(6,6,CV_64F,TRANSdataLGbhon).clone();  
 
         TRANSdataLGahon = new double[36];
