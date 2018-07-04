@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <ctime>
 
 #include <yarp/sig/Vector.h>
 #include <yarp/os/all.h>
@@ -313,7 +314,7 @@ using namespace yarp::math;
         Bcounter = 0;
 
         time(&timer1);           // get current time
-
+        
         myfile.open ("log.txt");
         myfile << "[";
         myfile2.open ("log2.txt");
@@ -476,6 +477,8 @@ using namespace yarp::math;
 
         myfile << "];";
         myfile.close();
+        myfile2 << seq_mat_wTime;
+        myfile2.close();
 
         iarm->stopControl();
 

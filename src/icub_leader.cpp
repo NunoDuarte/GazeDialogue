@@ -129,7 +129,7 @@ using namespace std;
         double logpseq;
 
         // call the predictor function
-        action = predictFollower(act_probability, state-1, action);
+        action = predictFollower(act_probability, state, action);
         //myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
@@ -137,6 +137,9 @@ using namespace std;
         time(&timer2);           // get current time
         float diffTime = timer2 - timer1;
 
+        yInfo() << "diffTime" << diffTime;
+        yInfo() << "Time" << timer1;
+        yInfo() << "Time2" << timer2;
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);      
@@ -144,7 +147,8 @@ using namespace std;
         seq.at<double>(0,cnt) = state;
         // store timestamp of the specific state
         seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        seq_mat_wTime.at<float>(1,cnt) = diffTime;
+        yInfo() << seq_mat_wTime.at<double>(1,cnt);
 
         cnt++;
         cout << "M = " << endl;
@@ -199,7 +203,7 @@ using namespace std;
       	double pupil; string hand; Vector gaze;
         // state the human is in (as a follower)
 
-        Bottle *b = inPort.read(false);
+        /*Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -233,7 +237,9 @@ using namespace std;
         }else{
             yInfo() << "NO Human Data";
         }
-      	
+      	*/
+        state = 4;
+        actionBehavior(state);
         count++;
 
         // Mutual Alignment Model
