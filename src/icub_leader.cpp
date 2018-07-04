@@ -135,7 +135,7 @@ using namespace std;
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         time(&timer2);           // get current time
-        float diffTime = timer2 - timer1;
+        float diffTime = difftime (timer2,timer1);
 
         yInfo() << "diffTime" << diffTime;
         yInfo() << "Time" << timer1;
@@ -203,7 +203,7 @@ using namespace std;
       	double pupil; string hand; Vector gaze;
         // state the human is in (as a follower)
 
-        /*Bottle *b = inPort.read(false);
+        Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -237,8 +237,7 @@ using namespace std;
         }else{
             yInfo() << "NO Human Data";
         }
-      	*/
-        state = 4;
+      	
         actionBehavior(state);
         count++;
 
@@ -255,7 +254,7 @@ using namespace std;
         // Generate Next State
         state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
-        if (count < 50){
+        if (count < 10){
 
             // start by looking at Brick
             int look = 1;       
@@ -324,7 +323,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>100)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     

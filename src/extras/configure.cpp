@@ -22,8 +22,8 @@ using namespace yarp::math;
         //initialize here variables
         printf("ControlThread:starting\n");
 
-        seq = cv::Mat::zeros(cv::Size( 100000,1), CV_64FC1);
-        seq_mat_wTime = cv::Mat::zeros(cv::Size( 2,10000), CV_64FC1);
+        seq = cv::Mat::zeros(cv::Size( 1000,1), CV_64FC1);
+        seq_mat_wTime = cv::Mat::zeros(cv::Size(1000, 2), CV_64FC1);
         seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
