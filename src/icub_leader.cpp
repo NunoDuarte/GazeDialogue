@@ -129,14 +129,17 @@ using namespace std;
         double logpseq;
 
         // call the predictor function
-        action = predictFollower(act_probability, state-1, action);
+        action = predictFollower(act_probability, state, action);
         //myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         time(&timer2);           // get current time
-        float diffTime = timer2 - timer1;
+        float diffTime = difftime (timer2,timer1);
 
+        yInfo() << "diffTime" << diffTime;
+        yInfo() << "Time" << timer1;
+        yInfo() << "Time2" << timer2;
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);      
@@ -144,7 +147,8 @@ using namespace std;
         seq.at<double>(0,cnt) = state;
         // store timestamp of the specific state
         seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        seq_mat_wTime.at<float>(1,cnt) = diffTime;
+        yInfo() << seq_mat_wTime.at<double>(1,cnt);
 
         cnt++;
         cout << "M = " << endl;
@@ -234,6 +238,7 @@ using namespace std;
             yInfo() << "NO Human Data";
         }
       	
+        actionBehavior(state);
         count++;
 
         // Mutual Alignment Model
@@ -249,7 +254,7 @@ using namespace std;
         // Generate Next State
         state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
-        if (count < 50){
+        if (count < 10){
 
             // start by looking at Brick
             int look = 1;       
@@ -318,7 +323,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>100)
+        if ((Time::now()-startTime)>50)
             done=true;
     }
     

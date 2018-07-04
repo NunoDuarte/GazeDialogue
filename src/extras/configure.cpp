@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <ctime>
 
 #include <yarp/sig/Vector.h>
 #include <yarp/os/all.h>
@@ -21,8 +22,8 @@ using namespace yarp::math;
         //initialize here variables
         printf("ControlThread:starting\n");
 
-        seq = cv::Mat::zeros(cv::Size( 100000,1), CV_64FC1);
-        seq_mat_wTime = cv::Mat::zeros(cv::Size( 2,10000), CV_64FC1);
+        seq = cv::Mat::zeros(cv::Size( 1000,1), CV_64FC1);
+        seq_mat_wTime = cv::Mat::zeros(cv::Size(1000, 2), CV_64FC1);
         seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
@@ -313,7 +314,7 @@ using namespace yarp::math;
         Bcounter = 0;
 
         time(&timer1);           // get current time
-
+        
         myfile.open ("log.txt");
         myfile << "[";
         myfile2.open ("log2.txt");
@@ -476,6 +477,8 @@ using namespace yarp::math;
 
         myfile << "];";
         myfile.close();
+        myfile2 << seq_mat_wTime;
+        myfile2.close();
 
         iarm->stopControl();
 
