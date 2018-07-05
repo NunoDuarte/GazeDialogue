@@ -203,6 +203,9 @@ using namespace std;
       	double pupil; string hand; Vector gaze;
         // state the human is in (as a follower)
 
+        // initialize the state of the leader
+        int human_state;
+
         Bottle *b = inPort.read(false);
         if (b != NULL)
         {
@@ -211,48 +214,49 @@ using namespace std;
             yInfo() << "Human is looking at: ";
             if ( pupil == 2){
                 yInfo() << "iCub's Tower";
-                state = 3;
+                human_state = 3;
 
             }else if ( pupil == 7) {
                 yInfo() << "iCub's Face";
-                state = 1;
+                human_state = 1;
 
             }else if ( pupil == 5) {
                 yInfo() << "iCub's Hand";
-                state = 2;
+                human_state = 2;
            
             }else if ( pupil == 1) {
                 yInfo() << "Human Tower";
-                state = 4;
+                human_state = 4;
          
             } else {
                 yInfo() << "Nothing";
-                state = -1;            
+                human_state = -1;            
             }
             //state=5;
-            if (state != -1){
+            if (human_state != -1){
                 // if you observe the human looking at one of the states then act
-                actionBehavior(state);
+                actionBehavior(human_state);
             }
         }else{
             yInfo() << "NO Human Data";
         }
       	
-        actionBehavior(state);
+        //actionBehavior(state);
         count++;
 
         // Mutual Alignment Model
         double logpseq;
         
         // Initialize the state
-        if (count == 1){ state = 0;}
+        //if (count == 1){ human_state = 0;}
 
         // Add to Sequence
-        seq.at<double>(0,count) = state;
+        //seq.at<double>(0,count) = human_state;
 
 
         // Generate Next State
-        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
+        int iCub_state;
+        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
         if (count < 10){
 
@@ -266,13 +270,13 @@ using namespace std;
         // duration of action
         }else{
 
-            fixate(state+1);
-            yInfo() << "fixating at (" << state+1 << ")";
+            fixate(iCub_state+1);
+            yInfo() << "fixating at (" << iCub_state+1 << ")";
         }
 
 
         // save to output file - increment all for reading purposes
-        myfile << state + 1 << ", ";
+        myfile << human_state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
