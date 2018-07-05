@@ -128,9 +128,9 @@ while cv2.waitKey(1):
             # frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
             # if ballB is not [] and len(ballB) != 0:
             #      ball.append([ballB, 3])
-            # frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
-            # if ballY is not [] and len(ballY) != 0:
-            #     ball.append([ballY, 4])
+            frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
+            if ballY is not [] and len(ballY) != 0:
+                ball.append([ballY, 4])
             # frame, pts, ballC = ballTracking.trackingCyan(frame, pts)
             # if ballC is not [] and len(ballC) != 0:
             #     ball.append([ballC, 5])

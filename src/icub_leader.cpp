@@ -81,10 +81,13 @@ using namespace std;
         double treshold = 0.15;
         double alfa = 0.05;//parameter of exponential moving average
 
-        if(cur_state>=0 && cur_state<4)
+        if(cur_state>=1 && cur_state<=4)
         {
-            prob_G = APL.at<double>(cur_state,0);
-            prob_P = APL.at<double>(cur_state,1);
+            prob_G = APL.at<double>(cur_state-1,0);
+            prob_P = APL.at<double>(cur_state-1,1);
+        }else{
+            yInfo() << "ERROR";
+            return -1;
         }
 
 
@@ -126,7 +129,7 @@ using namespace std;
         //        logpseg -- irrelevant for now
         // output: behavior of robot
         int action;
-        double logpseq;
+        double logpseq; 
 
         // call the predictor function
         action = predictFollower(act_probability, state, action);
@@ -135,11 +138,26 @@ using namespace std;
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         time(&timer2);           // get current time
-        float diffTime = difftime (timer2,timer1);
+        //float diffTime = timer2 - timer1;
 
-        yInfo() << "diffTime" << diffTime;
-        yInfo() << "Time" << timer1;
-        yInfo() << "Time2" << timer2;
+        float diffTime;
+        if (cnt == 0){
+            const clock_t begin_time = clock();
+            timeI = begin_time;
+            //yInfo() << "clock" << begin_time;
+
+            diffTime = 0.0;
+        }
+        else { 
+            clock_t thread_time = clock();
+
+            //yInfo() << "clock 1" << thread_time;
+            //yInfo() << "clock" << timeI;
+
+            diffTime = 1000*float( clock () - timeI ) /  CLOCKS_PER_SEC;
+            //yInfo() << "diffTime" << diffTime;
+
+        }
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);      
@@ -147,8 +165,8 @@ using namespace std;
         seq.at<double>(0,cnt) = state;
         // store timestamp of the specific state
         seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<float>(1,cnt) = diffTime;
-        yInfo() << seq_mat_wTime.at<double>(1,cnt);
+        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        //yInfo() << seq_mat_wTime.at<double>(1,cnt);
 
         cnt++;
         cout << "M = " << endl;
@@ -203,7 +221,11 @@ using namespace std;
       	double pupil; string hand; Vector gaze;
         // state the human is in (as a follower)
 
-        Bottle *b = inPort.read(false);
+        // initialize the state of the leader
+        int human_state;
+human_state = 2;
+actionBehavior(human_state);
+        /*Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -211,48 +233,51 @@ using namespace std;
             yInfo() << "Human is looking at: ";
             if ( pupil == 2){
                 yInfo() << "iCub's Tower";
-                state = 3;
+                human_state = 3;
 
             }else if ( pupil == 7) {
                 yInfo() << "iCub's Face";
-                state = 1;
+                human_state = 1;
 
-            }else if ( pupil == 5) {
+            }else if ( pupil == 4) {
+                // let's assume that looking at the iCub's hand is looking at the 
+                // object which is being grasped by the iCub's hand
                 yInfo() << "iCub's Hand";
-                state = 2;
+                human_state = 2;
            
             }else if ( pupil == 1) {
                 yInfo() << "Human Tower";
-                state = 4;
+                human_state = 4;
          
             } else {
                 yInfo() << "Nothing";
-                state = -1;            
+                human_state = -1;            
             }
             //state=5;
-            if (state != -1){
+            if (human_state != -1){
                 // if you observe the human looking at one of the states then act
-                actionBehavior(state);
+                actionBehavior(human_state);
             }
         }else{
             yInfo() << "NO Human Data";
-        }
+        }*/
       	
-        actionBehavior(state);
+        //actionBehavior(state);
         count++;
 
         // Mutual Alignment Model
         double logpseq;
         
-        // Initialize the state
-        if (count == 1){ state = 0;}
 
+        // Initialize the state (to send the seq to the mutuaAlign)
+        if (count == 1){ human_state = 0;}
         // Add to Sequence
-        seq.at<double>(0,count) = state;
+        seq.at<double>(0,count) = human_state;
 
 
         // Generate Next State
-        state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
+        int iCub_state;
+        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
         if (count < 10){
 
@@ -261,18 +286,18 @@ using namespace std;
 
             fixate(look);
             arm(look);
-            yInfo()<<"fixating at ("<< look <<")";
+            //yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
         }else{
 
-            fixate(state+1);
-            yInfo() << "fixating at (" << state+1 << ")";
+            fixate(iCub_state+1);
+            //yInfo() << "fixating at (" << iCub_state+1 << ")";
         }
 
 
         // save to output file - increment all for reading purposes
-        myfile << state + 1 << ", ";
+        myfile << human_state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
@@ -321,9 +346,10 @@ int main(int argc, char *argv[])
 
     bool done=false;
     double startTime=Time::now();
+
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>100)
             done=true;
     }
     
