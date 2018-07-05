@@ -83,8 +83,11 @@ using namespace std;
 
         if(cur_state>=0 && cur_state<4)
         {
-            prob_G = APL.at<double>(cur_state,0);
-            prob_P = APL.at<double>(cur_state,1);
+            prob_G = APL.at<double>(cur_state-1,0);
+            prob_P = APL.at<double>(cur_state-1,1);
+        }else{
+            yInfo() << "ERROR";
+            return -1;
         }
 
 
@@ -135,11 +138,10 @@ using namespace std;
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         time(&timer2);           // get current time
-        float diffTime = difftime (timer2,timer1);
+        float diffTime = timer2 - timer1;
 
         yInfo() << "diffTime" << diffTime;
-        yInfo() << "Time" << timer1;
-        yInfo() << "Time2" << timer2;
+
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);      
@@ -220,7 +222,9 @@ using namespace std;
                 yInfo() << "iCub's Face";
                 human_state = 1;
 
-            }else if ( pupil == 5) {
+            }else if ( pupil == 4) {
+                // let's assume that looking at the iCub's hand is looking at the 
+                // object which is being grasped by the iCub's hand
                 yInfo() << "iCub's Hand";
                 human_state = 2;
            
@@ -247,11 +251,11 @@ using namespace std;
         // Mutual Alignment Model
         double logpseq;
         
-        // Initialize the state
-        //if (count == 1){ human_state = 0;}
 
+        // Initialize the state (to send the seq to the mutuaAlign)
+        if (count == 1){ human_state = 0;}
         // Add to Sequence
-        //seq.at<double>(0,count) = human_state;
+        seq.at<double>(0,count) = human_state;
 
 
         // Generate Next State
@@ -265,13 +269,13 @@ using namespace std;
 
             fixate(look);
             arm(look);
-            yInfo()<<"fixating at ("<< look <<")";
+            //yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
         }else{
 
             fixate(iCub_state+1);
-            yInfo() << "fixating at (" << iCub_state+1 << ")";
+            //yInfo() << "fixating at (" << iCub_state+1 << ")";
         }
 
 
@@ -327,7 +331,7 @@ int main(int argc, char *argv[])
     double startTime=Time::now();
     while(!done)
     {
-        if ((Time::now()-startTime)>50)
+        if ((Time::now()-startTime)>100)
             done=true;
     }
     
