@@ -223,9 +223,9 @@ using namespace std;
 
         // initialize the state of the leader
         int human_state;
-human_state = 2;
-actionBehavior(human_state);
-        /*Bottle *b = inPort.read(false);
+        //human_state = 2;
+        //actionBehavior(human_state);
+        Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -260,7 +260,7 @@ actionBehavior(human_state);
             }
         }else{
             yInfo() << "NO Human Data";
-        }*/
+        }
       	
         //actionBehavior(state);
         count++;
