@@ -106,7 +106,20 @@ public:
  		//yInfo() << "ind" << ind;
 		// get index of the state
 		double next_state = sortInd.at<int>(ind);
-		//yInfo() << next_state;
+
+		// Here is where we check if the next state is the same as the previous one or
+		// a different one
+
+		// if previous and next are the same
+		if (next_state == seq.at<double>(0,cnt))
+			return next_state;
+		else{
+			
+			
+		
+		}
+		
+
 		// add next state to the sequence
 		return next_state;
 

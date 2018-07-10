@@ -87,6 +87,13 @@ class ControlThread: public RateThread
 
             cv::Mat INITLG;
 
+            // define matrixes without the diagonal
+            double *TRANSdataLGswbhon;
+            cv::Mat TRANSLGswbhon;
+
+            double *TRANSdataLGswahon;
+            cv::Mat TRANSLGswahon;
+
             // define the sequence of states
             cv::Mat seq_mat;
             cv::Mat seq_mat_wTime;

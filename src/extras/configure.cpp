@@ -301,7 +301,86 @@ using namespace yarp::math;
         std::cout << "LG:";
         mcLG.printModel(TRANSLGbhon,TRANSLGahon,INITLG);
 
-        /*------------------------ LEADER PLACING MODEL ------------------------*/
+        /*---------------------- LEADER GIVING MODEL (WITHOUT DIAGONAL) ----------------------*/
+        TRANSdataLGswbhon = new double[36];        
+        TRANSdataLGswbhon[0] = 0.0;
+        TRANSdataLGswbhon[1] = 0.117647058823529;
+        TRANSdataLGswbhon[2] = 0.323529411764706;
+        TRANSdataLGswbhon[3] = 0.117647058823529;
+        TRANSdataLGswbhon[4] = 0.294117647058824;
+        TRANSdataLGswbhon[5] = 0.147058823529412;
+        TRANSdataLGswbhon[6] = 0.0;
+        TRANSdataLGswbhon[7] = 0.0;
+        TRANSdataLGswbhon[8] = 0.958333333333333;
+        TRANSdataLGswbhon[9] = 0.041666666666667;
+        TRANSdataLGswbhon[10] = 0.0;
+        TRANSdataLGswbhon[11] = 0.0;
+        TRANSdataLGswbhon[12] = 0.0;
+        TRANSdataLGswbhon[13] = 0.800000000000000;
+        TRANSdataLGswbhon[14] = 0.0;
+        TRANSdataLGswbhon[15] = 0.033333333333333;
+        TRANSdataLGswbhon[16] = 0.166666666666667;
+        TRANSdataLGswbhon[17] = 0.0;
+        TRANSdataLGswbhon[18] = 0.0;
+        TRANSdataLGswbhon[19] = 0.0;
+        TRANSdataLGswbhon[20] = 0.857142857142857;
+        TRANSdataLGswbhon[21] = 0.0;
+        TRANSdataLGswbhon[22] = 0.142857142857143;
+        TRANSdataLGswbhon[23] = 0.0;
+        TRANSdataLGswbhon[24] = 0.0;
+        TRANSdataLGswbhon[25] = 0.210526315789474;
+        TRANSdataLGswbhon[26] = 0.631578947368421;
+        TRANSdataLGswbhon[27] = 0.052631578947368;
+        TRANSdataLGswbhon[28] = 0.0;
+        TRANSdataLGswbhon[29] = 0.105263157894737;
+        TRANSdataLGswbhon[30] = 0.0;
+        TRANSdataLGswbhon[31] = 0.166666666666667;
+        TRANSdataLGswbhon[32] = 0.166666666666667;
+        TRANSdataLGswbhon[33] = 0.666666666666667;
+        TRANSdataLGswbhon[34] = 0.0;
+        TRANSdataLGswbhon[35] = 0.0;
+
+        TRANSLGswbhon = cv::Mat(6,6,CV_64F,TRANSdataLGswbhon).clone();  
+
+        TRANSdataLGswahon = new double[36];        
+        TRANSdataLGswahon[0] = 0.0;
+        TRANSdataLGswahon[1] = 0.0;
+        TRANSdataLGswahon[2] = 0.0;
+        TRANSdataLGswahon[3] = 0.0;
+        TRANSdataLGswahon[4] = 0.0;
+        TRANSdataLGswahon[5] = 0.0;
+        TRANSdataLGswahon[6] = 0.0;
+        TRANSdataLGswahon[7] = 0.0;
+        TRANSdataLGswahon[8] = 0.545454545454545;
+        TRANSdataLGswahon[9] = 0.0;
+        TRANSdataLGswahon[10] = 0.409090909090909;
+        TRANSdataLGswahon[11] = 0.045454545454545;
+        TRANSdataLGswahon[12] = 0.0;
+        TRANSdataLGswahon[13] = 0.535714285714286;
+        TRANSdataLGswahon[14] = 0.0;
+        TRANSdataLGswahon[15] = 0.0;
+        TRANSdataLGswahon[16] = 0.428571428571429;
+        TRANSdataLGswahon[17] = 0.035714285714286;
+        TRANSdataLGswahon[18] = 0.0;
+        TRANSdataLGswahon[19] = 0.0;
+        TRANSdataLGswahon[20] = 0.0;
+        TRANSdataLGswahon[21] = 0.0;
+        TRANSdataLGswahon[22] = 0.0;
+        TRANSdataLGswahon[23] = 0.0;
+        TRANSdataLGswahon[24] = 0.0;
+        TRANSdataLGswahon[25] = 0.681818181818182;
+        TRANSdataLGswahon[26] = 0.136363636363636;
+        TRANSdataLGswahon[27] = 0.0;
+        TRANSdataLGswahon[28] = 0.0;
+        TRANSdataLGswahon[29] = 0.181818181818182;
+        TRANSdataLGswahon[30] = 0.0;
+        TRANSdataLGswahon[31] = 0.500000000000000;
+        TRANSdataLGswahon[32] = 0.500000000000000;
+        TRANSdataLGswahon[33] = 0.0;
+        TRANSdataLGswahon[34] = 0.0;
+        TRANSdataLGswahon[35] = 0.0;
+
+        TRANSLGswahon = cv::Mat(6,6,CV_64F,TRANSdataLGswahon).clone();  
 
         getchar();
 
