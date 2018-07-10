@@ -223,9 +223,9 @@ using namespace std;
 
         // initialize the state of the leader
         int human_state;
-        human_state = 2;
-        actionBehavior(human_state);
-        /*Bottle *b = inPort.read(false);
+        //human_state = 2;
+        //actionBehavior(human_state);
+        Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -260,7 +260,7 @@ using namespace std;
             }
         }else{
             yInfo() << "NO Human Data";
-        }*/
+        }
       	
         //actionBehavior(state);
         count++;
@@ -270,7 +270,6 @@ using namespace std;
         
 
         // Initialize the state (to send the seq to the mutuaAlign)
-        int iCub_state;
         if (count == 1){ iCub_state = 0;}
         // Add to Sequence
         seq.at<double>(0,count) = iCub_state;
@@ -285,7 +284,7 @@ using namespace std;
             int look = 1;       
 
             fixate(look);
-            arm(look);
+            //arm(look);
             //yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action

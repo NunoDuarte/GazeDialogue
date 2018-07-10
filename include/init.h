@@ -94,6 +94,9 @@ class ControlThread: public RateThread
             double *TRANSdataLGswahon;
             cv::Mat TRANSLGswahon;
 
+            // state of the icub
+            int iCub_state;
+
             //// define the sequence of states
             cv::Mat seq_mat;
             cv::Mat seq_mat_wTime;
