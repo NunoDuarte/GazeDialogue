@@ -133,7 +133,7 @@ using namespace std;
 
         // call the predictor function
         action = predictFollower(act_probability, state, action);
-        //myfile << act_probability << "\n";
+        myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
@@ -284,7 +284,7 @@ using namespace std;
             int look = 1;       
 
             fixate(look);
-            //arm(look);
+            arm(look);
             //yInfo()<<"fixating at ("<< look <<")";
 
         // duration of action
