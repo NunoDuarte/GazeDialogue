@@ -77,24 +77,24 @@ class ControlThread: public RateThread
             // Declare the probabilities of being giving or placing action
             cv::Mat act_probability;
 
-            // define matrixes for the leader
+            //// define matrixes
+            // for the leader
             CvMC mcLG;
             double *TRANSdataLGbhon;
             cv::Mat TRANSLGbhon;
-
             double *TRANSdataLGahon;
             cv::Mat TRANSLGahon;
 
             cv::Mat INITLG;
 
-            // define matrixes without the diagonal
+            // without the diagonal
             double *TRANSdataLGswbhon;
             cv::Mat TRANSLGswbhon;
 
             double *TRANSdataLGswahon;
             cv::Mat TRANSLGswahon;
 
-            // define the sequence of states
+            //// define the sequence of states
             cv::Mat seq_mat;
             cv::Mat seq_mat_wTime;
             cv::Mat seq;

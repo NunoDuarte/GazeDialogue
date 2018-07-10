@@ -223,9 +223,9 @@ using namespace std;
 
         // initialize the state of the leader
         int human_state;
-        //human_state = 2;
-        //actionBehavior(human_state);
-        Bottle *b = inPort.read(false);
+        human_state = 2;
+        actionBehavior(human_state);
+        /*Bottle *b = inPort.read(false);
         if (b != NULL)
         {
             yInfo() << b;
@@ -260,7 +260,7 @@ using namespace std;
             }
         }else{
             yInfo() << "NO Human Data";
-        }
+        }*/
       	
         //actionBehavior(state);
         count++;
@@ -277,7 +277,7 @@ using namespace std;
 
 
         // Generate Next State
-        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
+        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon, TRANSLGswbhon, TRANSLGswahon, INITLG,logpseq,pstates,count, released);
 
         if (count < 10){
 

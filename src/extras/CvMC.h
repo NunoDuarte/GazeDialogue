@@ -33,7 +33,7 @@ class CvMC {
 public:
 	CvMC(){};
 
-	int mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt, bool released)
+	int mutualAlign(const cv::Mat &seq,const cv::Mat &_TRANSb,const cv::Mat &_TRANSa,	const cv::Mat &_TRANSwb,const cv::Mat &_TRANSwa, const cv::Mat &_INIT, double &logpseq, cv::Mat &PSTATES, int cnt, bool released)
 	{
 	  /*
 			seq 1xT array of sequences of observations (states are 0-M)
@@ -51,6 +51,8 @@ public:
 		//cv::Mat seq = seqin.t();
 		cv::Mat TRANSb  = _TRANSb.clone();
 		cv::Mat TRANSa  = _TRANSa.clone();
+		cv::Mat TRANSwb = _TRANSwb.clone();
+		cv::Mat TRANSwa = _TRANSwa.clone();
 		cv::Mat INIT    = _INIT.clone();
 
 		int T = cnt;//seq.cols; // number of element per sequence
@@ -115,19 +117,46 @@ public:
 			return next_state;
 		else{
 			
-			
-		
+			if (released)
+				currStateProb = TRANSwa.row(seq.at<double>(0,cnt));
+			else
+				currStateProb = TRANSwb.row(seq.at<double>(0,cnt));
+
+			cv::sort(currStateProb, sortProb, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
+			cv::sortIdx(currStateProb, sortInd, CV_SORT_EVERY_ROW + CV_SORT_ASCENDING);
+
+			// generate random number (0.0 - 1.0)
+			rnd_numb = static_cast <double> (rand()) / static_cast <double> (RAND_MAX);
+			//yInfo() << rnd_numb;
+			// go through the values of probabilities to find the correct state
+			sum = 0.0;
+			trans_state_prob = 0.0;
+
+			ind;
+			in = false;
+			for (int j=0; j<currStateProb.cols;j++){
+				sum = sum + sortProb.at<double>(j);
+				//yInfo() << "sum" << sum;
+				// if sum is bigger than random number
+				if (sum > rnd_numb and in == false){
+					trans_state_prob = sortProb.at<double>(j);
+					ind = j;
+					//yInfo() << j;
+					in = true;
+				}
+			}
+	 		//yInfo() << "ind" << ind;
+			// get index of the state
+			next_state = sortInd.at<int>(ind);
+			// add next state to the sequence
+			return next_state;
 		}
 		
 
-		// add next state to the sequence
-		return next_state;
-
-		
-
-
 		TRANSb.release();
 		TRANSa.release();
+		TRANSwb.release();
+		TRANSwa.release();
 		INIT.release();
 
 	}
