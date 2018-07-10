@@ -270,13 +270,13 @@ using namespace std;
         
 
         // Initialize the state (to send the seq to the mutuaAlign)
-        if (count == 1){ human_state = 0;}
+        int iCub_state;
+        if (count == 1){ iCub_state = 0;}
         // Add to Sequence
-        seq.at<double>(0,count) = human_state;
+        seq.at<double>(0,count) = iCub_state;
 
 
         // Generate Next State
-        int iCub_state;
         iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
 
         if (count < 10){
@@ -297,7 +297,7 @@ using namespace std;
 
 
         // save to output file - increment all for reading purposes
-        myfile << human_state + 1 << ", ";
+        myfile << iCub_state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
