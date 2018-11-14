@@ -42,5 +42,5 @@ Repository for the Modeling Human Gaze Behavior and Robot Application Project
 Do experiments where the robot gives an object to a human and we analyze the gaze behavior of the human. The robot will have different gaze behaviors and the point is to evaluate the benefits and performance between approaches:
 
 1. ground truth - no gaze (look straight)
-2. manual control - object, face, hand (based on a paper) 
+2. manual control - object, face, hand ([Zheng, Minhua et al. "Impacts of Robot Head Gaze on Robot-to-Human Handovers" *International Journal of Social Robotics.* Springer Netherlands. 2015. Pages:783-798](https://link.springer.com/article/10.1007/s12369-015-0305-z)) 
 3. hhi inspired control
