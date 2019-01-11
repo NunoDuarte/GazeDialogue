@@ -533,6 +533,7 @@ using namespace yarp::math;
                                 reply.addString("Yeah! I did it! Maybe...");
                                 yInfo() << "Yeah! I did it! Maybe...";
                                 grasp = true;
+                                getchar();
                             }
                             else
                             {

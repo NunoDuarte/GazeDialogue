@@ -13,18 +13,18 @@ Repository for the Modeling Human Gaze Behavior and Robot Application Project
 
 ## Robot as a Follower
 
-# read camera output
+### read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
 
-# to work paralleled with pupil labs
+### to work paralleled with pupil labs
 - sudo rmmod uvcvideo
 - sudo modprobe uvcvideo quirks=128 
 -> you can think of running a script instead of always needing to run this before turning it on
 
-# run on the real robot (without right arm)
+### run on the real robot (without right arm)
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-### iCubStartup:
+# iCubStartup:
 - iKinCartesianSolver -part left_arm
 - iKinGazeCtrl ...
 - wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
@@ -32,8 +32,15 @@ Repository for the Modeling Human Gaze Behavior and Robot Application Project
 - fingersTuner          icub-laptop
 - imuFilter             pc104
 
-# run yarp from a different computer
+## run yarp from a different computer
 - yarp namespace /icub
 - yarp detect (to check you are connected)
 - gedit /home/nduarte/.config/yarp/_icub.conf
 - 'ip of computer you wish to connect' 10000 yarp 
+
+## HRI experiments for Frontiers Journal
+Do experiments where the robot gives an object to a human and we analyze the gaze behavior of the human. The robot will have different gaze behaviors and the point is to evaluate the benefits and performance between approaches:
+
+1. ground truth - no gaze (look straight)
+2. manual control - object, face, hand (based on [Zheng, Minhua et al. 2015](https://link.springer.com/article/10.1007/s12369-015-0305-z)) 
+3. hhi inspired control

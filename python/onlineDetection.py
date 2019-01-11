@@ -39,16 +39,16 @@ info.desc().append_child_value("manufacturer", "Vislab")
 outlet = StreamOutlet(info)
 
 # send notification:
-def notify(notification):
-    """Sends ``notification`` to Pupil Remote"""
-    topic = 'notify.' + notification['subject']
-    payload = packb(notification, use_bin_type=True)
-    req.send_string(topic, flags=zmq.SNDMORE)
-    req.send(payload)
-    return req.recv_string()
+# def notify(notification):
+#     """Sends ``notification`` to Pupil Remote"""
+#     topic = 'notify.' + notification['subject']
+#     payload = packb(notification, use_bin_type=True)
+#     req.send_string(topic, flags=zmq.SNDMORE)
+#     req.send(payload)
+#     return req.recv_string()
 
 # Start frame publisher with format BGR
-notify({'subject': 'start_plugin', 'name': 'Frame_Publisher', 'args': {'format': 'bgr'}})
+#notify({'subject': 'start_plugin', 'name': 'Frame_Publisher', 'args': {'format': 'bgr'}})
 
 # open a sub port to listen to pupil
 sub = context.socket(zmq.SUB)
