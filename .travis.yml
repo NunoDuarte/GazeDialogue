@@ -46,34 +46,46 @@ install:
   - cmake ..
   - sudo make install -j
   - cd ../../
+  
+  # install opencv v3.0.0. from master
+  # opencv dependencies 
+  - sudo apt-get install -y build-essential
+  - sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+  - sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
 
+  # Download v3.0.0 .zip file and extract.
+  - curl -sL https://github.com/opencv/opencv/archive/3.0.0.zip > opencv.zip
+  - unzip opencv.zip
+- cd opencv-3.0.0
+
+  # Create a new 'build' folder.
+  - mkdir build
+  - cd build
+  
+  # Set build instructions for Ubuntu distro.
+  - cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=ON -D INSTALL_PYTHON_EXAMPLES=ON -D BUILD_EXAMPLES=ON -D WITH_QT=ON -D WITH_OPENGL=ON ..
+  
+  # Run 'make' with four threads.
+  - make -j4
+  
+  # Install to OS.
+  - sudo make install
+  
+  # Add configuration to OpenCV to tell it where the library files are located on the file system (/usr/local/lib)
+  - sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
+  
+  - sudo ldconfig
+  - echo "OpenCV installed."
+  - cd ../../
 
 before_script:
-  - mkdir GIVER-RECEIVER_MOD-ARM-DIFF/real/build
-  - cd GIVER-RECEIVER_MOD-ARM-DIFF/real/build
+  - mkdir build
+  - cd build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j
-  - cd ../../..
-
-  - mkdir GIVER-RECEIVER_MOD-ARM-DIFF/sim/build
-  - cd GIVER-RECEIVER_MOD-ARM-DIFF/sim/build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j
-  - cd ../../..
-
-  - mkdir MASTER-SLAVE_PROX-HEIGHT/real/build
-  - cd MASTER-SLAVE_PROX-HEIGHT/real/build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j
-  - cd ../../..
-
-  - mkdir MASTER-SLAVE_PROX-HEIGHT/sim/build
-  - cd MASTER-SLAVE_PROX-HEIGHT/sim/build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j
 
 script:
-
+  - make -j
 
 after_success:
+
 
