@@ -749,4 +749,4 @@ public:
 	}
 };
 
-#endif CVHMM_H
+#endif

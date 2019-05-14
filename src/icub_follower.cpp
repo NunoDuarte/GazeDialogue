@@ -589,10 +589,10 @@ public:
         string hand=(x[1]>=0.0?"right":"left");
 
         // select the correct interface
-        IControlLimits2   *ilim1;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim1;
+        IPositionControl *ipos;
         IEncoders         *ienc1;
-        IControlMode2     *imod1;
+        IControlMode     *imod1;
 
         if (hand=="right")
         {
@@ -639,10 +639,10 @@ public:
         string hand=(x[1]>=0.0?"right":"left");
 
         // select the correct interface
-        IControlLimits2   *ilim1;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim1;
+        IPositionControl *ipos;
         IEncoders         *ienc1;
-        IControlMode2     *imod1;
+        IControlMode     *imod1;
 
         if (hand=="right")
         {
@@ -706,10 +706,10 @@ public:
         // select the correct interface
 
         // this should be in the beginning, where you initialize the necessary stuff
-        IControlLimits2   *ilim;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim;
+        IPositionControl *ipos;
         IEncoders         *ienc;
-        IControlMode2     *imod;
+        IControlMode     *imod;
 
         if (hand=="right")
         {
