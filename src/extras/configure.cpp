@@ -27,7 +27,7 @@ using namespace yarp::math;
         seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
-        string robot="icubSim";
+        string robot="icub";
 
         if (!openCartesian(robot,"left_arm"))
         {
@@ -440,10 +440,10 @@ using namespace yarp::math;
         string hand=(x[1]>=0.0?"right":"left");
 
         // select the correct interface
-        IControlLimits2   *ilim1;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim1;
+        IPositionControl *ipos;
         IEncoders         *ienc1;
-        IControlMode2     *imod1;
+        IControlMode     *imod1;
 
         if (hand=="right")
         {
@@ -490,10 +490,10 @@ using namespace yarp::math;
         string hand=(x[1]>=0.0?"right":"left");
 
         // select the correct interface
-        IControlLimits2   *ilim1;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim1;
+        IPositionControl *ipos;
         IEncoders         *ienc1;
-        IControlMode2     *imod1;
+        IControlMode     *imod1;
 
         if (hand=="right")
         {
