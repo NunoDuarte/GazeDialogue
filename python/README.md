@@ -5,18 +5,20 @@ Software for Identifying from Gaze Fixations the Recognized Object or Face
 So you need to get the icub-face-detection repo to make it work
 
 ## Requirements to make it work
-1. tensorflow models - object detection
-2. pylsl
-3. labstreaminglayer/liblsl (both work)
-3.1. I got https://github.com/NunoDuarte/lsl_archived which has the version I need (because it was working)
-4. Install, compile, and sudo make from the lsl_archived
-5. yarp
-6. pupil with zmq plugin
-7. pupil LSL plugin (**pupil_lsl_relay.py**)
-8. pupil with pupil remote and frame publisher activated
-9. pupil-stream-lsl project (other repository)
-10. check the requirements of the pupil-stream-lsl 
-11. check that pupil-stream-lsl has the correct threads activated
+1. add anaconda
+2. source activate pupilos
+3. tensorflow models - object detection
+4. pylsl
+5. labstreaminglayer/liblsl (both work)
+6.1. I got https://github.com/NunoDuarte/lsl_archived which has the version I need (because it was working)
+7. Install, compile, and sudo make from the lsl_archived
+8. yarp
+9. pupil with zmq plugin
+10. pupil LSL plugin (**pupil_lsl_relay.py**)
+11. pupil with pupil remote and frame publisher activated
+12. pupil-stream-lsl project (other repository)
+13. check the requirements of the pupil-stream-lsl 
+14. check that pupil-stream-lsl has the correct threads activated
 
 ## if you find this problem when using codeblocks 
 - pthread_create@2.25 
