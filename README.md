@@ -12,6 +12,13 @@
 
 ## Robot as a Follower
 
+1. open YARP - yarpserver 
+2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
+3. open PupilLabs (python3 main.py)
+4. connect to python project [link](https://github.com/NunoDuarte/gazePupil_iCub/tree/master/python)
+5. run Pupil_Stream_to_Yarp to open LSL [link](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md)
+6. check /pupil_gaze_tracker is publishing gaze fixations
+
 ### read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
