@@ -1,12 +1,27 @@
 import numpy as np
 import cv2
 
+
 class Ball:
 
     def __init__(self):
-        pass
+        self.ball_all = []
 
-    def trackingCyan(self, frame, pts):
+    def tracking(self, frame, vector, pts):
+        if vector[0]:
+            self.green(frame, pts)
+        if vector[1]:
+            self.red(frame, pts)
+        if vector[2]:
+            self.blue(frame, pts)
+        if vector[3]:
+            self.yellow(frame, pts)
+        if vector[4]:
+            self.cyan(frame, pts)
+
+        return self.ball_all
+
+    def cyan(self, frame, pts):
         ball = []
 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -63,9 +78,13 @@ class Ball:
 
         # show the frame to our screen
         # cv2.imshow("output1", np.hstack([frame, output1]))
+
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 5])
+
         return frame, pts, ball
 
-    def trackingYellow(self, frame, pts):
+    def yellow(self, frame, pts):
         ball = []
 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -120,11 +139,12 @@ class Ball:
         # update the points queue
         pts.appendleft(center)
 
-        # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 4])
+
         return frame, pts, ball
 
-    def trackingRed(self, frame, pts):
+    def red(self, frame, pts):
         ball = []
 
         # hsv for red bounds
@@ -162,9 +182,12 @@ class Ball:
         # update the points queue
         pts.appendleft(center)
 
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 2])
+
         return frame, pts, ball
 
-    def trackingBlue(self, frame, pts):
+    def blue(self, frame, pts):
         ball = []
 
         # hsv for blue bounds
@@ -194,9 +217,12 @@ class Ball:
         # update the points queue
         pts.appendleft(center)
 
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 3])
+
         return frame, pts, ball
 
-    def trackingGreen(self, frame, pts):
+    def green(self, frame, pts):
         ball = []
 
         # hsv for green bounds
@@ -230,6 +256,9 @@ class Ball:
 
         # update the points queue
         pts.appendleft(center)
+
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 1])
 
         return frame, pts, ball
 
