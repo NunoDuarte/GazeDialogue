@@ -1,6 +1,7 @@
 import math
 from pylsl import StreamInfo, StreamOutlet
 
+
 class gazeBehaviour:
 
     def __init__(self, outlet=None):
@@ -10,7 +11,7 @@ class gazeBehaviour:
         epsilon = 8  # the threshold in pixels allowed
 
         for ball in allBalls:
-            if (len(ball[0]) == 1):
+            if len(ball[0]) == 1:
                 distX = fixation[0] - ball[0][0][0]
                 distY = fixation[1] - ball[0][0][1]
 

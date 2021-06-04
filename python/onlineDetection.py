@@ -1,19 +1,12 @@
 # python3 onlineDetection.py --buffer 68
-from pylsl import StreamInlet, resolve_stream
-from pylsl import StreamInfo, StreamOutlet
 
-# import files
 from balltracking import Ball
 from faceDetector import faceDetector
 from gazeBehaviour import gazeBehaviour
+from pupil_lsl_yarp import LSL
 
-# import necessary libraries
-from msgpack import unpackb
-from collections import deque
 import numpy as np
 import cv2
-import zmq
-import argparse
 import imutils
 
 # import for face detection
@@ -22,68 +15,12 @@ import os
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 
-"""
-Receive world camera data from Pupil using ZMQ.
-Make sure the frame publisher plugin is loaded and configuredsource  to gray or rgb
-"""
 
-context = zmq.Context()
-# open a req port to talk to pupil
-addr = '127.0.0.1'  # remote ip or localhost
-req_port = "50020"  # same as in the pupil remote gui
-req = context.socket(zmq.REQ)
-req.connect("tcp://{}:{}".format(addr, req_port))
-# ask for the sub port
-req.send_string('SUB_PORT')
-sub_port = req.recv_string()
-
-# create a new stream info
-info = StreamInfo("GazePose", "NormPose2IP", 4, 100, "float32", "myuid34234")
-info.desc().append_child_value("manufacturer", "Vislab")
-outlet = StreamOutlet(info)
-
-# open a sub port to listen to pupil
-sub = context.socket(zmq.SUB)
-sub.connect("tcp://{}:{}".format(addr, sub_port))
-
-# set subscriptions to topics
-# recv just pupil/gaze/notifications
-sub.setsockopt_string(zmq.SUBSCRIBE, 'frame.')
-
-
-def recv_from_sub():
-    '''Recv a message with topic, payload.
-
-    Topic is a utf-8 encoded string. Returned as unicode object.
-    Payload is a msgpack serialized dict. Returned as a python dict.
-
-    Any addional message frames will be added as a list
-    in the payload dict with key: '__raw_data__' .
-    '''
-
-    topic = sub.recv_string()
-    payload = unpackb(sub.recv(), encoding='utf-8')
-    extra_frames = []
-    while sub.get(zmq.RCVMORE):
-        extra_frames.append(sub.recv())
-    if extra_frames:
-        payload['__raw_data__'] = extra_frames
-    return topic, payload
-
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="path to the (optional) video file")
-ap.add_argument("-b", "--buffer", type=int, default=64, help="max buffer size")
-args = vars(ap.parse_args())
-pts = deque(maxlen=args["buffer"])
-
+lsl = LSL()
 ballTracking = Ball()
-gaze = gazeBehaviour(outlet)
+gaze = gazeBehaviour(lsl.outlet)
 
-print("looking for an NormPose2IP stream...")
-streams = resolve_stream('name', 'NormPose2IP')
-# create a new inlet to read from the stream
-inlet = StreamInlet(streams[0])
+
 
 # # What model to download.
 # MODEL_NAME = 'icub_graph'
@@ -107,21 +44,21 @@ inlet = StreamInlet(streams[0])
 
 i = 0
 ball = []
+
 # with detection_graph.as_default():
 #     with tf.Session(graph=detection_graph) as sess:
 while cv2.waitKey(1):
-    topic, msg = recv_from_sub()
+    topic, msg = lsl.recv_from_sub()
 
     if topic == 'frame.world' and i % 4 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
-        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if frame is not None:
             frame = imutils.resize(frame, width=750)
             height, width, channels = frame.shape
 
             # object (color) detection [G, R, B, Y, C]
-            ball = ballTracking.tracking(frame, [1, 1, 1, 0, 0], pts)
+            ball = ballTracking.tracking(frame, [1, 1, 1, 0, 0], lsl.pts)
 
             # # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
             # image_np_expanded = np.expand_dims(frame, axis=0)
@@ -147,7 +84,7 @@ while cv2.waitKey(1):
             #     use_normalized_coordinates=True,
             #     line_thickness=8)
 
-            sample, timestamp = inlet.pull_chunk()
+            sample, timestamp = lsl.inlet.pull_chunk()
             if sample:
                 pos_x = sample[0][1]
                 pos_y = sample[0][2]
@@ -163,10 +100,9 @@ while cv2.waitKey(1):
                     mysample = gaze.record(sample[0][0], ball, [], fixation, [])
                     if len(mysample) is not 0:
                         #print(mysample)
-                        outlet.push_sample(mysample)
+                        lsl.outlet.push_sample(mysample)
 
         cv2.imshow('frame', frame)
     i = i + 1
 
-# cap.release()
 cv2.destroyAllWindows()

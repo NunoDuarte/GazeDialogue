@@ -3,6 +3,7 @@ import logging as log
 import datetime as dt
 import os
 
+
 class faceDetector:
 
     def __init__(self):
