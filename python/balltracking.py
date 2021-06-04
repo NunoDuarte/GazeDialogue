@@ -244,23 +244,21 @@ class Ball:
 
     def trackingGreen(self, frame, pts):
         ball = []
-
+        #
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        # because hue wraps up and to extract as many "red objects" as possible,
-        # I define lower and upper boundaries for brighter and for darker red shades
-        bright_green_lower_bounds = (65, 60, 60)
-        bright_green_upper_bounds = (80, 255, 100)
-        bright_green_mask = cv2.inRange(hsv, bright_green_lower_bounds, bright_green_upper_bounds)
 
-        dark_green_lower_bounds = (65, 60, 160)
-        dark_green_upper_bounds = (80, 255, 179)
-        dark_green_mask = cv2.inRange(hsv, dark_green_lower_bounds, dark_green_upper_bounds)
-
-        # after masking the red shades out, I add the two images
-        weighted_mask = cv2.addWeighted(bright_green_mask, 1.0, dark_green_mask, 1.0, 0.0)
+        hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        green_low = np.array([45, 100, 50])
+        green_high = np.array([75, 255, 255])
+        curr_mask = cv2.inRange(hsv_img, green_low, green_high)
+        # hsv_img[curr_mask > 0] = ([75, 255, 200])
+        # ## contouring
+        # RGB_again = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
+        # gray = cv2.cvtColor(RGB_again, cv2.COLOR_RGB2GRAY)
+        # ret, threshold = cv2.threshold(gray, 90, 255, 0)
 
         # then the result is blurred
-        blurred = cv2.GaussianBlur(weighted_mask, (9, 9), 3, 3)
+        blurred = cv2.GaussianBlur(curr_mask, (9, 9), 3, 3)
 
         # construct a mask for the color "red", then perform
         # a series of dilations and erosions to remove any small
@@ -298,7 +296,7 @@ class Ball:
         pts.appendleft(center)
 
         # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        # cv2.imshow("output1", mask)
 
         return frame, pts, ball
 
