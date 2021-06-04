@@ -1,4 +1,4 @@
-# python3 onlineDetection.py --buffer 68
+# python3 main.py --buffer 68
 from ball_tracking import Ball
 from face_detector import FaceDetector
 from face_detector_gpu import FaceGPU
