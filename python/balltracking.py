@@ -244,40 +244,25 @@ class Ball:
 
     def trackingGreen(self, frame, pts):
         ball = []
-        #
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # hsv for green bounds
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         green_low = np.array([45, 100, 50])
         green_high = np.array([75, 255, 255])
-        curr_mask = cv2.inRange(hsv_img, green_low, green_high)
-        # hsv_img[curr_mask > 0] = ([75, 255, 200])
-        # ## contouring
-        # RGB_again = cv2.cvtColor(hsv_img, cv2.COLOR_HSV2RGB)
-        # gray = cv2.cvtColor(RGB_again, cv2.COLOR_RGB2GRAY)
-        # ret, threshold = cv2.threshold(gray, 90, 255, 0)
-
-        # then the result is blurred
-        blurred = cv2.GaussianBlur(curr_mask, (9, 9), 3, 3)
-
-        # construct a mask for the color "red", then perform
-        # a series of dilations and erosions to remove any small
-        # blobs left in the mask
-        # mask = cv2.inRange(blurred, greenLower, greenUpper)
+        # mask
+        mask = cv2.inRange(hsv, green_low, green_high)
+        # blur frame
+        blurred = cv2.GaussianBlur(mask, (9, 9), 3, 3)
+        # dilation and erosion to remove small blobs in the mask
         mask = cv2.erode(blurred, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
-
-        # find contours in the mask and initialize the current
-        # (x, y) center of the ball
+        # find contour
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
-        center = None
 
-        # only proceed if at least one contour was found
+        center = None
         if len(cnts) > 0:
-            # find the largest contour in the mask, then use
-            # it to compute the minimum enclosing circle and
-            # centroid
+            # find largest contour. compute enclosing circle and centroid
             c = max(cnts, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
@@ -285,18 +270,12 @@ class Ball:
 
             # only proceed if the radius meets a minimum size
             if radius > 1:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                #cv2.circle(frame, (int(x), int(y)), int(radius),
-                #           (0, 255, 255), 2)
+                # draw circle and centroid on frame
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
         # update the points queue
         pts.appendleft(center)
-
-        # show the frame to our screen
-        # cv2.imshow("output1", mask)
 
         return frame, pts, ball
 
