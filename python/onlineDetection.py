@@ -43,7 +43,6 @@ gaze = gazeBehaviour(lsl.outlet)
 #         tf.import_graph_def(od_graph_def, name='')
 
 i = 0
-ball = []
 
 # with detection_graph.as_default():
 #     with tf.Session(graph=detection_graph) as sess:
@@ -86,21 +85,11 @@ while cv2.waitKey(1):
 
             sample, timestamp = lsl.inlet.pull_chunk()
             if sample:
-                pos_x = sample[0][1]
-                pos_y = sample[0][2]
+                # push to yarp port
+                gaze.push(frame, sample, ball, width, height, lsl)
 
-                # print(int(float(pos_x)*width))
-                # print(int(height - int(float(pos_y)*height)))
-                # cv2.circle(frame, (int(float(pos_x) * width), int(height - int(float(pos_y) * height))), 10, (0, 255, 1),
-                #            thickness=5, lineType=8, shift=0)  # draw circle
-                fixation = [(int(float(pos_x) * width)), int(height - int(float(pos_y) * height))]
-
-                # check the gaze behaviour
-                if len(ball) is not 0:
-                    mysample = gaze.record(sample[0][0], ball, [], fixation, [])
-                    if len(mysample) is not 0:
-                        #print(mysample)
-                        lsl.outlet.push_sample(mysample)
+            # clear buffer of object detect for new frame
+            ballTracking.ball_all = []
 
         cv2.imshow('frame', frame)
     i = i + 1

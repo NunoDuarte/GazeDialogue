@@ -1,4 +1,5 @@
 import math
+import cv2
 from pylsl import StreamInfo, StreamOutlet
 
 
@@ -8,7 +9,7 @@ class gazeBehaviour:
         pass
 
     def record(self, timestamp, allBalls, faces, fixation, labels):
-        epsilon = 8  # the threshold in pixels allowed
+        epsilon = 10  # the threshold in pixels allowed
 
         for ball in allBalls:
             if len(ball[0]) == 1:
@@ -20,7 +21,6 @@ class gazeBehaviour:
                     mysample = [timestamp, ball[1], ball[0][0][0], ball[0][0][1], ]
                     return mysample
 
-                i = 0
                 for face in faces:
 
                     cX = face[0]
@@ -32,7 +32,24 @@ class gazeBehaviour:
                         mysample = [timestamp, 7, face[0], face[1]]
                         return mysample
 
-
             mysample = []
+
         return mysample
+
+    def push(self, frame, sample, ball, width, height, lsl):
+        pos_x = sample[0][1]
+        pos_y = sample[0][2]
+
+        # print(int(float(pos_x)*width))
+        # print(int(height - int(float(pos_y)*height)))
+        cv2.circle(frame, (int(float(pos_x) * width), int(height - int(float(pos_y) * height))), 10, (0, 255, 1),
+                   thickness=5, lineType=8, shift=0)  # draw circle
+        fixation = [(int(float(pos_x) * width)), int(height - int(float(pos_y) * height))]
+
+        # check the gaze behaviour
+        if len(ball) is not 0:
+            mysample = self.record(sample[0][0], ball, [], fixation, [])
+            if len(mysample) is not 0:
+                # print(mysample)
+                lsl.outlet.push_sample(mysample)
 
