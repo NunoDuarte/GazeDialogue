@@ -4,7 +4,7 @@ import datetime as dt
 import os
 
 
-class faceDetector:
+class FaceDetector:
 
     def __init__(self):
         self.subjects = ["", "iCub"]

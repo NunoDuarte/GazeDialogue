@@ -1,8 +1,8 @@
 # python3 onlineDetection.py --buffer 68
-from balltracking import Ball
-from faceDetector import faceDetector
+from ball_tracking import Ball
+from face_detector import FaceDetector
 from face_detector_gpu import FaceGPU
-from gazeBehaviour import gazeBehaviour
+from gaze_behaviour import GazeBehaviour
 from pupil_lsl_yarp import LSL
 
 import tensorflow as tf
@@ -14,7 +14,7 @@ import imutils
 lsl = LSL()
 faceTracking = FaceGPU()
 ballTracking = Ball()
-gazeTracking = gazeBehaviour(lsl.outlet)
+gazeTracking = GazeBehaviour(lsl.outlet)
 
 
 i = 0

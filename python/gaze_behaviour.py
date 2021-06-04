@@ -1,9 +1,8 @@
 import math
 import cv2
-from pylsl import StreamInfo, StreamOutlet
 
 
-class gazeBehaviour:
+class GazeBehaviour:
 
     def __init__(self, outlet=None):
         pass
