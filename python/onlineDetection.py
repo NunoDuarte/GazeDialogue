@@ -87,7 +87,6 @@ ballTracking = Ball()
 
 cascPath = "cascade-icub-60v60.xml"
 faceCascade = cv2.CascadeClassifier(cascPath)
-log.basicConfig(filename='faceDetected.log', level=log.INFO)
 anterior = 0
 face = faceDetector()
 
