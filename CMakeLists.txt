@@ -34,8 +34,8 @@ endif( OpenCV_FOUND )
 
 # follower
 add_executable(${PROJECT_NAME}-main-follower 
-		               	${CMAKE_SOURCE_DIR}/src/icub_follower.cpp
 				${CMAKE_SOURCE_DIR}/include/helpers.h 
+		               	${CMAKE_SOURCE_DIR}/src/icub_follower.cpp
 			       	${CMAKE_SOURCE_DIR}/src/extras/helpers.cpp  
 				)
 
