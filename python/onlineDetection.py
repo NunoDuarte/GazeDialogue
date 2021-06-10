@@ -39,16 +39,16 @@ info.desc().append_child_value("manufacturer", "Vislab")
 outlet = StreamOutlet(info)
 
 # send notification:
-def notify(notification):
-    """Sends ``notification`` to Pupil Remote"""
-    topic = 'notify.' + notification['subject']
-    payload = packb(notification, use_bin_type=True)
-    req.send_string(topic, flags=zmq.SNDMORE)
-    req.send(payload)
-    return req.recv_string()
+# def notify(notification):
+#     """Sends ``notification`` to Pupil Remote"""
+#     topic = 'notify.' + notification['subject']
+#     payload = packb(notification, use_bin_type=True)
+#     req.send_string(topic, flags=zmq.SNDMORE)
+#     req.send(payload)
+#     return req.recv_string()
 
 # Start frame publisher with format BGR
-notify({'subject': 'start_plugin', 'name': 'Frame_Publisher', 'args': {'format': 'bgr'}})
+#notify({'subject': 'start_plugin', 'name': 'Frame_Publisher', 'args': {'format': 'bgr'}})
 
 # open a sub port to listen to pupil
 sub = context.socket(zmq.SUB)
@@ -125,12 +125,12 @@ while cv2.waitKey(1):
             frame, pts, ballR = ballTracking.trackingRed(frame, pts)
             if ballR is not [] and len(ballR) != 0:
                 ball.append([ballR, 2])
-            # frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
-            # if ballB is not [] and len(ballB) != 0:
-            #      ball.append([ballB, 3])
-            frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
-            if ballY is not [] and len(ballY) != 0:
-                ball.append([ballY, 4])
+            frame, pts, ballB = ballTracking.trackingBlue(frame, pts)
+            if ballB is not [] and len(ballB) != 0:
+                 ball.append([ballB, 3])
+            # frame, pts, ballY = ballTracking.trackingYellow(frame, pts)
+            # if ballY is not [] and len(ballY) != 0:
+            #     ball.append([ballY, 4])
             # frame, pts, ballC = ballTracking.trackingCyan(frame, pts)
             # if ballC is not [] and len(ballC) != 0:
             #     ball.append([ballC, 5])
