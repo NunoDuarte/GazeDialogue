@@ -1,4 +1,4 @@
-# Repository for Modeling Human Gaze Behavior and Robot Applications (gazePupil_iCub) [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/gazePupil_iCub)
+# Gaze Dialogue Model - iCub Controller [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/gazePupil_iCub)
 
 ## Robot as a Leader
 1. placing action is in the module simHHItoiCub-left 
