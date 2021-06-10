@@ -1,6 +1,6 @@
 # activate anaconda environment:export PATH="/home/nduarte/anaconda3/bin:$PATH" && source activate pupilos
 
-# python3 main.py --buffer 68
+# python3 main.py (optional) --buffer 68
 from ball_tracking import Ball
 from face_detector import FaceDetector
 from gaze_behaviour import GazeBehaviour
@@ -31,13 +31,13 @@ while cv2.waitKey(1):
             ball = ballTracking.tracking(frame, [1, 1, 1, 0, 0], lsl.pts)
 
             # iCub face
-            face = faceTracking.detecting(frame)
+            # face = faceTracking.detecting(frame)
 
             # pupil
             sample, timestamp = lsl.inlet.pull_chunk()
             if sample:
                 # push to yarp port
-                gazeTracking.push(frame, sample, ball, face, width, height, lsl)
+                gazeTracking.push(frame, sample, ball, [], width, height)
 
             # clear buffer of object for new frame
             ballTracking.ball_all = []

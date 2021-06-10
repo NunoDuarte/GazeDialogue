@@ -5,6 +5,7 @@ import cv2
 class GazeBehaviour:
 
     def __init__(self, outlet=None):
+        self.outlet = outlet
         pass
 
     def record(self, timestamp, allBalls, faces, fixation):
@@ -35,7 +36,7 @@ class GazeBehaviour:
 
         return mysample
 
-    def push(self, frame, sample, ball, face, width, height, lsl):
+    def push(self, frame, sample, ball, face, width, height):
         pos_x = sample[0][1]
         pos_y = sample[0][2]
 
@@ -47,8 +48,8 @@ class GazeBehaviour:
 
         # check the gaze behaviour
         if len(ball) is not 0:
+            # timestamp = sample[0][0]
             mysample = self.record(sample[0][0], ball, face, fixation)
             if len(mysample) is not 0:
-                # print(mysample)
-                lsl.outlet.push_sample(mysample)
+                self.outlet.push_sample(mysample)
 
