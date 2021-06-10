@@ -1,57 +1,55 @@
 import cv2
-import logging as log
-import datetime as dt
 import os
 
-class faceDetector:
+
+class FaceDetector:
 
     def __init__(self):
         self.subjects = ["", "iCub"]
         self.eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+        self.face_cascade = cv2.CascadeClassifier("cascade-icub-60v60.xml")
 
-    def detecting(self, frame, anterior, faceCascade):
+    def detecting(self, frame):
 
-        faces = []
-        faceTrain = []
+        face = []
+        # if you want to see the potential face found
+        face_crop = []
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (31, 31), 0)
         thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_TOZERO)[1]
-        facesDetect = faceCascade.detectMultiScale(
+        potential_face = self.face_cascade.detectMultiScale(
             thresh,
             scaleFactor=1.2,
-            minNeighbors=10,
-            minSize=(20, 20),
+            minNeighbors=5,
+            minSize=(40, 40),
+            maxSize=(200, 200),
+            flags=cv2.CASCADE_FIND_BIGGEST_OBJECT
         )
 
-        # Draw a rectangle around the faces
-        for (x, y, w, h) in facesDetect:
-            # print(x,y,w,h)
+        # you should only find one face
+        # Draw a rectangle around the potential face
+        for (x, y, w, h) in potential_face:
             num_eyes = 0
 
             roi_gray = gray[y:y + h, x:x + w]
             roi_color = frame[y:y + h, x:x + w]
-            faces.append([x, y, w, h])
-            faceTrain.append(gray[y:y + w, x:x + h])
+
+            # find the eyes of the potential face
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
             for (ex, ey, ew, eh) in eyes:
                 if len(eyes) == 2:
                     cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
-                    num_eyes = num_eyes + 1
-                    #print("hello")
+                    num_eyes = 2
             if num_eyes == 2:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            else:
-                faces = []
-                faceTrain = []
+                face.append([x, y, w, h])
+                face_crop.append(gray[y:y + w, x:x + h])
+            # if not - ignore potential face
 
-        if anterior != len(facesDetect):
-            anterior = len(facesDetect)
-            log.info("faces: "+str(len(facesDetect))+" at "+str(dt.datetime.now()))
+        return face
 
-        return anterior, faces, faceTrain
-
-    def prepare_training_data(self, data_folder_path, faceCascade):
+    def prepare_training_data(self, data_folder_path):
 
         dirs = os.listdir(data_folder_path)
 
@@ -78,7 +76,7 @@ class faceDetector:
                 cv2.imshow("Training on image...", image)
                 cv2.waitKey(100)
 
-                non, non1, face = self.detecting(image, 0, faceCascade)
+                non, non1, face = self.detecting(image, 0, self.face_cascade)
 
                 if face is not None and len(face) is not 0:
                     faces.append(face[0])

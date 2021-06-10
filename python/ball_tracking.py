@@ -1,12 +1,27 @@
 import numpy as np
 import cv2
 
+
 class Ball:
 
     def __init__(self):
-        pass
+        self.ball_all = []
 
-    def trackingCyan(self, frame, pts):
+    def tracking(self, frame, vector, pts):
+        if vector[0]:
+            self.green(frame, pts)
+        if vector[1]:
+            self.red(frame, pts)
+        if vector[2]:
+            self.blue(frame, pts)
+        if vector[3]:
+            self.yellow(frame, pts)
+        if vector[4]:
+            self.cyan(frame, pts)
+
+        return self.ball_all
+
+    def cyan(self, frame, pts):
         ball = []
 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -63,9 +78,13 @@ class Ball:
 
         # show the frame to our screen
         # cv2.imshow("output1", np.hstack([frame, output1]))
+
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 5])
+
         return frame, pts, ball
 
-    def trackingYellow(self, frame, pts):
+    def yellow(self, frame, pts):
         ball = []
 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -120,48 +139,35 @@ class Ball:
         # update the points queue
         pts.appendleft(center)
 
-        # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 4])
+
         return frame, pts, ball
 
-    def trackingRed(self, frame, pts):
+    def red(self, frame, pts):
         ball = []
 
+        # hsv for red bounds
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        # because hue wraps up and to extract as many "red objects" as possible,
-        # I define lower and upper boundaries for brighter and for darker red shades
         bright_red_lower_bounds = (0, 100, 100)
         bright_red_upper_bounds = (10, 255, 255)
         bright_red_mask = cv2.inRange(hsv, bright_red_lower_bounds, bright_red_upper_bounds)
-
         dark_red_lower_bounds = (160, 100, 100)
         dark_red_upper_bounds = (179, 255, 255)
+        # mask
         dark_red_mask = cv2.inRange(hsv, dark_red_lower_bounds, dark_red_upper_bounds)
-
-        # after masking the red shades out, I add the two images
         weighted_mask = cv2.addWeighted(bright_red_mask, 1.0, dark_red_mask, 1.0, 0.0)
-
-        # then the result is blurred
+        # blur
         blurred = cv2.GaussianBlur(weighted_mask, (9, 9), 3, 3)
-
-        # construct a mask for the color "red", then perform
-        # a series of dilations and erosions to remove any small
-        # blobs left in the mask
-        # mask = cv2.inRange(blurred, greenLower, greenUpper)
+        # dilation and erosion to remove small blobs in the mask
         mask = cv2.erode(blurred, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
-
-        # find contours in the mask and initialize the current
-        # (x, y) center of the ball
+        # find contour
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
-
-        # only proceed if at least one contour was found
         if len(cnts) > 0:
-            # find the largest contour in the mask, then use
-            # it to compute the minimum enclosing circle and
-            # centroid
+            # find largest contour. compute enclosing circle and centroid
             c = max(cnts, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
@@ -169,58 +175,34 @@ class Ball:
 
             # only proceed if the radius meets a minimum size
             if radius > 1:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                #cv2.circle(frame, (int(x), int(y)), int(radius),
-                #           (0, 255, 255), 2)
+                # draw circle and centroid on frame
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
         # update the points queue
         pts.appendleft(center)
 
-        # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 2])
+
         return frame, pts, ball
 
-    def trackingBlue(self, frame, pts):
+    def blue(self, frame, pts):
         ball = []
 
+        # hsv for blue bounds
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        # because hue wraps up and to extract as many "red objects" as possible,
-        # I define lower and upper boundaries for brighter and for darker red shades
-        bright_blue_lower_bounds = (110, 150, 150) #(65, 60, 60)
-        bright_blue_upper_bounds = (140, 255, 255) #(80, 255, 100)
-        bright_blue_mask = cv2.inRange(hsv, bright_blue_lower_bounds, bright_blue_upper_bounds)
-
-        dark_blue_lower_bounds = (130, 255, 255) #(65, 60, 160)
-        dark_blue_upper_bounds = (140, 255, 255) #(80, 255, 179)
-        dark_blue_mask = cv2.inRange(hsv, dark_blue_lower_bounds, dark_blue_upper_bounds)
-
-        # after masking the red shades out, I add the two images
-        weighted_mask = cv2.addWeighted(bright_blue_mask, 1.0, dark_blue_mask, 1.0, 0.0)
-
-        # then the result is blurred
-        blurred = cv2.GaussianBlur(weighted_mask, (9, 9), 3, 3)
-
-        # construct a mask for the color "red", then perform
-        # a series of dilations and erosions to remove any small
-        # blobs left in the mask
-        # mask = cv2.inRange(blurred, greenLower, greenUpper)
-        mask = cv2.erode(blurred, None, iterations=2)
-        mask = cv2.dilate(mask, None, iterations=2)
-
-        # find contours in the mask and initialize the current
-        # (x, y) center of the ball
-        cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
+        low_blue = np.array([94, 80, 2])
+        high_blue = np.array([126, 255, 255])
+        # mask
+        blue_mask = cv2.inRange(hsv, low_blue, high_blue)
+        # find contour
+        cnts = cv2.findContours(blue_mask.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
-        center = None
 
-        # only proceed if at least one contour was found
+        center = None
         if len(cnts) > 0:
-            # find the largest contour in the mask, then use
-            # it to compute the minimum enclosing circle and
-            # centroid
+            # find largest contour. compute enclosing circle and centroid
             c = max(cnts, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
@@ -228,58 +210,39 @@ class Ball:
 
             # only proceed if the radius meets a minimum size
             if radius > 1:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                #cv2.circle(frame, (int(x), int(y)), int(radius),
-                #           (0, 255, 255), 2)
+                # draw circle and centroid on frame
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
         # update the points queue
         pts.appendleft(center)
 
-        # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 3])
+
         return frame, pts, ball
 
-    def trackingGreen(self, frame, pts):
+    def green(self, frame, pts):
         ball = []
 
+        # hsv for green bounds
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        # because hue wraps up and to extract as many "red objects" as possible,
-        # I define lower and upper boundaries for brighter and for darker red shades
-        bright_green_lower_bounds = (65, 60, 60)
-        bright_green_upper_bounds = (80, 255, 100)
-        bright_green_mask = cv2.inRange(hsv, bright_green_lower_bounds, bright_green_upper_bounds)
-
-        dark_green_lower_bounds = (65, 60, 160)
-        dark_green_upper_bounds = (80, 255, 179)
-        dark_green_mask = cv2.inRange(hsv, dark_green_lower_bounds, dark_green_upper_bounds)
-
-        # after masking the red shades out, I add the two images
-        weighted_mask = cv2.addWeighted(bright_green_mask, 1.0, dark_green_mask, 1.0, 0.0)
-
-        # then the result is blurred
-        blurred = cv2.GaussianBlur(weighted_mask, (9, 9), 3, 3)
-
-        # construct a mask for the color "red", then perform
-        # a series of dilations and erosions to remove any small
-        # blobs left in the mask
-        # mask = cv2.inRange(blurred, greenLower, greenUpper)
+        green_low = np.array([45, 100, 50])
+        green_high = np.array([75, 255, 255])
+        # mask
+        mask = cv2.inRange(hsv, green_low, green_high)
+        # blur frame
+        blurred = cv2.GaussianBlur(mask, (9, 9), 3, 3)
+        # dilation and erosion to remove small blobs in the mask
         mask = cv2.erode(blurred, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
-
-        # find contours in the mask and initialize the current
-        # (x, y) center of the ball
+        # find contour
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
-        center = None
 
-        # only proceed if at least one contour was found
+        center = None
         if len(cnts) > 0:
-            # find the largest contour in the mask, then use
-            # it to compute the minimum enclosing circle and
-            # centroid
+            # find largest contour. compute enclosing circle and centroid
             c = max(cnts, key=cv2.contourArea)
             ((x, y), radius) = cv2.minEnclosingCircle(c)
             M = cv2.moments(c)
@@ -287,18 +250,15 @@ class Ball:
 
             # only proceed if the radius meets a minimum size
             if radius > 1:
-                # draw the circle and centroid on the frame,
-                # then update the list of tracked points
-                #cv2.circle(frame, (int(x), int(y)), int(radius),
-                #           (0, 255, 255), 2)
+                # draw circle and centroid on frame
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
         # update the points queue
         pts.appendleft(center)
 
-        # show the frame to our screen
-        # cv2.imshow("output1", np.hstack([frame, output1]))
+        if ball is not [] and len(ball) != 0:
+            self.ball_all.append([ball, 1])
 
         return frame, pts, ball
 
