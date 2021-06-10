@@ -16,7 +16,7 @@ faceTracking = FaceDetector()
 ballTracking = Ball()
 gazeTracking = GazeBehaviour(lsl.outlet)
 
-i = 0
+i = 0   # to skip frames for faster Frame Rate
 while cv2.waitKey(1):
     topic, msg = lsl.recv_from_sub()
 

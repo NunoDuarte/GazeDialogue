@@ -1,6 +1,6 @@
 <application>
 
-  <name>Pupil_iCubSim-follower-nonmutual</name>
+  <name>GazeDialogue-Follower</name>
 
   <dependencies>
       <port>/iKinGazeCtrl/rpc</port>
