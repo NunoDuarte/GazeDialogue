@@ -870,8 +870,8 @@ public:
         seq.at<double>(0,cnt) = state;
 
         // store timestamp of the specific state
-        seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        //seq_mat_wTime.at<double>(0,cnt) = state;
+        //seq_mat_wTime.at<double>(1,cnt) = diffTime;
 
         cout << "M = " << endl;
         for(int nu=0;nu<cnt;nu++) cout << " "  << seq.at<double>(0,nu);
