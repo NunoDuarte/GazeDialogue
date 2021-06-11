@@ -23,9 +23,33 @@ install:
   
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
   
-  #install icub ycm yarp 
-  - sudo apt install icub
+    #install yarp from master
+  - git clone --depth 1 -b $YARP_BRANCH https://github.com/robotology/yarp
+  - cd yarp
+  - mkdir build
+  - cd build
+  - cmake ../ -DCREATE_GUIS:BOOL=ON -DCREATE_LIB_MATH:BOOL=ON -DCREATE_OPTIONAL_CARRIERS:BOOL=ON -DENABLE_yarpcar_bayer_carrier:BOOL=ON
+  - make -j
+  - sudo make install
+  - cd ../..
+  
+  #install icub from master
+  - git clone --depth 1 https://github.com/robotology/icub-main.git
+  - cd icub-main
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - sudo make install -j
+  - cd ../../
 
+  #install icub-contrib-common from master
+  - git clone --depth 1 https://github.com/robotology/icub-contrib-common.git
+  - cd icub-contrib-common
+  - mkdir build
+  - cd build
+  - cmake ..
+  - sudo make install -j
+  - cd ../../
   #install icub-contrib-common from master
   - git clone --depth 1 https://github.com/robotology/icub-contrib-common.git
   - cd icub-contrib-common
