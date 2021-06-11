@@ -30,7 +30,7 @@ install:
   - cd robotology-superbuild
   - mkdir build
   - cd build
-  - ccmake ../
+  - cmake ..
   - make -j4
   - cd ../..
   
