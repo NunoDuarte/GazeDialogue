@@ -16,6 +16,8 @@ env:
 install:
   # ubuntu dependencies
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -; fi
   # icub key
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi
   # google chrome key
@@ -24,6 +26,8 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157; fi
   # icub-common
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi
+  
+
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes --force-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
   
