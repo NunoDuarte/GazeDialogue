@@ -15,7 +15,7 @@ env:
 
 install:
   # ubuntu dependencies
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; 
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; fi
   # icub key
   - sudo apt-get install build-essential git cmake cmake-curses-gui \
       libeigen3-dev \
