@@ -20,22 +20,26 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi  
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget | wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null | sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' | sudo apt-get update; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install cmake; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
-  # gazebo
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then curl -sSL http://get.gazebosim.org | sh; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
   
-  # install yarp icub-main icub-common-contrib
-  - git clone https://github.com/robotology/robotology-superbuild
-  - sudo apt-get install bash-completion build-essential cmake cmake-curses-gui coinor-libipopt-dev freeglut3-dev git libace-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libdc1394-22-dev libedit-dev libeigen3-dev libgsl0-dev libjpeg-dev liblua5.1-dev libode-dev libopencv-dev libsdl1.2-dev libtinyxml-dev libv4l-dev libxml2-dev lua5.1 portaudio19-dev qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings qml-module-qtmultimedia qml-module-qtquick-controls qml-module-qtquick-dialogs qml-module-qtquick-window2 qml-module-qtquick2 qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev swig libmatio-dev libirrlicht-dev libspdlog-dev libblas-dev liblapack-dev
-  - cd robotology-superbuild
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
+  
+  #install icub ycm yarp 
+  - sudo apt install icub
+
+  #install icub-contrib-common from master
+  - git clone --depth 1 https://github.com/robotology/icub-contrib-common.git
+  - cd icub-contrib-common
   - mkdir build
   - cd build
   - cmake ..
-  - make -j4
   - sudo make install -j
-  - cd ../..
+  - cd ../../
   
+  # install opencv 
+  - sudo apt-get install -y build-essential
+  - sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+  - sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+
   # install opencv 
   - sudo apt install python3-opencv
   - echo "OpenCV installed."
