@@ -38,7 +38,6 @@ install:
   # install opencv 
   - sudo apt install python3-opencv
   - echo "OpenCV installed."
-  - cd ../../
 
 before_script:
   - mkdir build
