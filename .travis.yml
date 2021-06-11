@@ -18,6 +18,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; fi
   # icub key
   - sudo apt-get install build-essential git cmake cmake-curses-gui libeigen3-dev libace-dev libedit-dev libsqlite3-dev libtinyxml-dev
+  - sudo apt-get install qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtmultimedia qml-module-qtquick-dialogs qml-module-qtquick-controls qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings 
       
     # install ycm
   - git clone https://github.com/robotology/ycm.git -b v0.11.3
