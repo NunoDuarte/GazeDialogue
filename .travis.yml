@@ -24,64 +24,18 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
   
-  #install yarp from master
-  - git clone --depth 1 -b $YARP_BRANCH https://github.com/robotology/yarp
-  - cd yarp
+  # install yarp icub-main icub-common-contrib
+  - git clone https://github.com/robotology/robotology-superbuild
+  - sudo apt-get install bash-completion build-essential cmake cmake-curses-gui coinor-libipopt-dev freeglut3-dev git libace-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libdc1394-22-dev libedit-dev libeigen3-dev libgsl0-dev libjpeg-dev liblua5.1-dev libode-dev libopencv-dev libsdl1.2-dev libtinyxml-dev libv4l-dev libxml2-dev lua5.1 portaudio19-dev qml-module-qt-labs-folderlistmodel qml-module-qt-labs-settings qml-module-qtmultimedia qml-module-qtquick-controls qml-module-qtquick-dialogs qml-module-qtquick-window2 qml-module-qtquick2 qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev swig libmatio-dev libirrlicht-dev libspdlog-dev libblas-dev liblapack-dev
+  - cd robotology-superbuild
   - mkdir build
   - cd build
-  - cmake ../ -DCREATE_GUIS:BOOL=ON -DCREATE_LIB_MATH:BOOL=ON -DCREATE_OPTIONAL_CARRIERS:BOOL=ON -DENABLE_yarpcar_bayer_carrier:BOOL=ON
-  - make -j2
-  - sudo make install
+  - ccmake ../
+  - make -j4
   - cd ../..
   
-  #install icub from master
-  - git clone --depth 1 https://github.com/robotology/icub-main.git
-  - cd icub-main
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - sudo make install -j
-  - cd ../../
-
-  #install icub-contrib-common from master
-  - git clone --depth 1 https://github.com/robotology/icub-contrib-common.git
-  - cd icub-contrib-common
-  - mkdir build
-  - cd build
-  - cmake ..
-  - sudo make install -j
-  - cd ../../
-  
-  # install opencv v3.0.0. from master
-  # opencv dependencies 
-  - sudo apt-get install -y build-essential
-  - sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-  - sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
-  - sudo apt update
-  - sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper1 libjasper-dev libdc1394-22-dev
-
-  # Download v3.0.0 .zip file and extract.
-  - curl -sL https://github.com/opencv/opencv/archive/3.0.0.zip > opencv.zip
-  - unzip opencv.zip
-  - cd opencv-3.0.0
-
-  # Create a new 'build' folder.
-  - mkdir build
-  - cd build
-  
-  # Set build instructions for Ubuntu distro.
-  - cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D INSTALL_C_EXAMPLES=ON -D INSTALL_PYTHON_EXAMPLES=ON -D BUILD_EXAMPLES=ON -D WITH_QT=ON -D WITH_OPENGL=ON ..
-  
-  # Run 'make' with four threads.
-  - make -j4
-  
-  # Install to OS.
-  - sudo make install
-  
-  # Add configuration to OpenCV to tell it where the library files are located on the file system (/usr/local/lib)
-  - sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
-  
-  - sudo ldconfig
+  # install opencv 
+  - sudo apt install python3-opencv
   - echo "OpenCV installed."
   - cd ../../
 
