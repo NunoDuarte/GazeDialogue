@@ -19,7 +19,7 @@ install:
   # icub key
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi  
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes --force-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
   
   #install yarp from master
   - git clone --depth 1 -b $YARP_BRANCH https://github.com/robotology/yarp
