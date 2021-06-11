@@ -16,10 +16,11 @@ env:
 install:
   # ubuntu dependencies
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget | wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null | sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' | sudo apt-get update; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install cmake; fi
   # icub key
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi  
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget | wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null | sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' | sudo apt-get update; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install cmake; fi
+  
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
   
