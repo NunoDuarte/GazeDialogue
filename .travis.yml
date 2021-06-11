@@ -15,27 +15,37 @@ env:
 
 install:
   # ubuntu dependencies
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" > /etc/apt/sources.list.d/icub.list'; 
   # icub key
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi  
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget | wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null | sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' | sudo apt-get update; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install cmake; fi
+  - sudo apt-get install build-essential git cmake cmake-curses-gui \
+      libeigen3-dev \
+      libace-dev \
+      libedit-dev \
+      libsqlite3-dev \
+      libtinyxml-dev
+      
+    # install ycm
+  - git clone https://github.com/robotology/ycm.git -b v0.11.3
+  - cd ycm
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j
+  - sudo make install
+  - cd ../..
   
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt update; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get --assume-yes install cmake libeigen3-dev icub-common libv4lconvert0 libv4l-dev; fi
-  
-    #install yarp from master
-  - git clone --depth 1 -b $YARP_BRANCH https://github.com/robotology/yarp
+    # install yarp
+  - git clone https://github.com/robotology/yarp.git -b v3.4.0
   - cd yarp
   - mkdir build
   - cd build
-  - cmake ../ -DCREATE_GUIS:BOOL=ON -DCREATE_LIB_MATH:BOOL=ON -DCREATE_OPTIONAL_CARRIERS:BOOL=ON -DENABLE_yarpcar_bayer_carrier:BOOL=ON
+  - cmake ../ -DCREATE_GUIS:BOOL=ON -DCREATE_LIB_MATH:BOOL=ON -DCREATE_OPTIONAL_CARRIERS:BOOL=ON -DENABLE_yarpcar_bayer:BOOL=ON
   - make -j2
   - sudo make install
   - cd ../..
   
-  #install icub from master
-  - git clone --depth 1 https://github.com/robotology/icub-main.git
+  # install icub
+  - git clone https://github.com/robotology/icub-main.git -b v1.17.0
   - cd icub-main
   - mkdir build
   - cd build
