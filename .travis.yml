@@ -22,6 +22,8 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6; fi
   # google chrome key
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -; fi
+  # apache cassandra
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key A278B781FE4B2BDA; fi
   # git lfs
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157; fi
   # icub-common
