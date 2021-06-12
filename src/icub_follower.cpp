@@ -4,6 +4,7 @@
 #include <yarp/os/RateThread.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Property.h>
+#nclude <yarp/os/LogStream.h>
 #include <yarp/dev/IControlLimits2.h>         // Control Limits for Drivers
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
