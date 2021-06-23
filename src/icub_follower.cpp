@@ -4,6 +4,7 @@
 #include <yarp/os/RateThread.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Property.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/dev/IControlLimits2.h>         // Control Limits for Drivers
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
@@ -870,8 +871,8 @@ public:
         seq.at<double>(0,cnt) = state;
 
         // store timestamp of the specific state
-        seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        //seq_mat_wTime.at<double>(0,cnt) = state;
+        //seq_mat_wTime.at<double>(1,cnt) = diffTime;
 
         cout << "M = " << endl;
         for(int nu=0;nu<cnt;nu++) cout << " "  << seq.at<double>(0,nu);
