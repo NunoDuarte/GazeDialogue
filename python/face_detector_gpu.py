@@ -4,7 +4,6 @@ import tensorflow as tf
 import os
 import numpy as np
 
-
 class FaceGPU:
 
     def __init__(self):
@@ -44,6 +43,7 @@ class FaceGPU:
         (boxes, scores, classes, num_detections) = sess.run(
             [boxes, scores, classes, num_detections],
             feed_dict={image_tensor: image_np_expanded})
+
         # Visualization of the results of a detection.
         vis_util.visualize_boxes_and_labels_on_image_array(
             frame,
