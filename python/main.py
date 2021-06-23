@@ -28,7 +28,7 @@ while cv2.waitKey(1):
             height, width, channels = frame.shape
 
             # object (color) detection          [G, R, B, Y, C]
-            ball = ballTracking.tracking(frame, [1, 1, 1, 0, 0], lsl.pts)
+            ball = ballTracking.tracking(frame, [1, 0, 0, 1, 1], lsl.pts)
 
             # iCub face
             # face = faceTracking.detecting(frame)
