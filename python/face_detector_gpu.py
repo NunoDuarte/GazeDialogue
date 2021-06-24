@@ -4,6 +4,9 @@ import tensorflow as tf
 import os
 import numpy as np
 
+def length_of_bounding_box(bbox, IMG_WIDTH):
+    return bbox[3]*IMG_WIDTH - bbox[1]*IMG_WIDTH
+
 class FaceGPU:
 
     def __init__(self):
@@ -44,12 +47,23 @@ class FaceGPU:
             [boxes, scores, classes, num_detections],
             feed_dict={image_tensor: image_np_expanded})
 
+        # find best score
+        id = np.argmax(np.squeeze(scores))
+        maxId = np.squeeze(boxes)[0]
         # Visualization of the results of a detection.
-        vis_util.visualize_boxes_and_labels_on_image_array(
-            frame,
-            np.squeeze(boxes),
-            np.squeeze(classes).astype(np.int32),
-            np.squeeze(scores),
-            self.category_index,
-            use_normalized_coordinates=True,
-            line_thickness=8)
+        _, width, _ = frame.shape
+        if length_of_bounding_box(maxId, width) < 100:
+            # print(length_of_bounding_box(maxId, width))
+            vis_util.visualize_boxes_and_labels_on_image_array(
+                frame,
+                np.squeeze(boxes),
+                np.squeeze(classes).astype(np.int32),
+                np.squeeze(scores),
+                self.category_index,
+                use_normalized_coordinates=True,
+                max_boxes_to_draw = 1,
+                skip_scores=True,       # to not show the score confidence
+                line_thickness=8,
+                min_score_thresh=0)
+            #
+            return maxId

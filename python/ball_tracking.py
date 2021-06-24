@@ -58,7 +58,7 @@ class Ball:
                 ball.append([int(x), int(y)])
 
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 5])
+            self.ball_all.append([ball, 2])
 
         return frame, ball
 

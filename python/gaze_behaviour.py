@@ -7,8 +7,8 @@ class GazeBehaviour:
     def __init__(self, outlet=None):
         pass
 
-    def record(self, timestamp, allBalls, faces, fixation, labels):
-        epsilon = 30  # the threshold in pixels allowed
+    def record(self, timestamp, allBalls, face, fixation, labels, width, height):
+        epsilon = 80  # the threshold in pixels allowed
 
         for ball in allBalls:
             if len(ball[0]) == 1:
@@ -20,22 +20,22 @@ class GazeBehaviour:
                     mysample = [timestamp, ball[1], ball[0][0][0], ball[0][0][1], ]
                     return mysample
 
-                for face in faces:
+            if face is not None:
+                cX = face[0]*width
+                cY = face[1]*height
+                cW = face[0]*width + face[2]*width
+                cH = face[1]*height + face[3]*height
+                print(cX, cY, cW, cH)
 
-                    cX = face[0]
-                    cY = face[1]
-                    cW = face[0] + face[2]
-                    cH = face[1] + face[3]
-
-                    if cX - 30 < fixation[0] < cW + 30 and cY - 30 < fixation[1] < cH + 30:
-                        mysample = [timestamp, 7, face[0], face[1]]
-                        return mysample
+                if cX - epsilon < fixation[0] < cW + epsilon and cY - epsilon < fixation[1] < cH + epsilon:
+                    mysample = [timestamp, 7, face[0], face[1]]
+                    return mysample
 
             mysample = []
 
         return mysample
 
-    def push(self, frame, sample, ball, width, height, lsl):
+    def push(self, frame, sample, ball, face, width, height, lsl):
         pos_x = sample[0][1]
         pos_y = sample[0][2]
 
@@ -47,8 +47,8 @@ class GazeBehaviour:
 
         # check the gaze behaviour
         if len(ball) is not 0:
-            mysample = self.record(sample[0][0], ball, [], fixation, [])
+            mysample = self.record(sample[0][0], ball, face, fixation, [], width, height)
             if len(mysample) is not 0:
-                # print(mysample)
-                lsl.outlet.push_sample(mysample)
+                print(mysample)
+                # lsl.outlet.push_sample(mysample)
 
