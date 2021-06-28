@@ -1,5 +1,8 @@
 # Gaze Dialogue Model
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![C++](https://img.shields.io/badge/C%2B%2B-%3F%3F-blue?logo=cplusplus)](https://www.codecademy.com/catalog/language/c-plus-plus?g_network=g&g_device=c&g_adid=518718870684&g_keyword=c%2B%2B%20programming&g_acctid=243-039-7011&g_adtype=search&g_adgroupid=102650142713&g_keywordid=kwd-12432420&g_campaign=ROW+Language%3A+Basic+-+Exact&g_campaignid=10074200771&utm_id=t_kwd-12432420:ag_102650142713:cp_10074200771:n_g:d_c&utm_term=c%2B%2B%20programming&utm_campaign=ROW%20Language%3A%20Basic%20-%20Exact&utm_source=google&utm_medium=paid-search&utm_content=518718870684&hsa_acc=2430397011&hsa_cam=10074200771&hsa_grp=102650142713&hsa_ad=518718870684&hsa_src=g&hsa_tgt=kwd-12432420&hsa_kw=c%2B%2B%20programming&hsa_mt=e&hsa_net=adwords&hsa_ver=3&gclid=Cj0KCQjw5uWGBhCTARIsAL70sLKe0aAEMv2Io23zejU2ij5ElZ7_tqrInOxNVFF8Ra9WRHwyGMqGbvYaAn1REALw_wcB)
 [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
 Gaze Dialogue Model controller for iCub Humanoid Robot 
 
@@ -7,19 +10,34 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 
 # Table of Contents
 
-- [Install](#install)
+- [Structure](#structure)
+- [Building](#building)
+- [Setup](#setup)
 - [Usage](#usage)
 - [Extras](#extras)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Install
-
+## Structure
+``` text
+.
+├── CMakeLists.txt
+├── app
+│   └── main.cpp
+├── include
+│   ├── example.h
+│   └── exampleConfig.h.in
+├── src
+│   └── example.cpp
+└── tests
+    ├── dummy.cpp
+    └── main.cpp
 ```
-```
 
-## Steps to take before Usage
+## Building
+
+## Setup
 Run yarp from a different computer
 - yarp namespace /icub
 - yarp detect (to check you are connected)
