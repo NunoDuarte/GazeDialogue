@@ -57,7 +57,8 @@ Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
 
-## Citation (temporary)
+## Citation 
+(temporary)
 If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
 
     @inproceedings{rakovic2021gazedialogue,
