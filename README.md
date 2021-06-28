@@ -1,12 +1,13 @@
 # Gaze Dialogue Model
 
-Gaze Dialogue Model controller for iCub Humanoid Robot [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/gazePupil_iCub)
+Gaze Dialogue Model controller for iCub Humanoid Robot [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
 
 ## Table of Contents
 
 - [Install](#install)
 - [Usage](#usage)
 - [Extras](#extras)
+- [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -55,6 +56,17 @@ Robot as a Leader:
 Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
+
+## Citation (temporary)
+If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
+
+    @inproceedings{rakovic2021gazedialogue,
+	author = {Raković, Mirko and Ferreira Duarte, Nuno and Marques, Jorge and Billard, Aude and Santos-Victor, José},
+	year = {2021},
+	month = {},
+	pages = {14},
+	title = {The Gaze Dialogue Model: Non-verbal communication in Human-Human and Human-Robot Interaction}
+	}
 
 ## Contributing
 
