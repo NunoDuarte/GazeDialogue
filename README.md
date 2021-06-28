@@ -12,8 +12,8 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 
 - [Structure](#structure)
 - [Building](#building)
+- [Instructions](#instructions)
 - [Setup](#setup)
-- [Usage](#usage)
 - [Extras](#extras)
 - [Citation](#citation)
 - [Contributing](#contributing)
@@ -49,7 +49,7 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 
 ## Building
 
-## Setup
+## Instructions
 Run yarp from a different computer
 - yarp namespace /icub
 - yarp detect (to check you are connected)
@@ -66,7 +66,7 @@ Run on the real robot - without right arm (optional)
 - fingersTuner          icub-laptop
 - imuFilter             pc104
 
-## Usage
+## Setup
 Robot as a Follower:
 1. open YARP - yarpserver 
 2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
