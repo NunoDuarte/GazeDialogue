@@ -24,15 +24,27 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 .
 ├── CMakeLists.txt
 ├── app
-│   └── main.cpp
+│   ├── pupil_iCubSim-follower-nonmutual.xml
+|   ├── pupil_iCubSim-leader-nonmutual.xml
+|   ├── pupil_iCubSim-leader-mutual.xml
+|   └── system.xml
+|
 ├── include
-│   ├── example.h
-│   └── exampleConfig.h.in
-├── src
-│   └── example.cpp
-└── tests
-    ├── dummy.cpp
-    └── main.cpp
+│   ├── compute.h
+│   ├── configure.h
+|   ├── helpers.h
+|   └── init.h
+└── src
+    ├── icub_follower.cpp
+    ├── icub_leader.cpp
+    └── extras
+        ├── CvHMM.h
+        ├── CvMC.h
+        ├── compute.cpp
+	├── configure.cpp
+	├── detector.cpp
+	└── helpers.cpp
+
 ```
 
 ## Building
