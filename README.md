@@ -2,7 +2,7 @@
 
 Gaze Dialogue Model controller for iCub Humanoid Robot [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
 
-<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="400" height="300" /> <img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="400" height="300" />
+<img src="gif_g.gif" width="400" height="225" /> <img src="gif_f.gif" width="400" height="225" />
 
 # Table of Contents
 
