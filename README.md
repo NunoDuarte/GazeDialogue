@@ -55,7 +55,7 @@ Robot as a Leader:
 Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
-- 
+
 ## Contributing
 
 Nuno Ferreira Duarte
