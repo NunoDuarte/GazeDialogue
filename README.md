@@ -10,6 +10,7 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 
 # Table of Contents
 
+- [Dependencies](#dependencies)
 - [Building](#building)
 - [Instructions](#instructions)
 - [Setup](#setup)
@@ -18,6 +19,8 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Dependencies
 
 ## Building
 
