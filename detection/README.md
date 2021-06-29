@@ -1,4 +1,4 @@
-# Software for Identifying from Gaze Fixations the Desired Objects and Faces
+# Identifying from Gaze Fixations the Desired Objects and Faces
 
 <img src="../doc/python.gif" width="800" height="450" />
 
