@@ -6,45 +6,18 @@
 
 Gaze Dialogue Model controller for iCub Humanoid Robot 
 
-<img src="gif_g.gif" width="400" height="225" /> <img src="gif_f.gif" width="400" height="225" />
+<img src="doc/gif_g.gif" width="400" height="225" /> <img src="doc/gif_f.gif" width="400" height="225" />
 
 # Table of Contents
 
-- [Structure](#structure)
 - [Building](#building)
 - [Instructions](#instructions)
 - [Setup](#setup)
+- [Structure](#structure)
 - [Extras](#extras)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Structure
-``` text
-.
-├── CMakeLists.txt
-├── app
-│   ├── GazeDialogue_follower.xml
-|   ├── GazeDialogue_leader.xml
-|   └── iCub_startup.xml
-|   
-├── include
-│   ├── compute.h
-│   ├── configure.h
-|   ├── helpers.h
-|   └── init.h
-└── src
-    ├── icub_follower.cpp
-    ├── icub_leader.cpp
-    └── extras
-        ├── CvHMM.h
-        ├── CvMC.h
-        ├── compute.cpp
-	├── configure.cpp
-	├── detector.cpp
-	└── helpers.cpp
-
-```
 
 ## Building
 
@@ -83,6 +56,34 @@ Robot as a Leader:
 - look_down is automatic
 - grasp_it is when for the first time the iCub looks at the brick (red ball)
 - giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+
+## Structure
+``` text
+.
+├─── Controller
+	├── CMakeLists.txt
+	├── app
+	│   ├── GazeDialogue_follower.xml
+	|   ├── GazeDialogue_leader.xml
+	|   └── iCub_startup.xml
+	|   
+	├── include
+	│   ├── compute.h
+	│   ├── configure.h
+	|   ├── helpers.h
+	|   └── init.h
+	└── src
+	    ├── icub_follower.cpp
+	    ├── icub_leader.cpp
+	    └── extras
+		├── CvHMM.h
+		├── CvMC.h
+		├── compute.cpp
+		├── configure.cpp
+		├── detector.cpp
+		└── helpers.cpp
+
+```
 
 ## Extras
 Read camera output
