@@ -1,6 +1,6 @@
 <application>
 
-  <name>Pupil_iCubSim-leader-nonmutual</name>
+  <name>GazeDialogue-Leader</name>
 
   <dependencies>
       <port>/iKinGazeCtrl/rpc</port>
@@ -20,9 +20,16 @@
   </connection>
 
   <connection>
+      <from>/pupil_gaze_tracker</from>
+      <to>/read_pupil</to>
+      <protocol>tcp</protocol>
+  </connection>
+
+  <connection>
       <from>/action</from>
       <to>/hardcoded</to>
       <protocol>tcp</protocol>
   </connection>
+
 
 </application>
