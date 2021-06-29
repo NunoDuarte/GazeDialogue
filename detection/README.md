@@ -1,5 +1,4 @@
-# Python Project for PupilLabs interface for object and iCub detection using eye-tracker
-Software for Identifying from Gaze Fixations the Recognized Object or Face
+# Software for Identifying from Gaze Fixations the Desired Objects and Faces
 
 <img src="../doc/python.gif" width="800" height="450" />
 
