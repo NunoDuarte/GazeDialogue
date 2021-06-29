@@ -1,7 +1,7 @@
 # Python Project for PupilLabs interface for object and iCub detection using eye-tracker
 Software for Identifying from Gaze Fixations the Recognized Object or Face
 
-<img src="doc/python.gif" width="800" height="450" />
+<img src="../doc/python.gif" width="800" height="450" />
 
 ### Current version of onlineDetect uses tensorflow object detection network trained on icub faces
 So you need to get the icub-face-detection repo to make it work
