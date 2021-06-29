@@ -3,14 +3,22 @@ Software for Identifying from Gaze Fixations the Recognized Object or Face
 
 <img src="../doc/python.gif" width="800" height="450" />
 
-### Current version of onlineDetect uses tensorflow object detection network trained on icub faces
+### Current version of main.py uses tensorflow object detection network trained on icub faces
 So you need to get the icub-face-detection repo to make it work
 
-## Requirements to make it work
+# Table of Contents
+
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Possible Issues](#issues)
+
+## Dependencies
 1. add anaconda
 2. source activate pupilos
 3. tensorflow models - object detection
 4. import utils
+
+## Installation 
 ###  to import utils you need to install tensorflow with gpu then get the models of tensorflow for object recognition to recognize the import 
 ```
 from utils import label_map_util
@@ -35,6 +43,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 14. check the requirements of the pupil-stream-lsl 
 15. check that pupil-stream-lsl has the correct threads activated
 
+## Possible Issues
 ## if you find this problem when using codeblocks 
 - pthread_create@2.25 
 The solution is to add the thread library to both the compiler and linker 
