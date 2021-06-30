@@ -56,6 +56,9 @@ echo $PYTHONPATH
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
 ```
 The connectivity App needs the following dependencies:
+- LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) 
+- YARP  (on v2.3.72)
+- PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
 
 ## Building
 
