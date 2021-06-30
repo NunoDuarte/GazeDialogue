@@ -29,8 +29,32 @@ The controller App needs the following dependencies:
 OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
 
 The detection App needs the following dependencies:
-- 
+- OpenCV 
+- pylsl
+- numpy
+- os
+- math
+- msgpack
+- zmq
+- Tensorflow with CUDA
+- utils (from Tensorflow Object Detection API)
 
+We recommend to install the [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
+```bash
+pip install numpy os math msgpath zmq pylsl cv2
+```
+to import utils you need to install tensorflow with gpu then get the models of tensorflow for object recognition to recognize the import 
+```
+from utils import label_map_util
+from utils import visualization_utils as vis_util
+```
+you need the following (after you have followed the instructions on how to install tensorflow models)
+``` 
+cd tensorflow/models/research
+export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
+echo $PYTHONPATH 
+export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
+```
 The connectivity App needs the following dependencies:
 
 ## Building
