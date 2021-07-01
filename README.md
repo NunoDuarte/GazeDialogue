@@ -63,17 +63,16 @@ The connectivity App needs the following dependencies:
 ## Building
 
 ## Instructions
-Run yarp from a different computer
-- yarp namespace /icub
+In case you have the detection App and/or the connectivity App in a different computer then point the yarp to the laptop/computer that iCub is running:
+- yarp namespace /icub (in case /icub is the name of the yarp network)
 - yarp detect (to check you are connected)
-- gedit /home/nduarte/.config/yarp/_icub.conf
+- gedit /home/user/.config/yarp/_icub.conf
 - 'ip of computer you wish to connect' 10000 yarp 
 
-Run on the real robot - without right arm (optional)
+Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-- iCubStartup
 - iKinCartesianSolver -part left_arm
-- iKinGazeCtrl ...
+- iKinGazeCtrl 
 - wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
 - gravityCompensator    icubbrain2   --headV2 --no_right_arm
 - fingersTuner          icub-laptop
