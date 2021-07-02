@@ -81,7 +81,7 @@ using namespace std;
         double treshold = 0.15;
         double alfa = 0.05;//parameter of exponential moving average
 
-        if(cur_state>=0 && cur_state<4)
+        if(cur_state>=1 && cur_state<=4)
         {
             prob_G = APL.at<double>(cur_state-1,0);
             prob_P = APL.at<double>(cur_state-1,1);
@@ -129,19 +129,35 @@ using namespace std;
         //        logpseg -- irrelevant for now
         // output: behavior of robot
         int action;
-        double logpseq;
+        double logpseq; 
 
         // call the predictor function
         action = predictFollower(act_probability, state, action);
-        //myfile << act_probability << "\n";
+        myfile << act_probability << "\n";
         yInfo() << "predicting" << act_probability.at<double>(0,0);
         yInfo() << "predicting" << act_probability.at<double>(1,0);
 
         time(&timer2);           // get current time
-        float diffTime = timer2 - timer1;
+        //float diffTime = timer2 - timer1;
 
-        yInfo() << "diffTime" << diffTime;
+        float diffTime;
+        if (cnt == 0){
+            const clock_t begin_time = clock();
+            timeI = begin_time;
+            //yInfo() << "clock" << begin_time;
 
+            diffTime = 0.0;
+        }
+        else { 
+            clock_t thread_time = clock();
+
+            //yInfo() << "clock 1" << thread_time;
+            //yInfo() << "clock" << timeI;
+
+            diffTime = 1000*float( clock () - timeI ) /  CLOCKS_PER_SEC;
+            //yInfo() << "diffTime" << diffTime;
+
+        }
         // add state to sequence of states
         int rows = seq_mat.rows;
         seq_mat.push_back(state);      
@@ -149,8 +165,8 @@ using namespace std;
         seq.at<double>(0,cnt) = state;
         // store timestamp of the specific state
         seq_mat_wTime.at<double>(0,cnt) = state;
-        seq_mat_wTime.at<float>(1,cnt) = diffTime;
-        yInfo() << seq_mat_wTime.at<double>(1,cnt);
+        seq_mat_wTime.at<double>(1,cnt) = diffTime;
+        //yInfo() << seq_mat_wTime.at<double>(1,cnt);
 
         cnt++;
         cout << "M = " << endl;
@@ -207,7 +223,8 @@ using namespace std;
 
         // initialize the state of the leader
         int human_state;
-
+        //human_state = 2;
+        //actionBehavior(human_state);
         Bottle *b = inPort.read(false);
         if (b != NULL)
         {
@@ -253,14 +270,13 @@ using namespace std;
         
 
         // Initialize the state (to send the seq to the mutuaAlign)
-        if (count == 1){ human_state = 0;}
+        if (count == 1){ iCub_state = 0;}
         // Add to Sequence
-        seq.at<double>(0,count) = human_state;
+        seq.at<double>(0,count) = iCub_state;
 
 
         // Generate Next State
-        int iCub_state;
-        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon,INITLG,logpseq,pstates,count, released);
+        iCub_state = mcLG.mutualAlign(seq,TRANSLGbhon,TRANSLGahon, TRANSLGswbhon, TRANSLGswahon, INITLG,logpseq,pstates,count, released);
 
         if (count < 10){
 
@@ -280,7 +296,7 @@ using namespace std;
 
 
         // save to output file - increment all for reading purposes
-        myfile << human_state + 1 << ", ";
+        myfile << iCub_state + 1 << ", ";
     }
 
 int main(int argc, char *argv[]) 
@@ -329,6 +345,7 @@ int main(int argc, char *argv[])
 
     bool done=false;
     double startTime=Time::now();
+
     while(!done)
     {
         if ((Time::now()-startTime)>100)

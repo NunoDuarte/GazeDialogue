@@ -533,6 +533,7 @@ using namespace yarp::math;
                                 reply.addString("Yeah! I did it! Maybe...");
                                 yInfo() << "Yeah! I did it! Maybe...";
                                 grasp = true;
+                                getchar();
                             }
                             else
                             {
@@ -612,10 +613,10 @@ using namespace yarp::math;
         // select the correct interface
 
         // this should be in the beginning, where you initialize the necessary stuff
-        IControlLimits2   *ilim;
-        IPositionControl2 *ipos;
+        IControlLimits   *ilim;
+        IPositionControl *ipos;
         IEncoders         *ienc;
-        IControlMode2     *imod;
+        IControlMode     *imod;
 
         if (hand=="right")
         {
@@ -693,9 +694,9 @@ using namespace yarp::math;
     /***************************************************/
     void ControlThread::release(string hand)
     {
-        IControlLimits2   *ilim;
-        IPositionControl2 *ipos;
-        IControlMode2     *imod;
+        IControlLimits   *ilim;
+        IPositionControl *ipos;
+        IControlMode     *imod;
 
         if (hand=="right")
         {

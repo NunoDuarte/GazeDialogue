@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>                            // add libraries to define output files
 
+
 #define NBSAMPLES 1
 
 using namespace yarp::os;
@@ -54,6 +55,8 @@ class ControlThread: public RateThread
 
             time_t timer1;       // define time variable 1
             time_t timer2;       // define time variable 2
+            clock_t begin_time;
+            double timeI;
 
             int startup_ctxt_gaze;
             string _hand;
@@ -74,17 +77,27 @@ class ControlThread: public RateThread
             // Declare the probabilities of being giving or placing action
             cv::Mat act_probability;
 
-            // define matrixes for the leader
+            //// define matrixes
+            // for the leader
             CvMC mcLG;
             double *TRANSdataLGbhon;
             cv::Mat TRANSLGbhon;
-
             double *TRANSdataLGahon;
             cv::Mat TRANSLGahon;
 
             cv::Mat INITLG;
 
-            // define the sequence of states
+            // without the diagonal
+            double *TRANSdataLGswbhon;
+            cv::Mat TRANSLGswbhon;
+
+            double *TRANSdataLGswahon;
+            cv::Mat TRANSLGswahon;
+
+            // state of the icub
+            int iCub_state;
+
+            //// define the sequence of states
             cv::Mat seq_mat;
             cv::Mat seq_mat_wTime;
             cv::Mat seq;

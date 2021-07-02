@@ -4,6 +4,7 @@
 #include <yarp/os/RateThread.h>
 #include <yarp/os/Time.h>
 #include <yarp/os/Property.h>
+#include <yarp/os/LogStream.h>
 #include <yarp/dev/IControlLimits2.h>         // Control Limits for Drivers
 #include <yarp/dev/ControlBoardInterfaces.h>  // joint control
 #include <yarp/dev/CartesianControl.h>        // cartesian control
@@ -119,7 +120,7 @@ public:
         seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
-        string robot="icubSim";
+        string robot="icub";
 
         if (!openCartesian(robot,"left_arm"))
         {
@@ -575,7 +576,7 @@ public:
         port.close();
 
         myfile << seq_mat;
-        myfile << seq_mat_wTime;
+        //myfile << seq_mat_wTime;
         myfile2 << pstates << "\n";
         myfile.close(); 
         myfile2.close();
