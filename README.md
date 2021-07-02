@@ -1,6 +1,93 @@
-# Gaze Dialogue Model - iCub Controller [![Build Status](https://travis-ci.com/NunoDuarte/gazePupil_iCub.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/gazePupil_iCub)
+# Gaze Dialogue Model
+[![Python 3.6](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
+[![Build Status](https://travis-ci.com/NunoDuarte/GazeDialogue.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
-## Robot as a Leader
+Gaze Dialogue Model controller for iCub Humanoid Robot 
+
+<img src="doc/gif_g.gif" width="400" height="225" /> <img src="doc/gif_f.gif" width="400" height="225" />
+
+# Table of Contents
+
+- [Dependencies](#dependencies)
+- [Building](#building)
+- [Instructions](#instructions)
+- [Setup](#setup)
+- [Structure](#structure)
+- [Extras](#extras)
+- [Citation](#citation)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Dependencies
+The controller App needs the following dependencies:
+- OpenCV (tested on v3.4.1)
+- YARP  (tested on v2.3.72)
+- iCub (tested on v1.10)
+
+OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
+
+The detection App needs the following dependencies:
+- OpenCV 
+- pylsl
+- numpy
+- os
+- math
+- msgpack
+- zmq
+- Tensorflow with CUDA
+- utils (from Tensorflow Object Detection API)
+
+We recommend to install the [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
+```bash
+pip install numpy os math msgpath zmq pylsl cv2
+```
+to import utils you need to install tensorflow with gpu then get the models of tensorflow for object recognition to recognize the import 
+```
+from utils import label_map_util
+from utils import visualization_utils as vis_util
+```
+you need the following (after you have followed the instructions on how to install tensorflow models)
+``` 
+cd tensorflow/models/research
+export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
+echo $PYTHONPATH 
+export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
+```
+The connectivity App needs the following dependencies:
+- LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) 
+- YARP  (on v2.3.72)
+- PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
+
+## Building
+
+## Instructions
+In case you have the detection App and/or the connectivity App in a different computer then point the yarp to the laptop/computer that iCub is running:
+- yarp namespace /icub (in case /icub is the name of the yarp network)
+- yarp detect (to check you are connected)
+- gedit /home/user/.config/yarp/_icub.conf
+- 'ip of computer you wish to connect' 10000 yarp 
+
+Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
+- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
+- iKinCartesianSolver -part left_arm
+- iKinGazeCtrl 
+- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
+- gravityCompensator    icubbrain2   --headV2 --no_right_arm
+- fingersTuner          icub-laptop
+- imuFilter             pc104
+
+## Setup
+Robot as a Follower:
+1. open YARP - yarpserver 
+2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
+3. open PupilLabs (python3 main.py)
+4. connect to [python](https://github.com/NunoDuarte/gazePupil_iCub/tree/master/python) project 
+5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
+6. check /pupil_gaze_tracker is publishing gaze fixations 
+
+Robot as a Leader:
 1. placing action is in the module simHHItoiCub-left 
 - look_down
 - grasp_it (/hardcoded)
@@ -10,43 +97,60 @@
 - grasp_it is when for the first time the iCub looks at the brick (red ball)
 - giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
 
-## Robot as a Follower
+## Structure
+``` text
+.
+├─── Controller
+	├── CMakeLists.txt
+	├── app
+	│   ├── GazeDialogue_follower.xml
+	|   ├── GazeDialogue_leader.xml
+	|   └── iCub_startup.xml
+	|   
+	├── include
+	│   ├── compute.h
+	│   ├── configure.h
+	|   ├── helpers.h
+	|   └── init.h
+	└── src
+	    ├── icub_follower.cpp
+	    ├── icub_leader.cpp
+	    └── extras
+		├── CvHMM.h
+		├── CvMC.h
+		├── compute.cpp
+		├── configure.cpp
+		├── detector.cpp
+		└── helpers.cpp
 
-1. open YARP - yarpserver 
-2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
-3. open PupilLabs (python3 main.py)
-4. connect to python project [link](https://github.com/NunoDuarte/gazePupil_iCub/tree/master/python)
-5. run Pupil_Stream_to_Yarp to open LSL [link](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md)
-6. check /pupil_gaze_tracker is publishing gaze fixations
+```
 
-### read camera output
+## Extras
+Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
 
-### to work paralleled with pupil labs
-- sudo rmmod uvcvideo
-- sudo modprobe uvcvideo quirks=128 
--> you can think of running a script instead of always needing to run this before turning it on
+## Citation 
+(temporary)
+If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
 
-### run on the real robot (without right arm)
-- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-# iCubStartup:
-- iKinCartesianSolver -part left_arm
-- iKinGazeCtrl ...
-- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
-- gravityCompensator    icubbrain2   --headV2 --no_right_arm
-- fingersTuner          icub-laptop
-- imuFilter             pc104
+    @inproceedings{rakovic2021gazedialogue,
+	author = {Raković, Mirko and Ferreira Duarte, Nuno and Marques, Jorge and Billard, Aude and Santos-Victor, José},
+	year = {2021},
+	month = {},
+	pages = {14},
+	title = {The Gaze Dialogue Model: Non-verbal communication in Human-Human and Human-Robot Interaction}
+	}
 
-## run yarp from a different computer
-- yarp namespace /icub
-- yarp detect (to check you are connected)
-- gedit /home/nduarte/.config/yarp/_icub.conf
-- 'ip of computer you wish to connect' 10000 yarp 
+## Contributing
 
-## HRI experiments for Frontiers Journal
-Do experiments where the robot gives an object to a human and we analyze the gaze behavior of the human. The robot will have different gaze behaviors and the point is to evaluate the benefits and performance between approaches:
+Nuno Ferreira Duarte
 
-1. ground truth - no gaze (look straight)
-2. manual control - object, face, hand (based on [Zheng, Minhua et al. 2015](https://link.springer.com/article/10.1007/s12369-015-0305-z)) 
-3. hhi inspired control
+[![GitHub Badge](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NunoDuarte)
+[![Website Badge](https://camo.githubusercontent.com/42acc7ee3a18313a065e672e0835729edf3361dedb045d6c3cf8821fe30a1c2d/68747470733a2f2f696d672e736869656c64732e696f2f7374617469632f76313f7374796c653d666f722d7468652d6261646765266d6573736167653d47697426636f6c6f723d463035303332266c6f676f3d476974266c6f676f436f6c6f723d464646464646266c6162656c3d)](https://nunoduarte.github.io/)
+[![Google Badge](https://camo.githubusercontent.com/19402432392aa6c26fb154d597e9d809a69e7b6661219a70c732f60c8ccf87c6/68747470733a2f2f696d672e736869656c64732e696f2f7374617469632f76313f7374796c653d666f722d7468652d6261646765266d6573736167653d476f6f676c652b5363686f6c617226636f6c6f723d343238354634266c6f676f3d476f6f676c652b5363686f6c6172266c6f676f436f6c6f723d464646464646266c6162656c3d)](https://scholar.google.ch/citations?user=HA_f9qsAAAAJ&hl=en)
+
+## License
+
+MIT © Nuno Duarte
+
