@@ -20,7 +20,7 @@ i = 0   # to skip frames for faster Frame Rate
 while cv2.waitKey(1):
     topic, msg = lsl.recv_from_sub()
 
-    if topic == 'frame.world' and i % 4 == 0:
+    if topic == 'frame.world' and i % 8 == 0:
         frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
         if frame is not None:
@@ -28,16 +28,16 @@ while cv2.waitKey(1):
             height, width, channels = frame.shape
 
             # object (color) detection          [G, R, B, Y, C]
-            ball = ballTracking.tracking(frame, [1, 0, 0, 1, 1], lsl.pts)
+            ball = ballTracking.tracking(frame, [1, 1, 0, 0, 1], lsl.pts)
 
             # iCub face
-            # face = faceTracking.detecting(frame)
+            face = faceTracking.detecting(frame)
 
             # pupil
             sample, timestamp = lsl.inlet.pull_chunk()
             if sample:
                 # push to yarp port
-                gazeTracking.push(frame, sample, ball, [], width, height)
+                gazeTracking.push(frame, sample, ball, face, width, height)
 
             # clear buffer of object for new frame
             ballTracking.ball_all = []

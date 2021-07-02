@@ -7,21 +7,21 @@ class Ball:
     def __init__(self):
         self.ball_all = []
 
-    def tracking(self, frame, vector, pts):
+    def tracking(self, frame, vector):
         if vector[0]:
-            self.green(frame, pts)
+            self.green(frame)
         if vector[1]:
-            self.red(frame, pts)
+            self.red(frame)
         if vector[2]:
-            self.blue(frame, pts)
+            self.blue(frame)
         if vector[3]:
-            self.yellow(frame, pts)
+            self.yellow(frame)
         if vector[4]:
-            self.cyan(frame, pts)
+            self.cyan(frame)
 
         return self.ball_all
 
-    def cyan(self, frame, pts):
+    def cyan(self, frame):
         ball = []
 
         # hsv for cyan bounds
@@ -57,15 +57,12 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # update the points queue
-        pts.appendleft(center)
-
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 5])
+            self.ball_all.append([ball, 2])
 
-        return frame, pts, ball
+        return frame, ball
 
-    def yellow(self, frame, pts):
+    def yellow(self, frame):
         ball = []
 
         # hsv for yellow bounds
@@ -100,15 +97,12 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # update the points queue
-        pts.appendleft(center)
-
         if ball is not [] and len(ball) != 0:
             self.ball_all.append([ball, 4])
 
-        return frame, pts, ball
+        return frame, ball
 
-    def red(self, frame, pts):
+    def red(self, frame):
         ball = []
 
         # hsv for red bounds
@@ -143,15 +137,12 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # update the points queue
-        pts.appendleft(center)
-
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 4]) # 2
+            self.ball_all.append([ball, 4])  # 2
 
-        return frame, pts, ball
+        return frame, ball
 
-    def blue(self, frame, pts):
+    def blue(self, frame):
         ball = []
 
         # hsv for blue bounds
@@ -178,15 +169,12 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # update the points queue
-        pts.appendleft(center)
-
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 1]) # 3
+            self.ball_all.append([ball, 1])  # 3
 
-        return frame, pts, ball
+        return frame, ball
 
-    def green(self, frame, pts):
+    def green(self, frame):
         ball = []
 
         # hsv for green bounds
@@ -218,11 +206,8 @@ class Ball:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 ball.append([int(x), int(y)])
 
-        # update the points queue
-        pts.appendleft(center)
-
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 5]) # 1
+            self.ball_all.append([ball, 5])  # 1
 
-        return frame, pts, ball
+        return frame, ball
 
