@@ -11,11 +11,12 @@ class FaceGPU:
 
     def __init__(self):
         # What model to download.
+        FOLDER_NAME = 'icub_face'
         MODEL_NAME = 'icub_graph'
         # Path to frozen detection graph. This is the actual model that is used for the object detection.
-        PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
+        PATH_TO_FROZEN_GRAPH = FOLDER_NAME + '/' + MODEL_NAME + '/frozen_inference_graph.pb'
         # List of the strings that is used to add correct label for each box.
-        PATH_TO_LABELS = os.path.join('training', 'icub_detection.pbtxt')
+        PATH_TO_LABELS = os.path.join(FOLDER_NAME, 'icub_detection.pbtxt')
         NUM_CLASSES = 1
 
         label_map = label_map_util.load_labelmap(PATH_TO_LABELS)

@@ -1,4 +1,6 @@
+# activate anaconda environment:export PATH="/home/nduarte/anaconda3/bin:$PATH" && source activate pupilos
 # python3 main.py --buffer 68
+
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
