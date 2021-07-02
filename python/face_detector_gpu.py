@@ -49,10 +49,10 @@ class FaceGPU:
 
         # find best score
         id = np.argmax(np.squeeze(scores))
-        maxId = np.squeeze(boxes)[0]
+        maxId = np.squeeze(boxes)[id]
         # Visualization of the results of a detection.
         _, width, _ = frame.shape
-        if length_of_bounding_box(maxId, width) < 100:
+        if 50 < length_of_bounding_box(maxId, width) < 170:
             # print(length_of_bounding_box(maxId, width))
             vis_util.visualize_boxes_and_labels_on_image_array(
                 frame,

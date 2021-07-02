@@ -58,7 +58,7 @@ class Ball:
                 ball.append([int(x), int(y)])
 
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 2])
+            self.ball_all.append([ball, 5])
 
         return frame, ball
 
@@ -138,7 +138,7 @@ class Ball:
                 ball.append([int(x), int(y)])
 
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 4])  # 2
+            self.ball_all.append([ball, 1])  # 2 # 1 in ESN   # 3 in GazeDialogue
 
         return frame, ball
 
@@ -207,7 +207,7 @@ class Ball:
                 ball.append([int(x), int(y)])
 
         if ball is not [] and len(ball) != 0:
-            self.ball_all.append([ball, 5])  # 1
+            self.ball_all.append([ball, 1])  # 1 # 5 in ESN
 
         return frame, ball
 

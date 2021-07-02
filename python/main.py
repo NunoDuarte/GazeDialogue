@@ -29,21 +29,22 @@ with faceTracking.detection_graph.as_default():
                 frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
                 if frame is not None:
-                    frame = imutils.resize(frame, width=430)
+                    frame = imutils.resize(frame, width=640)
                     height, width, channels = frame.shape
 
                     # object (color) detection          [G, R, B, Y, C]
                     ball = ballTracking.tracking(frame, [1, 1, 0, 0, 1])
 
                     # iCub face
+                    face = None
                     if i % 8 == 0:
-                        faceTracking.detect(frame, sess)
+                        face = faceTracking.detect(frame, sess)
 
                     # pupil
                     sample, timestamp = lsl.inlet.pull_chunk()
                     if sample:
                         # push to yarp port
-                        gazeTracking.push(frame, sample, [], width, height, lsl)
+                        gazeTracking.push(frame, sample, ball, face, width, height, lsl)
 
                     # clear buffer of object for new frame
                     ballTracking.ball_all = []
@@ -51,4 +52,5 @@ with faceTracking.detection_graph.as_default():
                 cv2.imshow('frame', frame)
             i = i + 1
 
+print(gazeTracking.gaze_sequence)
 cv2.destroyAllWindows()

@@ -5,10 +5,11 @@ import cv2
 class GazeBehaviour:
 
     def __init__(self, outlet=None):
+        self.gaze_sequence = []
         pass
 
     def record(self, timestamp, allBalls, face, fixation, labels, width, height):
-        epsilon = 80  # the threshold in pixels allowed
+        epsilon = 30  # the threshold in pixels allowed
 
         for ball in allBalls:
             if len(ball[0]) == 1:
@@ -21,14 +22,15 @@ class GazeBehaviour:
                     return mysample
 
             if face is not None:
-                cX = face[0]*width
-                cY = face[1]*height
-                cW = face[0]*width + face[2]*width
-                cH = face[1]*height + face[3]*height
-                print(cX, cY, cW, cH)
+                cX = face[1]*width
+                cY = face[0]*height
+                cW = face[3]*width
+                cH = face[2]*height
+                # print(cX, cY, cW, cH)
+                # print(fixation)
 
-                if cX - epsilon < fixation[0] < cW + epsilon and cY - epsilon < fixation[1] < cH + epsilon:
-                    mysample = [timestamp, 7, face[0], face[1]]
+                if cX < fixation[0] < cW and cY < fixation[1] < cH :
+                    mysample = [timestamp, 4, face[0], face[1]]  # 4 is ESN # 7 in GazeDialogue
                     return mysample
 
             mysample = []
@@ -50,5 +52,6 @@ class GazeBehaviour:
             mysample = self.record(sample[0][0], ball, face, fixation, [], width, height)
             if len(mysample) is not 0:
                 print(mysample)
-                # lsl.outlet.push_sample(mysample)
+                self.gaze_sequence.append(mysample[1])
+                #lsl.outlet.push_sample(mysample)
 

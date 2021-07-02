@@ -28,15 +28,23 @@ faceTracking = FaceGPU()
 ballTracking = Ball()
 gazeTracking = GazeBehaviour()
 
-filename = '/home/nduarte/software/pupil/recordings/2021_06_23/002/exports/004'
-cap = cv2.VideoCapture(filename+'/world_viz.mp4')
+folder = '/home/nduarte/software/pupil/recordings/2021_06_24/004/exports/'
+filename = '000'
+cap = cv2.VideoCapture(folder+filename+'/world_viz.mp4')
 length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5) # 600
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5) # 337
+size = (width, height)
+fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+out = cv2.VideoWriter(filename+ '.avi', fourcc, 30.0, size)
+
 
 timestamps_gaze = list()
 norm_pos_x = list()
 norm_pos_y = list()
 
-with open(filename+'/gaze_positions.csv', newline='') as csvfile:
+with open(folder+filename+'/gaze_positions.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
         timestamps_gaze.append(float(row['timestamp']))
@@ -48,7 +56,7 @@ with open(filename+'/gaze_positions.csv', newline='') as csvfile:
 # print(norm_pos_y[2])      # dont forget it starts with 0
 # print(norm_pos_x[2])
 
-timestamps = np.load(filename+'/world_viz_timestamps.npy')
+timestamps = np.load(folder+filename+'/world_viz_timestamps.npy')
 
 i = 0
 
@@ -58,7 +66,7 @@ with faceTracking.detection_graph.as_default():
             ret, frame = cap.read()
 
             if frame is not None:
-                frame = imutils.resize(frame, width=600)
+                frame = imutils.resize(frame) #, width=600)
                 height, width, channels = frame.shape
                 # object (color) detection          [G, R, B, Y, C]
                 ball = ballTracking.tracking(frame, [0, 1, 0, 0, 1])
@@ -83,11 +91,15 @@ with faceTracking.detection_graph.as_default():
                 ballTracking.ball_all = []
 
                 cv2.imshow('frame', frame)
+                # write the flipped frame
+                out.write(frame)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
-            cv2.waitKey(0)
+            # cv2.waitKey(0)
             i = i + 1
 
+print(gazeTracking.gaze_sequence)
 cap.release()
+out.release()
 cv2.destroyAllWindows()
