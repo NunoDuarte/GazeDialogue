@@ -1,7 +1,7 @@
 # Gaze Dialogue Model
 [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![Python 3.8](https://img.shields.io/badge/python-3.8.12-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
-[![Tensorflow 1.8](https://img.shields.io/badge/tensorflow-v1.8-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![Tensorflow 2.7](https://img.shields.io/badge/tensorflow-v2.7-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
 [![Build Status](https://travis-ci.com/NunoDuarte/GazeDialogue.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
@@ -42,6 +42,8 @@ The detection App needs the following dependencies:
 - msgpack
 - zmq
 - Tensorflow with CUDA
+	- CUDA 8.0; Tensorflow 1.9; Cudnn v7.1 (for GTX 1070)
+	- nvidia driver 460.32; CUDA 11.2; Tensorflow 2.7; Cudnn v8.1 (for RTX 3090)
 - utils (from Tensorflow Object Detection API)
 
 We recommend to install the [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
