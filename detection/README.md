@@ -12,8 +12,9 @@ So you need to get the icub-face-detection repo to make it work
 - [Possible Issues](#issues)
 
 ## Dependencies
+- There are two conda virtual environments which were tested and was running (**pupilos** and **pupilos-10**). Pupilos was working for tensorflow 1.9 and CUDA-8.0 and pupilos-10 was working for tensorflow 2.7 and CUDA-11.2
 1. add anaconda
-2. source activate pupilos
+2. source activate pupilos***
 3. tensorflow models - object detection
 4. import utils
 

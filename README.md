@@ -1,5 +1,8 @@
 # Gaze Dialogue Model
-[![Python 3.6](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Python 3.8](https://img.shields.io/badge/python-3.8.12-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Tensorflow 2.7.0](https://img.shields.io/badge/tensorflow-v2.7.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
 [![Build Status](https://travis-ci.com/NunoDuarte/GazeDialogue.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
@@ -26,7 +29,9 @@ The controller App needs the following dependencies:
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
 
-OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
+	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0 and on CUDA-11.2). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
+	- To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). 
+	- To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
 
 The detection App needs the following dependencies:
 - OpenCV 
@@ -37,6 +42,8 @@ The detection App needs the following dependencies:
 - msgpack
 - zmq
 - Tensorflow with CUDA
+	- CUDA 8.0; Tensorflow 1.9; Cudnn v7.1 (for GTX 1070)
+	- nvidia driver 460.32; CUDA 11.2; Tensorflow 2.7; Cudnn v8.1 (for RTX 3090)
 - utils (from Tensorflow Object Detection API)
 
 We recommend to install the [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
@@ -129,6 +136,22 @@ Robot as a Leader:
 Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
+
+To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do the following:
+1. install nvidia driver 460.32.03 (cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb)
+2. wget https://developer.download.nvidia.com/compute/cuda/11.2.1/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb
+3. sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb 
+4. sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
+5. sudo apt-get install cuda-11-2
+6. check that apt-get is not removing any packages
+7. install Cudnn 8.1 for CUDA-11.0, 11.1, and 11.2
+8. test using deviceQuery on cuda-11.0 samples/1_Utilities
+9. follow the guidelines of Building and Instructions
+10. if after installing tensorflow, the system complains about missing cudart.so.11.0 then do this: (you can add this to ~/.bashrc)
+```
+export PATH=$PATH:/usr/local/cuda-11.2/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2/lib64
+```
 
 ## Citation 
 (temporary)
