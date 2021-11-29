@@ -19,6 +19,7 @@ Gaze Dialogue Model controller for iCub Humanoid Robot
 - [Setup](#setup)
 - [Structure](#structure)
 - [Extras](#extras)
+- [Issues](#issues)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -55,7 +56,7 @@ to import utils you need to install tensorflow with gpu then get the models of t
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 ```
-you need the following (after you have followed the instructions on how to install tensorflow models)
+you need the following (after you have followed the instructions on how to install tensorflow models) **WARNING[Issues](#issues)** 
 ``` 
 cd tensorflow/models/research
 export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
@@ -137,7 +138,8 @@ Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
 
-To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do the following:
+## Issues
+- To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do the following:
 1. install nvidia driver 460.32.03 (cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb)
 2. wget https://developer.download.nvidia.com/compute/cuda/11.2.1/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb
 3. sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb 
@@ -152,6 +154,8 @@ To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do
 export PATH=$PATH:/usr/local/cuda-11.2/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2/lib64
 ```
+- 
+
 
 ## Citation 
 (temporary)
