@@ -56,7 +56,7 @@ to import utils you need to install tensorflow with gpu then get the models of t
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 ```
-you need the following (after you have followed the instructions on how to install tensorflow models) **WARNING[Issues](#issues)** 
+you need the following (after you have followed the instructions on how to install tensorflow models) **[WARNING](#issues)** 
 ``` 
 cd tensorflow/models/research
 export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
