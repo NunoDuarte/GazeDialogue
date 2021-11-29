@@ -29,7 +29,9 @@ The controller App needs the following dependencies:
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
 
-OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
+	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0 and on CUDA-11.2). Please follow the detailed installation instructions on the [OpenCV documentation website](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
+	- To install iCub simulator and drivers you need to follow the [iCub documentation website](https://icub-tech-iit.github.io/documentation/sw_installation/). 
+	- To install the YARP middleware you need to follow the [YARP documentation website](https://www.yarp.it/latest/install_yarp_linux.html).
 
 The detection App needs the following dependencies:
 - OpenCV 
