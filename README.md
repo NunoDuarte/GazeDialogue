@@ -2,7 +2,7 @@
 [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![Python 3.8](https://img.shields.io/badge/python-3.8.12-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
-[![Tensorflow 2.7](https://img.shields.io/badge/tensorflow-v2.7-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+[![Tensorflow 2.7.0](https://img.shields.io/badge/tensorflow-v2.7.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 [![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
 [![Build Status](https://travis-ci.com/NunoDuarte/GazeDialogue.svg?token=dpExjnDjRy1sV64P2psP&branch=master)](https://travis-ci.com/NunoDuarte/GazeDialogue)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
