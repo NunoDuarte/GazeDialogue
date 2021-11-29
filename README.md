@@ -137,6 +137,17 @@ Read camera output
 - yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
 - yarp connect /test/video /icubSim/texture/screen
 
+To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do the following:
+1. install nvidia driver 460.32.03
+2. wget https://developer.download.nvidia.com/compute/cuda/11.2.1/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb
+3. sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb 
+4. sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
+5. sudo apt-get install cuda-11-2
+6. check that apt-get is not removing any packages
+7. install Cudnn 8.1 for CUDA-11.0, 11.1, and 11.2
+8. test using deviceQuery on  cuda-11.0 samples/1_Utilities
+9. 
+
 ## Citation 
 (temporary)
 If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
