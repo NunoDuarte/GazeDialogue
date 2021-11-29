@@ -5,12 +5,15 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from ball_tracking import Ball
-from face_detector import FaceDetector
-from face_detector_gpu import FaceGPU
+# from face_detector import FaceDetector as Face
+from face_detector_gpu import FaceGPU as Face
 from gaze_behaviour import GazeBehaviour
 from pupil_lsl_yarp import LSL
 
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import numpy as np
 import cv2
 import imutils
@@ -26,7 +29,7 @@ def findNearest(array, value):
 
 # initialize packages
 #lsl = LSL()
-faceTracking = FaceGPU()
+faceTracking = Face()
 ballTracking = Ball()
 gazeTracking = GazeBehaviour()
 

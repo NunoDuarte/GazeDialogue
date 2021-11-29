@@ -10,7 +10,10 @@ from face_detector_gpu import FaceGPU
 from gaze_behaviour import GazeBehaviour
 from pupil_lsl_yarp import LSL
 
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import numpy as np
 import cv2
 import imutils
