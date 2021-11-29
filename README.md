@@ -147,7 +147,7 @@ To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do
 7. install Cudnn 8.1 for CUDA-11.0, 11.1, and 11.2
 8. test using deviceQuery on cuda-11.0 samples/1_Utilities
 9. follow the guidelines of Building and Instructions
-10. if after installing tensorflow, the system complains about missing cudart.so.11.0 then do this
+10. if after installing tensorflow, the system complains about missing cudart.so.11.0 then do this: (you can add this to ~/.bashrc)
 ```
 export PATH=$PATH:/usr/local/cuda-11.2/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2/lib64
