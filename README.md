@@ -154,7 +154,16 @@ Read camera output
 export PATH=$PATH:/usr/local/cuda-11.2/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2/lib64
 ```
-- 
+- To make it work on tensorflow 2.7 I needed to alter the code in ~/software/tensorflow/models/research/object_detection/utils/label_map_utils.py (line 132)
+```
+with tf.io.gfile.GFile(path, 'r') as fid:
+```
+instead of 
+```
+with tf.gfile.GFile(path, 'r') as fid:
+```
+
+
 
 
 ## Citation 
