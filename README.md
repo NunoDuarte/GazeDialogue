@@ -145,8 +145,8 @@ To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do
 5. sudo apt-get install cuda-11-2
 6. check that apt-get is not removing any packages
 7. install Cudnn 8.1 for CUDA-11.0, 11.1, and 11.2
-8. test using deviceQuery on  cuda-11.0 samples/1_Utilities
-9. 
+8. test using deviceQuery on cuda-11.0 samples/1_Utilities
+9. follow the guidelines of Building and Instructions
 
 ## Citation 
 (temporary)
