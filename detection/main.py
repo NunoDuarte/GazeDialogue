@@ -27,7 +27,7 @@ gazeTracking = GazeBehaviour(lsl.outlet)
 i = 0
 with faceTracking.detection_graph.as_default():
     with tf.Session(graph=faceTracking.detection_graph) as sess:
-        while cv2.waitKey(1):
+        while cv2.waitKey(1) & 0xFF != ord('q'):
             topic, msg = lsl.recv_from_sub()
 
             if topic == 'frame.world' and i % 2 == 0:
@@ -38,7 +38,7 @@ with faceTracking.detection_graph.as_default():
                     height, width, channels = frame.shape
 
                     # object (color) detection          [G, R, B, Y, C]
-                    ball = ballTracking.tracking(frame, [1, 1, 0, 0, 1])
+                    ball = ballTracking.tracking(frame, [1, 1, 1, 0, 1])
 
                     # iCub face
                     face = None
