@@ -24,6 +24,7 @@ faceTracking = FaceGPU()
 ballTracking = Ball()
 gazeTracking = GazeBehaviour(lsl.outlet)
 
+# A window will open. To close, press 'q'.
 i = 0
 with faceTracking.detection_graph.as_default():
     with tf.Session(graph=faceTracking.detection_graph) as sess:
