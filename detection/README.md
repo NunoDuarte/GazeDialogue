@@ -3,7 +3,7 @@
 <img src="../doc/python.gif" width="800" height="450" />
 
 ### Current version of main.py uses tensorflow object detection network trained on icub faces
-So you need to get the icub-face-detection repo to make it work
+So you need to get the [icub-face-detection](https://github.com/NunoDuarte/icub-face-detection) repo to make it work
 
 # Table of Contents
 
