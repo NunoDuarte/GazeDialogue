@@ -13,16 +13,51 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 
 # Table of Contents
 
+- [Structure](#structure)
 - [Dependencies](#dependencies)
 - [Building](#building)
 - [Instructions](#instructions)
 - [Setup](#setup)
-- [Structure](#structure)
 - [Extras](#extras)
 - [Issues](#issues)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
+
+
+## Structure
+``` text
+.
+├─── Controller
+	├── CMakeLists.txt
+	├── app
+	│   ├── GazeDialogue_follower.xml
+	|   ├── GazeDialogue_leader.xml
+	|   └── iCub_startup.xml
+	|   
+	├── include
+	│   ├── compute.h
+	│   ├── configure.h
+	|   ├── helpers.h
+	|   └── init.h
+	└── src
+	    ├── icub_follower.cpp
+	    ├── icub_leader.cpp
+	    └── extras
+		├── CvHMM.h
+		├── CvMC.h
+		├── compute.cpp
+		├── configure.cpp
+		├── detector.cpp
+		└── helpers.cpp
+├─── Detection
+	├── main.py | main_offline.py
+	├── face_detector.py | face_detector_gpu.py
+	├── objt_tracking.py
+	├── gaze_behaviour.py
+	└── pupil_lsl_yarp.py
+
+```
 
 ## Dependencies
 The controller App needs the following dependencies:
@@ -104,34 +139,6 @@ Robot as a Leader:
 - look_down is automatic
 - grasp_it is when for the first time the iCub looks at the brick (red ball)
 - giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
-
-## Structure
-``` text
-.
-├─── Controller
-	├── CMakeLists.txt
-	├── app
-	│   ├── GazeDialogue_follower.xml
-	|   ├── GazeDialogue_leader.xml
-	|   └── iCub_startup.xml
-	|   
-	├── include
-	│   ├── compute.h
-	│   ├── configure.h
-	|   ├── helpers.h
-	|   └── init.h
-	└── src
-	    ├── icub_follower.cpp
-	    ├── icub_leader.cpp
-	    └── extras
-		├── CvHMM.h
-		├── CvMC.h
-		├── compute.cpp
-		├── configure.cpp
-		├── detector.cpp
-		└── helpers.cpp
-
-```
 
 ## Extras
 Read camera output
