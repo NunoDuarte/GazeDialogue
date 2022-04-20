@@ -82,7 +82,7 @@ The detection App needs the following dependencies:
 	- nvidia driver 460.32; CUDA 11.2; Tensorflow 2.7; Cudnn v8.1 (for RTX 3090)
 - utils (from Tensorflow Object Detection API)
 
-We recommend to install the [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
+We recommend installing [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
 ```bash
 pip install numpy os math msgpath zmq pylsl cv2
 ```
