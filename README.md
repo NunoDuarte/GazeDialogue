@@ -79,7 +79,7 @@ The detection App needs the following dependencies:
 - zmq
 - Tensorflow with CUDA
 	- CUDA 8.0; Tensorflow 1.9; Cudnn v7.1 (for GTX 1070)
-	- nvidia driver 460.32; CUDA 11.2; Tensorflow 2.7; Cudnn v8.1 (for RTX 3090)
+	- CUDA 11.2; Tensorflow 2.7; Cudnn v8.1; nvidia driver 460.32 (for RTX 3090)
 - utils (from Tensorflow Object Detection API)
 
 We recommend installing [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
@@ -102,6 +102,7 @@ The connectivity App needs the following dependencies:
 - LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) 
 - YARP  (on v2.3.72)
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
+	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
 ## Building
 
@@ -125,7 +126,7 @@ Run on the real robot - without right arm (optional). Firstly, start iCubStartup
 Robot as a Follower:
 1. open YARP - yarpserver 
 2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
-3. open PupilLabs (python3 main.py)
+3. open Pupil-Labs (Capture App)
 4. connect to [python](https://github.com/NunoDuarte/gazePupil_iCub/tree/master/python) project 
 5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
 6. check /pupil_gaze_tracker is publishing gaze fixations 
