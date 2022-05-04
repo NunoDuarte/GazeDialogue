@@ -127,7 +127,7 @@ Robot as a Follower:
 1. open YARP - yarpserver 
 2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
 3. open Pupil-Labs (Capture App)
-4. connect to [python](https://github.com/NunoDuarte/gazePupil_iCub/tree/master/python) project 
+4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
 5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
 6. check /pupil_gaze_tracker is publishing gaze fixations 
 
