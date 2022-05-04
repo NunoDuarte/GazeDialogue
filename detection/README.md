@@ -7,18 +7,16 @@ So you need to get the [icub-face-detection](https://github.com/NunoDuarte/icub-
 
 # Table of Contents
 
-- [Dependencies](#dependencies)
 - [Installation](#installation)
+- [Setup](#setup)
 - [Possible Issues](#issues)
 
-## Dependencies
+## Installation
 - There are two conda virtual environments which were tested and was running (**pupilos** and **pupilos-10**). Pupilos was working for tensorflow 1.9 and CUDA-8.0 and pupilos-10 was working for tensorflow 2.7 and CUDA-11.2
 1. add anaconda
 2. source activate pupilos***
 3. tensorflow models - object detection
 4. import utils
-
-## Installation 
 ###  to import utils you need to install tensorflow with gpu then get the models of tensorflow for object recognition to recognize the import 
 ```
 from utils import label_map_util
@@ -42,6 +40,23 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 13. pupil-stream-lsl project (other repository)
 14. check the requirements of the pupil-stream-lsl 
 15. check that pupil-stream-lsl has the correct threads activated
+
+## Setup 
+- There are two conda virtual environments which were tested and was running (**pupilos** and **pupilos-10**). Pupilos was working for tensorflow 1.9 and CUDA-8.0 and pupilos-10 was working for tensorflow 2.7 and CUDA-11.2
+1. add anaconda
+```
+source activate pupilos***
+```
+2. install tensorflow models - object detection
+3. add package utils (follow [dependencies](#dependencies))
+4. run main.py
+```
+python3 main.py
+```
+or main_offline.py
+```
+python3 main_offline.py
+```
 
 ## Issues
 If you find this problem when using codeblocks:
