@@ -175,7 +175,7 @@ with tf.gfile.GFile(path, 'r') as fid:
 
 
 ## Citation 
-(temporary)
+@TODO To be updated to Publication version
 If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
 
     @inproceedings{rakovic2021gazedialogue,
