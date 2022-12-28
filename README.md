@@ -175,16 +175,32 @@ with tf.gfile.GFile(path, 'r') as fid:
 
 
 ## Citation 
-@TODO To be updated to Publication version
-If you find this code useful in your research, please consider citing our [paper](https://www.researchgate.net/publication/326346431_The_Gaze_Dialogue_Model_Non-verbal_communication_in_Human-Human_and_Human-Robot_Interaction):
+If you find this code useful in your research, please consider citing [Journal](https://ieeexplore.ieee.org/abstract/document/9951394):
 
-    @inproceedings{rakovic2021gazedialogue,
-	author = {Raković, Mirko and Ferreira Duarte, Nuno and Marques, Jorge and Billard, Aude and Santos-Victor, José},
-	year = {2021},
-	month = {},
-	pages = {14},
-	title = {The Gaze Dialogue Model: Non-verbal communication in Human-Human and Human-Robot Interaction}
-	}
+	@ARTICLE{9951394,
+	  author={Duarte, Nuno F. and Billard, Aude and Santos-Victor, José},
+	  journal={IEEE Transactions on Cognitive and Developmental Systems}, 
+	  title={The Role of Object Physical Properties in Human Handover Actions: Applications in Robotics}, 
+	  year={2022},
+	  volume={},
+	  number={},
+	  pages={1-1},
+	  doi={10.1109/TCDS.2022.3222088}
+	  }
+
+or [Conference](https://ieeexplore.ieee.org/abstract/document/9278084):
+
+	@INPROCEEDINGS{9278084,
+	  author={Duarte, Nuno Ferreira and Chatzilygeroudis, Konstantinos and Santos-Victor, José and Billard, Aude},
+	  booktitle={2020 Joint IEEE 10th International Conference on Development and Learning and Epigenetic Robotics (ICDL-EpiRob)}, 
+	  title={From human action understanding to robot action execution: how the physical properties of handled objects modulate non-verbal cues}, 
+	  year={2020},
+	  volume={},
+	  number={},
+	  pages={1-6},
+	  doi={10.1109/ICDL-EpiRob48136.2020.9278084}
+	  }
+
 
 ## Contributing
 
