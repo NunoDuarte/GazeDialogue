@@ -60,7 +60,7 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 ```
 
 ## Dependencies
-The controller App needs the following dependencies:
+### For controller App:
 - OpenCV (tested on v3.4.1)
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
@@ -69,7 +69,7 @@ The controller App needs the following dependencies:
 	- To install iCub simulator and drivers you need to follow the oficial [iCub documentation](https://icub-tech-iit.github.io/documentation/sw_installation/). 
 	- To install the YARP middleware you need to follow the oficial [YARP documentation](https://www.yarp.it/latest/install_yarp_linux.html).
 
-The detection App needs the following dependencies:
+### For the detection App:
 - OpenCV 
 - pylsl
 - numpy
@@ -98,7 +98,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
 echo $PYTHONPATH 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
 ```
-The connectivity App needs the following dependencies:
+### For the connectivity App:
 - LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) 
 - YARP  (on v2.3.72)
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
