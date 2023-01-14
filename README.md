@@ -107,7 +107,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 ## Building
 
 ## Instructions
-In case you have the detection App and/or the connectivity App in a different computer then point the yarp to the laptop/computer that iCub is running:
+In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
 - yarp namespace /icub (in case /icub is the name of the yarp network)
 - yarp detect (to check you are connected)
 - gedit /home/user/.config/yarp/_icub.conf
@@ -123,7 +123,7 @@ Run on the real robot - without right arm (optional). Firstly, start iCubStartup
 - imuFilter             pc104
 
 ## Setup
-Robot as a Follower:
+### Robot as a Follower:
 1. open YARP - yarpserver 
 2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
 3. open Pupil-Labs (Capture App)
@@ -131,7 +131,7 @@ Robot as a Follower:
 5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
 6. check /pupil_gaze_tracker is publishing gaze fixations 
 
-Robot as a Leader:
+### Robot as a Leader:
 1. placing action is in the module simHHItoiCub-left 
 - look_down
 - grasp_it (/hardcoded)
@@ -171,22 +171,10 @@ instead of
 with tf.gfile.GFile(path, 'r') as fid:
 ```
 
-
-
-
 ## Citation 
 If you find this code useful in your research, please consider citing our [paper](https://ieeexplore.ieee.org/abstract/document/9965577):
 
-	@ARTICLE{9965577,
-	  author={Raković, Mirko and Duarte, Nuno Ferreira and Marques, Jorge and Billard, Aude and Santos-Victor, José},
-	  journal={IEEE Transactions on Cybernetics}, 
-	  title={The Gaze Dialogue Model: Nonverbal Communication in HHI and HRI}, 
-	  year={2022},
-	  volume={},
-	  number={},
-	  pages={1-0},
-	  doi={10.1109/TCYB.2022.3222077}
-	  }
+	M. Raković, N. F. Duarte, J. Marques, A. Billard and J. Santos-Victor, "The Gaze Dialogue Model: Nonverbal Communication in HHI and HRI," in IEEE Transactions on Cybernetics, doi: 10.1109/TCYB.2022.3222077.
 
 
 ## Contributing
