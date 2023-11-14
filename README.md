@@ -100,7 +100,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 ```
 ### For the connectivity App:
 - LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) (tested on 1.12)
-- YARP  (on v2.3.72)
+- YARP  (tested on v2.3.72)
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
