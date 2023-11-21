@@ -38,13 +38,15 @@ cd controller
 
 ## Dependencies
 ### For controller App:
-- OpenCV (tested on v3.4.1)
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
-
+```
+$ git clone https://github.com/robotology/ycm.git -b v0.11.3
+$ git clone https://github.com/robotology/yarp.git -b v3.4.0
+$ git clone https://github.com/robotology/icub-main.git -b v1.17.0
+```
+- OpenCV (tested on v3.4.1)
 	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0 and on CUDA-11.2). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
-	- To install iCub simulator and drivers you need to follow the oficial [iCub documentation](https://icub-tech-iit.github.io/documentation/sw_installation/). 
-	- To install the YARP middleware you need to follow the oficial [YARP documentation](https://www.yarp.it/latest/install_yarp_linux.html).
 
 ### For the detection App:
 - OpenCV 
