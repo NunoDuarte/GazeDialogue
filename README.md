@@ -37,7 +37,7 @@ cd controller
 
 
 ## Dependencies
-### For controller App:
+### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
 ```
