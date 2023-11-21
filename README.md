@@ -13,51 +13,28 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 
 # Table of Contents
 
-- [Structure](#structure)
-- [Dependencies](#dependencies)
 - [Building](#building)
-- [Instructions](#instructions-for-a-dual-computer-system)
+- [Dependencies](#dependencies)
 - [Setup](#setup)
+- [Structure](#structure)
+- [Instructions](#instructions-for-a-dual-computer-system)
 - [Extras](#extras)
 - [Issues](#issues)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
 
-
-## Structure
-``` text
-.
-├─── Controller
-	├── CMakeLists.txt
-	├── app
-	│   ├── GazeDialogue_follower.xml
-	|   ├── GazeDialogue_leader.xml
-	|   └── iCub_startup.xml
-	|   
-	├── include
-	│   ├── compute.h
-	│   ├── configure.h
-	|   ├── helpers.h
-	|   └── init.h
-	└── src
-	    ├── icub_follower.cpp
-	    ├── icub_leader.cpp
-	    └── extras
-		├── CvHMM.h
-		├── CvMC.h
-		├── compute.cpp
-		├── configure.cpp
-		├── detector.cpp
-		└── helpers.cpp
-├─── Detection
-	├── main.py | main_offline.py
-	├── face_detector.py | face_detector_gpu.py
-	├── objt_tracking.py
-	├── gaze_behaviour.py
-	└── pupil_lsl_yarp.py
-
+## Building
+1. clone repository
 ```
+git clone git@github.com:NunoDuarte/GazeDialogue.git
+```
+2. build the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
+```
+cd controller
+```
+3. install dependencies for controller App in [Dependencies](#dependencies)
+
 
 ## Dependencies
 ### For controller App:
@@ -104,7 +81,6 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
-## Building
 
 ## Setup
 ### Robot as a Follower:
@@ -133,6 +109,40 @@ Run on the real robot - without right arm (optional). Firstly, start iCubStartup
 - gravityCompensator    icubbrain2   --headV2 --no_right_arm
 - fingersTuner          icub-laptop
 - imuFilter             pc104
+
+## Structure
+``` text
+.
+├─── Controller
+	├── CMakeLists.txt
+	├── app
+	│   ├── GazeDialogue_follower.xml
+	|   ├── GazeDialogue_leader.xml
+	|   └── iCub_startup.xml
+	|   
+	├── include
+	│   ├── compute.h
+	│   ├── configure.h
+	|   ├── helpers.h
+	|   └── init.h
+	└── src
+	    ├── icub_follower.cpp
+	    ├── icub_leader.cpp
+	    └── extras
+		├── CvHMM.h
+		├── CvMC.h
+		├── compute.cpp
+		├── configure.cpp
+		├── detector.cpp
+		└── helpers.cpp
+├─── Detection
+	├── main.py | main_offline.py
+	├── face_detector.py | face_detector_gpu.py
+	├── objt_tracking.py
+	├── gaze_behaviour.py
+	└── pupil_lsl_yarp.py
+
+```
 
 ## Instructions for a dual-computer system
 In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
