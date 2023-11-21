@@ -16,7 +16,7 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 - [Structure](#structure)
 - [Dependencies](#dependencies)
 - [Building](#building)
-- [Instructions](#instructions)
+- [Instructions](#instructions-for-a-dual-computer-system)
 - [Setup](#setup)
 - [Extras](#extras)
 - [Issues](#issues)
