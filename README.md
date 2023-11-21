@@ -106,22 +106,6 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 
 ## Building
 
-## Instructions
-In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
-- yarp namespace /icub (in case /icub is the name of the yarp network)
-- yarp detect (to check you are connected)
-- gedit /home/user/.config/yarp/_icub.conf
-- 'ip of computer you wish to connect' 10000 yarp 
-
-Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
-- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-- iKinCartesianSolver -part left_arm
-- iKinGazeCtrl 
-- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
-- gravityCompensator    icubbrain2   --headV2 --no_right_arm
-- fingersTuner          icub-laptop
-- imuFilter             pc104
-
 ## Setup
 ### Robot as a Follower:
 1. open YARP - yarpserver 
@@ -140,6 +124,22 @@ Run on the real robot - without right arm (optional). Firstly, start iCubStartup
 - look_down is automatic
 - grasp_it is when for the first time the iCub looks at the brick (red ball)
 - giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+
+Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
+- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
+- iKinCartesianSolver -part left_arm
+- iKinGazeCtrl 
+- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
+- gravityCompensator    icubbrain2   --headV2 --no_right_arm
+- fingersTuner          icub-laptop
+- imuFilter             pc104
+
+## Instructions for a dual-computer system
+In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
+- yarp namespace /icub (in case /icub is the name of the yarp network)
+- yarp detect (to check you are connected)
+- gedit /home/user/.config/yarp/_icub.conf
+- 'ip of computer you wish to connect' 10000 yarp 
 
 ## Extras
 Read camera output
