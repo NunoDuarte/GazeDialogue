@@ -45,8 +45,8 @@ $ git clone https://github.com/robotology/ycm.git -b v0.11.3
 $ git clone https://github.com/robotology/yarp.git -b v3.4.0
 $ git clone https://github.com/robotology/icub-main.git -b v1.17.0
 ```
-- OpenCV (tested on v3.4.1)
-	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0 and on CUDA-11.2). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
+- OpenCV (tested on v3.4.1 and v3.4.17)
+	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
 ### For the detection App:
 - OpenCV 
