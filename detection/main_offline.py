@@ -33,7 +33,7 @@ faceTracking = Face()
 ballTracking = Ball()
 gazeTracking = GazeBehaviour()
 
-folder = '/home/nduarte/software/pupil/recordings/2021_06_24/004/exports/'
+folder = 'pupil_data_test/exports/'
 filename = '000'
 cap = cv2.VideoCapture(folder+filename+'/world_viz.mp4')
 length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
