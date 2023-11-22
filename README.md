@@ -80,6 +80,14 @@ This is send the communication of PupilLabs to the detection App which then send
 ## Setup
 Test controller App (iCubSIM). There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
 ### Manual mode:
+* 1\. yarpserver --write
+* 2\. yarpmanager
+    * 1.1\. open controller/apps/iCub_startup.xml
+    * 1.2\. open controller/apps/GazeDialogue_leader.xml
+    * 1.3\. run all modules in iCub_startup
+    * 1.4\. 
+* 3\. 
+   
 1. placing action is in the module simHHItoiCub-left 
 - look_down
 - grasp_it (/hardcoded)
