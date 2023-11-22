@@ -99,7 +99,15 @@ Test controller App (iCubSIM). There are three modes: manual robot leader; gazed
 
 
 Test detection App (pupil_data_test)
-
+1. go to detection app
+```
+cd detection
+```
+2. run detection system offline
+```
+python3 main_offline.py
+```
+You should see a window of a video output appear. The detection system is running on the PupilLabs exported data (pupil_data_test) and the output are [timestep, gaze fixations label, pixel_x, pixel_y], for each detected gaze fixation. 
 
 
 Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
