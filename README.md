@@ -77,15 +77,8 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 
 
 ## Setup
-### Robot as a Follower:
-1. open YARP - yarpserver 
-2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
-3. open Pupil-Labs (Capture App)
-4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
-5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
-6. check /pupil_gaze_tracker is publishing gaze fixations 
-
-### Robot as a Leader:
+Test controller App (iCubSIM). There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
+### Manual mode:
 1. placing action is in the module simHHItoiCub-left 
 - look_down
 - grasp_it (/hardcoded)
@@ -94,6 +87,20 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 - look_down is automatic
 - grasp_it is when for the first time the iCub looks at the brick (red ball)
 - giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+
+### Robot as a Follower:
+1. open YARP - yarpserver 
+2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
+3. open Pupil-Labs (Capture App)
+4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
+5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
+6. check /pupil_gaze_tracker is publishing gaze fixations 
+
+
+
+Test detection App (pupil_data_test)
+
+
 
 Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
