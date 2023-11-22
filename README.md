@@ -13,61 +13,40 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 
 # Table of Contents
 
-- [Structure](#structure)
-- [Dependencies](#dependencies)
 - [Building](#building)
-- [Instructions](#instructions-for-a-dual-computer-system)
+- [Dependencies](#dependencies)
 - [Setup](#setup)
+- [Structure](#structure)
+- [Instructions](#instructions-for-a-dual-computer-system)
 - [Extras](#extras)
 - [Issues](#issues)
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
 
-
-## Structure
-``` text
-.
-├─── Controller
-	├── CMakeLists.txt
-	├── app
-	│   ├── GazeDialogue_follower.xml
-	|   ├── GazeDialogue_leader.xml
-	|   └── iCub_startup.xml
-	|   
-	├── include
-	│   ├── compute.h
-	│   ├── configure.h
-	|   ├── helpers.h
-	|   └── init.h
-	└── src
-	    ├── icub_follower.cpp
-	    ├── icub_leader.cpp
-	    └── extras
-		├── CvHMM.h
-		├── CvMC.h
-		├── compute.cpp
-		├── configure.cpp
-		├── detector.cpp
-		└── helpers.cpp
-├─── Detection
-	├── main.py | main_offline.py
-	├── face_detector.py | face_detector_gpu.py
-	├── objt_tracking.py
-	├── gaze_behaviour.py
-	└── pupil_lsl_yarp.py
-
+## Building
+1. clone repository
 ```
+git clone git@github.com:NunoDuarte/GazeDialogue.git
+```
+2. build the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
+```
+cd controller
+```
+3. install dependencies for controller App in [Dependencies](#dependencies)
+
 
 ## Dependencies
-### For controller App:
-- OpenCV (tested on v3.4.1)
+### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
 - YARP  (tested on v2.3.72)
 - iCub (tested on v1.10)
-
-	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0 and on CUDA-11.2). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
-	- To install iCub simulator and drivers you need to follow the oficial [iCub documentation](https://icub-tech-iit.github.io/documentation/sw_installation/). 
-	- To install the YARP middleware you need to follow the oficial [YARP documentation](https://www.yarp.it/latest/install_yarp_linux.html).
+```
+$ git clone https://github.com/robotology/ycm.git -b v0.11.3
+$ git clone https://github.com/robotology/yarp.git -b v3.4.0
+$ git clone https://github.com/robotology/icub-main.git -b v1.17.0
+```
+- OpenCV (tested on v3.4.1 and v3.4.17)
+	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
 ### For the detection App:
 - OpenCV 
@@ -104,7 +83,6 @@ export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
-## Building
 
 ## Setup
 ### Robot as a Follower:
@@ -133,6 +111,40 @@ Run on the real robot - without right arm (optional). Firstly, start iCubStartup
 - gravityCompensator    icubbrain2   --headV2 --no_right_arm
 - fingersTuner          icub-laptop
 - imuFilter             pc104
+
+## Structure
+``` text
+.
+├─── Controller
+	├── CMakeLists.txt
+	├── app
+	│   ├── GazeDialogue_follower.xml
+	|   ├── GazeDialogue_leader.xml
+	|   └── iCub_startup.xml
+	|   
+	├── include
+	│   ├── compute.h
+	│   ├── configure.h
+	|   ├── helpers.h
+	|   └── init.h
+	└── src
+	    ├── icub_follower.cpp
+	    ├── icub_leader.cpp
+	    └── extras
+		├── CvHMM.h
+		├── CvMC.h
+		├── compute.cpp
+		├── configure.cpp
+		├── detector.cpp
+		└── helpers.cpp
+├─── Detection
+	├── main.py | main_offline.py
+	├── face_detector.py | face_detector_gpu.py
+	├── objt_tracking.py
+	├── gaze_behaviour.py
+	└── pupil_lsl_yarp.py
+
+```
 
 ## Instructions for a dual-computer system
 In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
