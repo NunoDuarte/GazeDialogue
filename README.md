@@ -48,35 +48,19 @@ $ git clone https://github.com/robotology/icub-main.git -b v1.17.0
 - OpenCV (tested on v3.4.1 and v3.4.17)
 	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
-### For the detection App:
-- OpenCV 
-- pylsl
-- numpy
-- os
-- math
-- msgpack
-- zmq
-- Tensorflow with CUDA
-	- CUDA 8.0; Tensorflow 1.9; Cudnn v7.1 (for GTX 1070)
-	- CUDA 11.2; Tensorflow 2.7; Cudnn v8.1; nvidia driver 460.32 (for RTX 3090)
-- utils (from Tensorflow Object Detection API)
-
-We recommend installing [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
-```bash
-pip install numpy os math msgpath zmq pylsl cv2
+### For the detection App
+Install the requirements. We recommend installing [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) virtual environment  
 ```
-to import utils you need to install tensorflow with gpu then get the models of tensorflow for object recognition to recognize the import 
+pip3 install -r requirements.txt
 ```
-from utils import label_map_util
-from utils import visualization_utils as vis_util
+```utils``` package is from Tensorflow [Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) (follow the instructions to install it). Then add it to your path
 ```
-you need the following (after you have followed the instructions on how to install tensorflow models) **[WARNING](#issues)** 
-``` 
 cd tensorflow/models/research
 export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
 echo $PYTHONPATH 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
 ```
+
 ### For the connectivity App:
 - LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) (tested on 1.12)
 - YARP  (tested on v2.3.72)
