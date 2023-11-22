@@ -109,7 +109,7 @@ python3 main_offline.py
 ```
 You should see a window of a video output appear. The detection system is running on the PupilLabs exported data (pupil_data_test) and the output are [timestep, gaze fixations label, pixel_x, pixel_y], for each detected gaze fixation. 
 
-
+## Run in real robot (iCub)
 Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
 - iKinCartesianSolver -part left_arm
