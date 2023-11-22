@@ -5,5 +5,5 @@ opencv_python==4.5.1.48
 opencv_python_headless==4.8.1.78
 pylsl==1.16.2
 pyzmq==25.1.1
-tensorflow==2.8.0
+tensorflow==2.11.1
 utils==1.0.1
