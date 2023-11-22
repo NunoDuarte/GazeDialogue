@@ -29,12 +29,20 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 ```
 git clone git@github.com:NunoDuarte/GazeDialogue.git
 ```
-2. build the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
+2. start with the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
 ```
 cd controller
 ```
 3. install dependencies for controller App in [Dependencies](#dependencies)
-
+4. build
+```
+mkdir build
+ccmake .
+make -j
+```
+5. install the dependencies for detection App in [Dependencies](#dependencies)
+6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional only for real iCub)
+7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
 ## Dependencies
 ### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
