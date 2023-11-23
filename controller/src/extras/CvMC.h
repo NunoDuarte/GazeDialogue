@@ -26,7 +26,7 @@
 #ifndef CVMC_H
 #define CVMC_H
 
-#include <opencv/cv.hpp>
+#include <opencv2/opencv.hpp>
 using namespace std;
 
 class CvMC {

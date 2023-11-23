@@ -117,7 +117,7 @@ class ControlThread: public RateThread
             double mag_e; 
 
             PolyDriver drvTorso;
-            IPositionControl2 *ipos;
+            IPositionControl *ipos;
             ICartesianControl *itorso;
 
             int startup_ctxt_arm_right;

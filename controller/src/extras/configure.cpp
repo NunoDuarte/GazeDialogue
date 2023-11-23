@@ -27,7 +27,7 @@ using namespace yarp::math;
         seq=seq-1;
         cnt=0;
         // Open cartesian solver for right and left arm
-        string robot="icub";
+        string robot="icubSim";
 
         if (!openCartesian(robot,"left_arm"))
         {
