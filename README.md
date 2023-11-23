@@ -112,12 +112,18 @@ cd GazeDialogue/controller/build
 ```
 4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
 ```
-./gazePupil-main-follower
+./gazePupil-manual-leader
 ```
-5. connect all modules in GazeDialogue-Leader.
-6. Press Enter - robot will look down
-7. Press Enter - robot will find ball and grasp it (try to!)
-8. Press Enter - robot will run GazeDialogue system for leader (needs PupilLabs to function properly)
+5. connect all modules in GazeDialogue-Leader. Open terminal:
+```
+yarp rpc /service
+```
+7. Write the following ```>> help``` this shows the available actions:
+```
+>> look_down
+>> grasp_it
+>> pass or place
+```
 
 ### GazeDialogue mode - Robot as a Leader:
 Open terminals:
@@ -136,7 +142,7 @@ cd GazeDialogue/controller/build
 ```
 4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
 ```
-./gazePupil-main-follower
+./gazePupil-main-leader
 ```
 5. connect all modules in GazeDialogue-Leader.
 6. Press Enter - robot will look down
