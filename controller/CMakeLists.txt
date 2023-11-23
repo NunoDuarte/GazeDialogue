@@ -9,22 +9,23 @@ find_package(YARP REQUIRED)
 find_package(ICUBcontrib REQUIRED)
 
 # extend the current search path used by cmake to load helpers
-list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
-list(APPEND CMAKE_MODULE_PATH ${ICUBCONTRIB_MODULE_PATH})
+#list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
+#list(APPEND CMAKE_MODULE_PATH ${ICUBCONTRIB_MODULE_PATH})
 
 # helpers defining certain macros (e.g. "yarp_install")
-include(YarpInstallationHelpers)
-include(ICUBcontribHelpers)
-include(ICUBcontribOptions)
+#include(YarpInstallationHelpers)
+#include(ICUBcontribHelpers)
+#include(ICUBcontribOptions)
 
 # specify to install in $ICUBcontrib_DIR/bin
-icubcontrib_set_default_prefix()
+#icubcontrib_set_default_prefix()
 
 # import math symbols from standard cmath
 add_definitions(-D_USE_MATH_DEFINES)
 
-include_directories(${YARP_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories( include )
+
 
 find_package( OpenCV REQUIRED )
 if( OpenCV_FOUND )
@@ -59,13 +60,36 @@ target_link_libraries(${PROJECT_NAME}-main-leader ${YARP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME}-main-leader ${OpenCV_LIBS})
 install(TARGETS ${PROJECT_NAME}-main-leader DESTINATION bin)
 
+# manual - leader
+add_executable(${PROJECT_NAME}-manual-leader  
+				${CMAKE_SOURCE_DIR}/include/manual/helpers.h
+			       ${CMAKE_SOURCE_DIR}/include/manual/init.h
+			       ${CMAKE_SOURCE_DIR}/include/manual/placing.h
+			       ${CMAKE_SOURCE_DIR}/include/manual/passing.h
+			       ${CMAKE_SOURCE_DIR}/include/manual/configure.h
+			       ${CMAKE_SOURCE_DIR}/include/manual/compute.h
+		               ${CMAKE_SOURCE_DIR}/src/manual/main.cpp
+                              ${CMAKE_SOURCE_DIR}/src/manual/helpers.cpp
+			       ${CMAKE_SOURCE_DIR}/src/manual/placing.cpp
+			       ${CMAKE_SOURCE_DIR}/src/manual/passing.cpp
+			       ${CMAKE_SOURCE_DIR}/src/manual/configure.cpp
+			       ${CMAKE_SOURCE_DIR}/src/manual/compute.cpp
+			       )
+							
+
+
+target_link_libraries(${PROJECT_NAME}-manual-leader ${YARP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}-manual-leader ${OpenCV_LIBS})
+install(TARGETS ${PROJECT_NAME}-manual-leader DESTINATION bin)
+
+
 # detector
 add_executable(${PROJECT_NAME}-detector ${CMAKE_SOURCE_DIR}/src/extras/detector.cpp)
 target_link_libraries(${PROJECT_NAME}-detector ${YARP_LIBRARIES})
 install(TARGETS ${PROJECT_NAME}-detector DESTINATION bin)
 
 # generate ad-hoc project to perform "make uninstall"
-icubcontrib_add_uninstall_target()
+#icubcontrib_add_uninstall_target()
 
 file(GLOB scripts ${CMAKE_SOURCE_DIR}/app/scripts/*.xml)
 yarp_install(FILES ${scripts} DESTINATION ${ICUBCONTRIB_APPLICATIONS_INSTALL_DIR})
