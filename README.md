@@ -81,37 +81,8 @@ This is send the communication of PupilLabs to the detection App which then send
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
 
-## Setup
-Test controller App (iCubSIM). There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
-### Manual mode:
-* 1\. yarpserver --write
-* 2\. yarpmanager
-    * 1.1\. open controller/apps/iCub_startup.xml
-    * 1.2\. open controller/apps/GazeDialogue_leader.xml
-    * 1.3\. run all modules in iCub_startup
-    * 1.4\. 
-* 3\. 
-   
-1. placing action is in the module simHHItoiCub-left 
-- look_down
-- grasp_it (/hardcoded)
-- place_on_the_center
-2. giving action it is icub_leader.cpp
-- look_down is automatic
-- grasp_it is when for the first time the iCub looks at the brick (red ball)
-- giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
-
-### Robot as a Follower:
-1. open YARP - yarpserver 
-2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
-3. open Pupil-Labs (Capture App)
-4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
-5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
-6. check /pupil_gaze_tracker is publishing gaze fixations 
-
-
-
-Test detection App (pupil_data_test)
+# Setup
+**Test detection App** (pupil_data_test)
 1. go to detection app
 ```
 cd detection
@@ -122,7 +93,81 @@ python3 main_offline.py
 ```
 You should see a window of a video output appear. The detection system is running on the PupilLabs exported data (pupil_data_test) and the output are [timestep, gaze fixations label, pixel_x, pixel_y], for each detected gaze fixation. 
 
-## Run in real robot (iCub)
+### Manual mode:
+**Test controller App (iCubSIM)**. There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
+
+Open terminals:
+```
+yarpserver --write
+yarpmanager
+```
+in yarpmanager do:
+1. open controller/apps/iCub_startup.xml
+2. open controller/apps/GazeDialogue_leader.xml
+3. run all modules in iCub_startup
+You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
+```
+cd GazeDialogue/controller/build
+./gazePupil-detector
+```
+4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
+```
+./gazePupil-main-follower
+```
+5. connect all modules in GazeDialogue-Leader.
+6. Press Enter - robot will look down
+7. Press Enter - robot will find ball and grasp it (try to!)
+8. Press Enter - robot will run GazeDialogue system for leader (needs PupilLabs to function properly)
+
+### GazeDialogue mode - Robot as a Leader:
+Open terminals:
+```
+yarpserver --write
+yarpmanager
+```
+in yarpmanager do:
+1. open controller/apps/iCub_startup.xml
+2. open controller/apps/GazeDialogue_leader.xml
+3. run all modules in iCub_startup
+You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
+```
+cd GazeDialogue/controller/build
+./gazePupil-detector
+```
+4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
+```
+./gazePupil-main-follower
+```
+5. connect all modules in GazeDialogue-Leader.
+6. Press Enter - robot will look down
+7. Press Enter - robot will find ball and grasp it (try to!)
+8. Press Enter - robot will run GazeDialogue system for leader (needs PupilLabs to function properly)
+
+1. placing action is in the module simHHItoiCub-left 
+- look_down
+- grasp_it (/hardcoded)
+- place_on_the_center
+2. giving action it is icub_leader.cpp
+- look_down is automatic
+- grasp_it is when for the first time the iCub looks at the brick (red ball)
+- giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+
+# Run in real robot (iCub)
+You need to change robot name in the file ```src/extras/configure.cpp``` 
+```cpp
+        // Open cartesian solver for right and left arm
+        string robot="icub";
+```
+from ```"icubSim"``` to ```"icub"```. Then recompile build.
+
+## Robot as a Follower:
+1. open YARP - yarpserver 
+2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
+3. open Pupil-Labs (Capture App)
+4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
+5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
+6. check /pupil_gaze_tracker is publishing gaze fixations 
+
 Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
 - yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
 - iKinCartesianSolver -part left_arm
