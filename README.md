@@ -149,14 +149,27 @@ cd GazeDialogue/controller/build
 7. Press Enter - robot will find ball and grasp it (try to!)
 8. Press Enter - robot will run GazeDialogue system for leader (needs PupilLabs to function properly)
 
-1. placing action is in the module simHHItoiCub-left 
-- look_down
-- grasp_it (/hardcoded)
-- place_on_the_center
-2. giving action it is icub_leader.cpp
-- look_down is automatic
-- grasp_it is when for the first time the iCub looks at the brick (red ball)
-- giving action is automatic (deterministic controller with a pre-defined gaze behaviour)
+### GazeDialogue mode - Robot as a Follower:
+Open terminals:
+```
+yarpserver --write
+yarpmanager
+```
+in yarpmanager do:
+1. open controller/apps/iCub_startup.xml
+2. open controller/apps/GazeDialogue_leader.xml
+3. run all modules in iCub_startup
+You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
+```
+cd GazeDialogue/controller/build
+./gazePupil-detector
+```
+4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
+```
+./gazePupil-main-follower
+```
+5. connect all modules in GazeDialogue-Leader.
+8. Press Enter - robot will run GazeDialogue system for follower (needs PupilLabs to function properly)
 
 # Run in real robot (iCub)
 You need to change robot name in the file ```src/extras/configure.cpp``` 
