@@ -68,6 +68,10 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
 echo $PYTHONPATH 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
 ```
+``pylsl`` needs liblsl. Either install in /usr/ or add the filepath specified by an environment variable named PYLSL_LIB
+```
+export PYLSL_LIB=/path/to/liblsl.so
+```
 
 ### For the connectivity App:
 This is send the communication of PupilLabs to the detection App which then send to the iCub (YARP)
