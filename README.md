@@ -26,7 +26,7 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 
 ## Dependencies
 ### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
-- YARP  (tested on v2.3.72)
+- YARP  (tested on v2.3.72) [yarp website](https://www.yarp.it/latest//install_yarp_linux.html)
 - iCub (tested on v1.10)
 ```
 $ git clone https://github.com/robotology/ycm.git -b v0.11.3
