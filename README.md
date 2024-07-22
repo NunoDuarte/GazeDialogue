@@ -13,8 +13,8 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 
 # Table of Contents
 
-- [Building](#building)
 - [Dependencies](#dependencies)
+- [Building](#building)
 - [Setup](#setup)
 - [Structure](#structure)
 - [Instructions](#instructions-for-a-dual-computer-system)
@@ -23,26 +23,6 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 - [Citation](#citation)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Building
-1. clone repository
-```
-git clone git@github.com:NunoDuarte/GazeDialogue.git
-```
-2. start with the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
-```
-cd controller
-```
-3. install dependencies for controller App in [Dependencies](#dependencies)
-4. build
-```
-mkdir build
-ccmake .
-make -j
-```
-5. install the dependencies for detection App in [Dependencies](#dependencies)
-6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional only for real iCub)
-7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
 ## Dependencies
 ### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
@@ -80,6 +60,25 @@ This is send the communication of PupilLabs to the detection App which then send
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
+## Building
+1. clone repository
+```
+git clone git@github.com:NunoDuarte/GazeDialogue.git
+```
+2. start with the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
+```
+cd controller
+```
+3. install dependencies for controller App in [Dependencies](#dependencies)
+4. build
+```
+mkdir build
+ccmake .
+make -j
+```
+5. install the dependencies for detection App in [Dependencies](#dependencies)
+6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional only for real iCub)
+7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
 # Setup
 **Test detection App** (pupil_data_test)
