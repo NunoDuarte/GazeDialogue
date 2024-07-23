@@ -17,7 +17,7 @@ follow instructions in [icub website](https://icub-tech-iit.github.io/documentat
 - YCM
 - YARP
 - icub-main
-- OpenCV (optional but recommended) 
+- OpenCV (optional) 
 #### Ubuntu 16.04 
 ```
 $ git clone https://github.com/robotology/ycm.git -b v0.11.3
