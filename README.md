@@ -65,7 +65,7 @@ This is send the communication of PupilLabs to the detection App which then send
 ```
 git clone git@github.com:NunoDuarte/GazeDialogue.git
 ```
-2. start with the controller App (have a look at [Structure](#structure) to understand the pipeline of GazeDialogue)
+2. start with the controller App 
 ```
 cd controller
 ```
@@ -77,7 +77,7 @@ ccmake .
 make -j
 ```
 5. install the dependencies for detection App in [Dependencies](#dependencies)
-6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional only for real iCub)
+6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional when using iCub)
 7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
 # Setup
