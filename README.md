@@ -69,15 +69,15 @@ git clone git@github.com:NunoDuarte/GazeDialogue.git
 ```
 cd controller
 ```
-3. install dependencies for controller App in [Dependencies](#dependencies)
+3. install controller App [Dependencies](#dependencies)
 4. build
 ```
 mkdir build
 ccmake .
 make -j
 ```
-5. install the dependencies for detection App in [Dependencies](#dependencies)
-6. install the dependencies for connectivity App in [Dependencies](#dependencies) (optional when using iCub)
+5. install detection App [Dependencies](#dependencies)
+6. install connectivity App [Dependencies](#dependencies) (optional when using iCub)
 7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
 # Setup
