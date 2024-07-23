@@ -17,6 +17,7 @@ follow instructions in [icub website](https://icub-tech-iit.github.io/documentat
 - YCM
 - YARP
 - icub-main
+- OpenCV (optional but recommended) 
 #### Ubuntu 16.04 
 ```
 $ git clone https://github.com/robotology/ycm.git -b v0.11.3
@@ -29,8 +30,8 @@ $ git clone https://github.com/robotology/ycm.git -b v0.11.3
 $ git clone https://github.com/robotology/yarp.git -b v3.4.0
 $ git clone https://github.com/robotology/icub-main.git -b v1.17.0
 ```
-- OpenCV (tested on v3.4.1 and v3.4.17)
-	- OpenCV can be with or without CUDA, but we do recommend to install OpenCV with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
+#### OpenCV (tested on v3.4.1 and v3.4.17)
+recommended with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
 ### For the detection App [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Python 3.8](https://img.shields.io/badge/python-3.8.12-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 2.8.0](https://img.shields.io/badge/tensorflow-v2.8.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 
