@@ -10,21 +10,8 @@
 Gaze Dialogue Model system for iCub Humanoid Robot 
 
 <img src="doc/gif_g.gif" width="400" height="225" /> <img src="doc/gif_f.gif" width="400" height="225" />
-
-# Table of Contents
-
-- [Dependencies](#dependencies)
-- [Building](#building)
-- [Setup](#setup)
-- [Structure](#structure)
-- [Instructions](#instructions-for-a-dual-computer-system)
-- [Extras](#extras)
-- [Issues](#issues)
-- [Citation](#citation)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Dependencies
+ 
+# Dependencies
 ### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
 - YARP  (tested on v2.3.72) [yarp website](https://www.yarp.it/latest//install_yarp_linux.html)
 - iCub (tested on v1.10)
