@@ -1,13 +1,16 @@
 # Gaze Dialogue Model
 
-[![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
 [![Build Status](https://app.travis-ci.com/NunoDuarte/GazeDialogue.svg?branch=master)](https://app.travis-ci.com/NunoDuarte/GazeDialogue)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
 Gaze Dialogue Model system for iCub Humanoid Robot 
 
 <img src="doc/gif_g.gif" width="400" height="225" /> <img src="doc/gif_f.gif" width="400" height="225" />
- 
+
+## Tested on
+![Build Status](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+ 16.04 and 20.04
+
 # Dependencies
 ### For controller App follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
 - YARP  (tested on v2.3.72) [yarp website](https://www.yarp.it/latest//install_yarp_linux.html)
@@ -50,6 +53,8 @@ This is send the communication of PupilLabs to the detection App which then send
 	- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
 ## Building
+[![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
+
 1. clone repository
 ```
 git clone git@github.com:NunoDuarte/GazeDialogue.git
