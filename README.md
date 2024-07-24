@@ -278,8 +278,4 @@ If you find this code useful in your research, please consider citing our [paper
 	M. Raković, N. F. Duarte, J. Marques, A. Billard and J. Santos-Victor, "The Gaze Dialogue Model: Nonverbal Communication in HHI and HRI," in IEEE Transactions on Cybernetics, doi: 10.1109/TCYB.2022.3222077.
 
 
-## Author
-
-Nuno Ferreira Duarte
-
 
