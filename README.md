@@ -57,7 +57,7 @@ export PYLSL_LIB=/path/to/liblsl.so
 ```
 You can test if the detection system is working by running ```python main_offline.py```
 ### For the connectivity App:
-This is send the communication of PupilLabs to the detection App which then send to the iCub (YARP)
+This is to send the communication of PupilLabs to the detection App which then sends it to the iCub (through YARP)
 - LSL - [LabStreamingLayer](https://github.com/sccn/labstreaminglayer) (tested on 1.12)
 - YARP  (tested on v2.3.72)
 - PupilLabs - [Pupil Capture](https://github.com/pupil-labs/pupil) (tested on v1.7.42)
