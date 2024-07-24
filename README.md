@@ -23,6 +23,7 @@ follow instructions in [icub website](https://icub-tech-iit.github.io/documentat
 git clone https://github.com/robotology/ycm.git -b v0.11.3
 git clone https://github.com/robotology/yarp.git -b v2.3.72
 git clone https://github.com/robotology/icub-main.git -b v1.10.0
+git clone https://github.com/robotology/icub-contrib-common -b 7d9b7e4
 ```
 #### Ubuntu 20.04
 ```
