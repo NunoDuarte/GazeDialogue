@@ -45,7 +45,7 @@ git clone https://github.com/tensorflow/models.git
 ```
 ```utils``` package is from Tensorflow [Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) (follow the instructions to install it). Then add it to your path
 ```
-cd tensorflow/models/research
+cd models/research
 export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
 echo $PYTHONPATH 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
