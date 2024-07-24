@@ -50,8 +50,9 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
 echo $PYTHONPATH 
 export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
 ```
-``pylsl`` needs liblsl. Either install in /usr/ or add the filepath specified by an environment variable named PYLSL_LIB
+``pylsl`` needs liblsl (v1.13.0). Either install in /usr/ or add the filepath specified by an environment variable named PYLSL_LIB
 ```
+cd liblsl & mkdir build & cmake ..
 export PYLSL_LIB=/path/to/liblsl.so
 ```
 
