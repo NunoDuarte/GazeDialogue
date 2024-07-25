@@ -6,4 +6,6 @@ opencv_python_headless==4.8.1.78
 pylsl==1.16.2
 pyzmq==25.1.1
 tensorflow==2.8.0
+protobuf==3.20.0
 utils==1.0.1
+matplotlib
