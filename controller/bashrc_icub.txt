@@ -1,0 +1,14 @@
+export ROBOT_CODE=/home/nuno/Documents/icub
+
+export YCM_ROOT=$ROBOT_CODE/ycm
+export YCM_DIR=$YCM_ROOT/build/INSTALL
+export YARP_ROOT=$ROBOT_CODE/yarp
+export YARP_DIR=$YARP_ROOT/build/INSTALL
+export ICUB_ROOT=$ROBOT_CODE/icub-main
+export ICUB_DIR=$ICUB_ROOT/build/INSTALL
+
+export ICUBcontrib_DIR=$ROBOT_CODE/icub-contrib-common/build/INSTALL
+export YARP_DATA_DIRS=$YARP_DIR/share/yarp:$ICUB_DIR/share/iCub:$ICUBcontrib_DIR/share/ICUBcontrib
+export PATH=$PATH:$YARP_DIR/bin:$ICUB_DIR/bin:$ICUBcontrib_DIR/bin
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$YARP_DIR/lib
