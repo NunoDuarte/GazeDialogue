@@ -1,3 +1,9 @@
+# TODO
+- update python, tensorflow versions
+- check that it is working on icubSIM
+- add pupil labs version
+- improve connectivity package - more streamlines
+- clean readme of connectivity - point to your private repo for more info or ask an issue
 # Gaze Dialogue Model
 
 [![Build Status](https://app.travis-ci.com/NunoDuarte/GazeDialogue.svg?branch=master)](https://app.travis-ci.com/NunoDuarte/GazeDialogue)
