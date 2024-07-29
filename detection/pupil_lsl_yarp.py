@@ -17,7 +17,7 @@ class LSL:
         context = zmq.Context()
         # open a req port to talk to pupil
         addr = '127.0.0.1'  # remote ip or localhost
-        req_port = "44805"  # same as in the pupil remote gui
+        req_port = "50020"  # same as in the pupil remote gui
         req = context.socket(zmq.REQ)
         req.connect("tcp://{}:{}".format(addr, req_port))
         # ask for the sub port
