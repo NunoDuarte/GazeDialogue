@@ -64,7 +64,7 @@ This is to send the communication of PupilLabs to the detection App which then s
 
 Install PupilLabs [Capture](https://github.com/pupil-labs/pupil) either the App or source. We use LabStreamingLayer to connect to Pupil to YARP
 - LSL
-- Pupil LSL plugin
+- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture) - 2018 version
 
 Alternative to LabStreamingLayer is to use ROS (not yet tested)
 - ROS
