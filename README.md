@@ -61,9 +61,11 @@ You can test if the detection system is working by running ```python main_offlin
 This is to send the communication of PupilLabs to the detection App which then sends it to the iCub (through YARP)
 - YARP
 - PupilLabs
+
 Install PupilLabs [Capture](https://github.com/pupil-labs/pupil) either the App or source. We use LabStreamingLayer to connect to Pupil to YARP
 - LSL
 - Pupil LSL plugin
+
 Alternative to LabStreamingLayer is to use ROS (not yet tested)
 - ROS
 - Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
