@@ -32,7 +32,8 @@ with faceTracking.detection_graph.as_default():
             topic, msg = lsl.recv_from_sub()
 
             if topic == 'frame.world' and i % 2 == 0:
-                frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
+                #print('msg', np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8))
+                frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(720,1280, 3)
 
                 if frame is not None:
                     frame = imutils.resize(frame, width=640)
