@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Pupil_Stream_To_Yarp" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Cut_video" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add directory="../../../yarp/src/libYARP_OS/include" />
+					<Add directory="../../../labstreaminglayer/LSL/liblsl/include" />
+					<Add directory="../../../json/src" />
+					<Add directory="../../../yarp/build/src/libYARP_conf/include" />
+				</Compiler>
+				<Linker>
+					<Add library="../../../yarp/build/lib/libYARP_dev.so" />
+					<Add library="../../../yarp/build/lib/libYARP_name.so" />
+					<Add library="../../../yarp/build/lib/libYARP_math.so" />
+					<Add library="../../../yarp/build/lib/libYARP_init.so" />
+					<Add library="../../../yarp/build/lib/libYARP_gsl.so" />
+					<Add library="../../../yarp/build/lib/libYARP_sig.so" />
+					<Add library="../../../yarp/build/lib/libYARP_OS.so" />
+					<Add library="../../../yarp/build/lib/libyarpmod.so" />
+					<Add library="../../../yarp/build/lib/libyarpcar.so" />
+					<Add library="../../software/liblsl/bin/liblsl64-debug.so" />
+					<Add library="../../software/liblsl/bin/liblsl64.so" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Cut_video" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-s" />
+					<Add directory="../../../opencv/include" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="`opencv-config --cxxflags`" />
+			<Add directory="../../../opencv/include" />
+			<Add directory="../../../labstreaminglayer-master/LSL/liblsl/include" />
+		</Compiler>
+		<Linker>
+			<Add option="`opencv-config --ldstaticflags`" />
+		</Linker>
+		<Unit filename="lena.jpg" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

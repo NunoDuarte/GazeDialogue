@@ -1,0 +1,329 @@
+
+
+    char c = 1;
+
+    /*std::string strtse0 = "N/A";
+	std::string strtse1 = "N/A";
+    std::string strtse02 = "N/A";
+	std::string strtse12 = "N/A";*/
+
+	cout.precision(17);
+
+	try {
+
+        cout << "Here is a one-shot resolve of all current streams:" << endl;
+
+		// discover all streams on the network
+		vector<lsl::stream_info> results_all = lsl::resolve_streams();
+
+		// display them
+		cout << "Display all resolved streams: " << endl;
+
+		for (unsigned k=0;k<results_all.size();k++)
+            cout << results_all[k].as_xml() << endl << endl;
+
+
+		cout << "Now creating the inlet..." << endl;
+
+        time (&rawtime);
+
+        double sample_ot[15];
+		double ts_ot;
+        ofstream sample_ot_file;
+        string file_name_ot;
+
+        sample_ot_file.precision(17);
+
+        results = lsl::resolve_stream("name","MyOptitrack");
+		lsl::stream_inlet inlet_ot(results[0]);
+
+		file_name_ot = "samples_ot";
+		file_name_ot.append(ctime (&rawtime));
+        file_name_ot.append(".csv");
+        sample_ot_file.open(file_name_ot.c_str());
+        //sample_ot_file.open ("test_ot2pl.csv");
+
+        #endif // LSL_OT
+
+		#ifdef LSL_PL1
+
+		string sample_pl;
+		double ts_pl;
+        ofstream sample_pl_file;
+        string file_name_pl;
+        char input_str[10000];
+        double ts_e0,ts_e1;
+        std::size_t found, foundtse0, foundtse1, foundcfe0, foundcfe1;
+
+        sample_pl_file.precision(17);
+
+        results = lsl::resolve_stream("name","Gaze Python Representation");
+        lsl::stream_inlet inlet_pl(results[0]);
+
+		file_name_pl = "samples_pl";
+		file_name_pl.append(ctime (&rawtime));
+        file_name_pl.append(".csv");
+        sample_pl_file.open (file_name_pl.c_str());
+        //sample_pl_file.open ("test_pl.csv");
+
+        #endif // LSL_PL1
+
+
+        #ifdef LSL_PL2
+
+		string sample_pl2;
+        double ts_pl2;
+        ofstream sample_pl_file2;
+        string file_name_pl2;
+        char input_str2[10000];
+        double ts_e02,ts_e12;
+        std::size_t found2, foundtse02, foundtse12, foundcfe02, foundcfe12;
+
+        sample_pl_file2.precision(17);
+
+        results = lsl::resolve_stream("name","Gaze Python Representation");
+
+        lsl::stream_inlet inlet_pl2(results[1]);
+
+		file_name_pl2 = "samples_pl2";
+		file_name_pl2.append(ctime (&rawtime));
+        file_name_pl2.append(".csv");
+        sample_pl_file2.open (file_name_pl2.c_str());
+
+        //sample_pl_file2.open ("test_pl2.csv");
+
+        #endif // LSL_PL
+
+		// start receiving & displaying the data
+		cout << "Now pulling samples..." << endl;
+
+		// start receiving & displaying the data
+
+		while (c!=27) {
+
+            strtse01 = "N/A";
+			strtse11 = "N/A";
+			#ifdef LSL_PL1
+			// get the PupiLabs sample
+
+			ts_pl = inlet_pl.pull_sample(&sample_pl,1,0.008334);
+			cout << "got: " << sample_pl << endl;
+			sample_pl_file << sample_pl << endl;
+            if(sample_pl.length()>1000)
+            {
+
+                found = sample_pl.find("'timestamp': ");
+
+                foundtse0 = sample_pl.find("'timestamp': ",found+1)+12;
+                foundcfe0 = sample_pl.find(", 'projected_sphere':",foundtse0+1)-1;
+
+                foundtse1 = sample_pl.find("'timestamp': ",foundcfe0+1)+12;
+                foundcfe1 = sample_pl.find(", 'projected_sphere':",foundtse1+1)-1;
+
+
+                if(foundtse0<foundcfe0 && foundtse1<foundcfe1)
+                {
+                    strtse01 = sample_pl.substr(foundtse0+1,13);
+                    strtse11 = sample_pl.substr(foundtse1+1,13);
+                }
+
+            }
+
+			strtse02 = "N/A";
+			strtse12 = "N/A";
+			#endif // LSL_PL1
+
+			#ifdef LSL_PL2
+			ts_pl2 = inlet_pl2.pull_sample(&sample_pl2,1,0.008334);
+			cout << "got: " << sample_pl2 << endl;
+			sample_pl_file2 << sample_pl2 << endl;
+            if(sample_pl2.length()>1000)
+            {
+
+                found2 = sample_pl2.find("'timestamp': ");
+
+                foundtse02 = sample_pl2.find("'timestamp': ",found2+1)+12;
+                foundcfe02 = sample_pl2.find(", 'projected_sphere':",foundtse02+1)-1;
+
+                foundtse12 = sample_pl2.find("'timestamp': ",foundcfe02+1)+12;
+                foundcfe12 = sample_pl2.find(", 'projected_sphere':",foundtse12+1)-1;
+
+
+                if(foundtse02<foundcfe02 && foundtse12<foundcfe12)
+                {
+                    strtse02 = sample_pl2.substr(foundtse02+1,13);
+                    strtse12 = sample_pl2.substr(foundtse12+1,13);
+                }
+
+            }
+
+
+			#endif // LSL_PL2
+
+			#ifdef LSL_OT
+			//ts_ot = inlet_ot.pull_sample(sample_ot,15,0.008334);
+			#endif // LSL_OT
+
+			if(ot_new_data_ready)
+            {
+                ot_new_data_ready = 0;
+
+                for (unsigned c=0;c<15;c++)
+                {
+                    cout << "\t" << sample_ot[c];
+
+                    sample_ot_file << sample_ot[c];
+                    sample_ot_file <<",";
+                }
+                cout << endl;
+
+
+                sample_ot_file <<strtse01;
+                sample_ot_file <<",";
+                sample_ot_file <<strtse11;
+                sample_ot_file <<",";
+                sample_ot_file <<strtse02;
+                sample_ot_file <<",";
+                sample_ot_file <<strtse12;
+                sample_ot_file << endl;
+
+            }
+
+
+
+		}
+
+
+        #ifdef LSL_OT
+
+
+        sample_ot_file.close();
+
+        #endif // LSL_OT
+
+		#ifdef LSL_PL1
+
+        sample_pl_file.close();
+
+        #endif // LSL_PL
+        #ifdef LSL_PL2
+
+        sample_pl_file2.close();
+
+        #endif // LSL_PL
+
+
+	} catch(std::exception &e) {
+		cerr << "Got an exception: " << e.what() << endl;
+	}
+	cout << "Press any key to exit. " << endl; cin.get();
+    return 0;
+
+
+
+    /*Mat img = imread("../trial_1/eye0/eye0_100.png", CV_LOAD_IMAGE_COLOR);
+    if(img.empty())
+       return -1;
+    namedWindow( "eye0", CV_WINDOW_AUTOSIZE );
+    imshow("eye0", img);
+    waitKey(0);
+    return 0;
+}*/
+
+  // Create a VideoCapture object and open the input file
+  // If the input is the web camera, pass 0 instead of the video file name
+    VideoCapture cap0("../trial_1/eye0trial1.mp4");
+    VideoCapture cap1("../trial_1/eye1trial1.mp4");
+
+    // Check if camera opened successfully
+    if(!cap0.isOpened()){
+        cout << "Error opening video stream or file" << endl;
+        return -1;
+    }
+
+    if(!cap1.isOpened()){
+        cout << "Error opening video stream or file" << endl;
+        return -1;
+    }
+
+    int frame_width = cap0.get(CV_CAP_PROP_FRAME_WIDTH);
+    int frame_height = cap0.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+    // Define the codec and create VideoWriter object.The output is stored in 'outcpp.avi' file.
+    VideoWriter video0("OutEye0.avi",CV_FOURCC('M','J','P','G'),120, Size(frame_width,frame_height));
+    VideoWriter video1("OutEye1.avi",CV_FOURCC('M','J','P','G'),120, Size(frame_width,frame_height));
+
+    Mat frame0;
+    Mat frame1;
+    int start = 0;
+    int frmcount = 0;
+    c = 'n';
+    string someText = "Dimension: ";
+    Point textOrg(frame_width/5, frame_height/1.2);
+    int fontFace = FONT_HERSHEY_COMPLEX_SMALL;
+    double fontScale = 1.5;
+    int thickness = 2;
+    stringstream ss;
+
+    while(1){
+
+
+        if(c=='s')
+        {
+            if(start)
+                start=0;
+            else
+                start=1;
+        }
+
+        if(c=='n' || start>0)
+        {
+            // Capture frame-by-frame
+            frmcount++;
+            cap0 >> frame0;
+            cap1 >> frame1;
+            ss.str("");
+            ss.str("");
+            ss.clear();
+            ss<<frmcount;
+            someText = ss.str();
+            putText(frame0, someText, textOrg, fontFace, fontScale, Scalar::all(255), thickness,8);
+
+        // If the frame is empty, break immediately
+            if (frame0.empty())
+                break;
+            if (frame1.empty())
+                break;
+
+            // Display the resulting frame
+            imshow( "Eye0", frame0 );
+            imshow( "Eye1", frame1 );
+            if(start)
+            {
+                start++;
+                video0.write(frame0);
+                video1.write(frame1);
+            }
+        }
+        if(!start)
+            c=(char)waitKey(0);
+        else
+            c=(char)waitKey(10);
+
+        if(start>3600)
+            break;
+        if(c==27)
+          break;
+
+        // Press  ESC on keyboard to exit
+    }
+
+    // When everything done, release the video capture object
+    cap0.release();
+    video0.release();
+    cap1.release();
+    video1.release();
+    // Closes all the frames
+    destroyAllWindows();
+
+    return 0;
