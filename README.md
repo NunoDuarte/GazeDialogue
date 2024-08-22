@@ -73,7 +73,7 @@ Alternative to LabStreamingLayer is to use ROS (not yet tested)
 - ROS
 - Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
-## Building
+## Building *controller app*
 [![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
 
 1. clone repository
