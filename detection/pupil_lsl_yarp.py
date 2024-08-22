@@ -1,9 +1,10 @@
 from pylsl import StreamInfo, StreamOutlet
-from pylsl import StreamInlet, resolve_stream
+from pylsl import StreamInlet, resolve_byprop
 from collections import deque
 from msgpack import unpackb
 import zmq
 import argparse
+import pylsl
 
 """
 Receive world camera data from Pupil using ZMQ.
@@ -24,11 +25,6 @@ class LSL:
         req.send_string('SUB_PORT')
         sub_port = req.recv_string()
 
-        # create a new stream info
-        info = StreamInfo("GazePose", "NormPose2IP", 4, 100, "float32", "myuid34234")
-        info.desc().append_child_value("manufacturer", "Vislab")
-        self.outlet = StreamOutlet(info)
-
         # open a sub port to listen to pupil
         self.sub = context.socket(zmq.SUB)
         self.sub.connect("tcp://{}:{}".format(addr, sub_port))
@@ -44,10 +40,22 @@ class LSL:
         args = vars(ap.parse_args())
         self.pts = deque(maxlen=args["buffer"])
 
-        print("looking for an NormPose2IP stream...")
-        streams = resolve_stream('name', 'NormPose2IP')
+        print("looking for Pupil Capture stream...")
+        streams = resolve_byprop("name", "pupil_capture", timeout=1.0)
+        if not streams:
+        	print("No LSL streams of name 'pupil_capture' found")
+        	exit(-1)
+
         # create an inlet to read from the stream
         self.inlet = StreamInlet(streams[0])
+        self.inlet.open_stream(timeout=0.1)
+        
+        # create a new stream info
+        info = StreamInfo("GazePose", "NormPose2IP", 4, 100, "float32", "myuid34234")
+        info.desc().append_child_value("manufacturer", "Vislab")
+        self.outlet = StreamOutlet(info)
+
+        
 
     def recv_from_sub(self, ):
         """
