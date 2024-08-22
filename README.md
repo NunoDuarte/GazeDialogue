@@ -1,5 +1,4 @@
 # TODO
-- improve connectivity package - more streamlines
 - clean readme of connectivity - point to your private repo for more info or ask an issue
 # Gaze Dialogue Model
 
