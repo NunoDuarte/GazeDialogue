@@ -34,6 +34,7 @@ with faceTracking.detection_graph.as_default():
             if topic == 'frame.world' and i % 2 == 0:
                 #print('msg', np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8))
                 frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(720,1280, 3)
+                #frame = np.frombuffer(msg['__raw_data__'][0], dtype=np.uint8).reshape(msg['height'], msg['width'], 3)
 
                 if frame is not None:
                     frame = imutils.resize(frame, width=640)
@@ -48,8 +49,9 @@ with faceTracking.detection_graph.as_default():
                         face = faceTracking.detect(frame, sess)
 
                     # pupil
-                    sample, timestamp = lsl.inlet.pull_chunk()
-                    if sample:
+                    sample = lsl.inlet.pull_chunk(timeout=0.1)
+                    print('hello', sample[0][0][1:3])
+                    if sample[0][0]:
                         # push to yarp port
                         gazeTracking.push(frame, sample, ball, face, width, height, lsl)
 
