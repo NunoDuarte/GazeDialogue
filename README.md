@@ -40,7 +40,7 @@ git clone https://github.com/robotology/icub-main.git -b v1.17.0
 #### OpenCV (tested on v3.4.1 and v3.4.17)
 recommended with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
-### For the detection App [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Python 3.9](https://img.shields.io/badge/python-3.9.19-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 2.8.0](https://img.shields.io/badge/tensorflow-v2.8.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+### For the detection App [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Python 3.9](https://img.shields.io/badge/python-3.9.19-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 2.15.0](https://img.shields.io/badge/tensorflow-v2.15.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 
 install the requirements. We recommend installing in a virtual environment like [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) 
 ```
