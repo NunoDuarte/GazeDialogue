@@ -1,5 +1,4 @@
 # TODO
-- update python, tensorflow versions
 - check that it is working on icubSIM
 - add pupil labs version
 - improve connectivity package - more streamlines
