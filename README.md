@@ -96,7 +96,7 @@ make -j
 6. install connectivity App [Dependencies](#dependencies) (optional when using iCub)
 7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
 
-# Setup
+# Demo
 **Test detection App** (pupil_data_test)
 1. go to detection app
 ```
@@ -108,6 +108,7 @@ python3 main_offline.py
 ```
 You should see a window of a video output appear. The detection system is running on the PupilLabs exported data (pupil_data_test) and the output are [timestep, gaze fixations label, pixel_x, pixel_y], for each detected gaze fixation. 
 
+# Setup
 ### Manual mode:
 **Test controller App (iCubSIM)**. There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
 
