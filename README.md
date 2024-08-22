@@ -65,9 +65,9 @@ This is to send the communication of PupilLabs to the detection App which then s
 - YARP
 - PupilLabs (working currently on v3.6.7)
 
-Install PupilLabs [Capture](https://github.com/pupil-labs/pupil) either the App or source. We use LabStreamingLayer to connect to Pupil to YARP
+Install PupilLabs [Capture](https://github.com/pupil-labs/pupil) either the App or from source. We use LabStreamingLayer to stream the data and convert to YARP
 - LSL
-- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture) - 2018 version
+- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture) - 2019 version
 
 Alternative to LabStreamingLayer is to use ROS (not yet tested)
 - ROS
@@ -162,7 +162,7 @@ cd GazeDialogue/controller/build
 5. connect all modules in GazeDialogue-Leader.
 6. Press Enter - robot will look down
 7. Press Enter - robot will find ball and grasp it (try to!)
-8. Press Enter - robot will run GazeDialogue system for leader (needs PupilLabs to function properly)
+8. Press Enter - robot will run GazeDialogue system for leader *PupilLabs is required with streaming plugin*
 
 ### GazeDialogue mode - Robot as a Follower:
 Open terminals:
@@ -183,8 +183,8 @@ cd GazeDialogue/controller/build
 ```
 ./gazePupil-main-follower
 ```
-5. connect all modules in GazeDialogue-Leader.
-8. Press Enter - robot will run GazeDialogue system for follower (needs PupilLabs to function properly)
+5. connect all modules in GazeDialogue-Follower.
+8. Press Enter - robot will run GazeDialogue system for follower *PupilLabs is required with streaming plugin*
 
 # Run in real robot (iCub)
 You need to change robot name in the file ```src/extras/configure.cpp``` 
