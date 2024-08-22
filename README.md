@@ -134,7 +134,7 @@ yarp rpc /service
 >> pass or place
 ```
 
-### GazeDialogue mode - Robot as a Leader:
+## GazeDialogue mode:
 Open terminals:
 ```
 yarpserver --write
@@ -149,7 +149,11 @@ You should see the iCubSIM simulator open a window, and a second window. Open mo
 cd GazeDialogue/controller/build
 ./gazePupil-detector
 ```
-4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
+4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now.
+
+Now, depending on whether you want to interact with the iCub or iCubSIM as a **Leader** or **Follower** the instructions change slightly
+### Robot as a Leader:
+open a new terminal to run main process for leader
 ```
 ./gazePupil-main-leader
 ```
@@ -157,23 +161,9 @@ cd GazeDialogue/controller/build
 6. Press Enter - robot will look down
 7. Press Enter - robot will find ball and grasp it (try to!)
 8. Press Enter - robot will run GazeDialogue system for leader *PupilLabs is required with streaming plugin*
-
-### GazeDialogue mode - Robot as a Follower:
-Open terminals:
-```
-yarpserver --write
-yarpmanager
-```
-in yarpmanager do:
-1. open controller/apps/iCub_startup.xml
-2. open controller/apps/GazeDialogue_leader.xml
-3. run all modules in iCub_startup
-You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
-```
-cd GazeDialogue/controller/build
-./gazePupil-detector
-```
-4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
+   
+### Robot as a Follower:
+open a new terminal to run main process for follower
 ```
 ./gazePupil-main-follower
 ```
