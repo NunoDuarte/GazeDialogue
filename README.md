@@ -59,16 +59,13 @@ cd liblsl & mkdir build & cmake ..
 export PYLSL_LIB=/path/to/liblsl.so
 ```
 You can test if the detection system is working by running ```python main_offline.py```
-### For the connectivity App:
+### For the connectivity App: [![PupilLabs 3.6.7](https://img.shields.io/badge/PupilLabs-3.6.7-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
 This is to send the communication of PupilLabs to the detection App which then sends it to the iCub (through YARP)
 - YARP
-- PupilLabs (working currently on v3.6.7)
+- PupilLabs [Capture](https://github.com/pupil-labs/pupil) 
+- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture)
 
-Install PupilLabs [Capture](https://github.com/pupil-labs/pupil) either the App or from source. We use LabStreamingLayer to stream the data and convert to YARP
-- LSL
-- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture) - 2019 version
-
-Alternative to LabStreamingLayer is to use ROS (not yet tested)
+Either install the PupilLabs Capture app or from source. We use LabStreamingLayer(LSL) to stream the data and convert to YARP. Alternatively to LabStreamingLayer is ROS (not yet tested)
 - ROS
 - Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
