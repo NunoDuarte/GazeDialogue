@@ -1,5 +1,3 @@
-# TODO
-- clean readme of connectivity - point to your private repo for more info or ask an issue
 # Gaze Dialogue Model
 
 [![Build Status](https://app.travis-ci.com/NunoDuarte/GazeDialogue.svg?branch=master)](https://app.travis-ci.com/NunoDuarte/GazeDialogue)
