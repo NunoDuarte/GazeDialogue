@@ -157,6 +157,7 @@ cd GazeDialogue/controller/build
 python3 main.py
 ```
 you should see a window open of the eye-tracker output. It should highlight the objects, faces, and gaze. 
+
 8. run Pupil_Stream_to_Yarp (pl1_yarp) to convert the message to YARP !!!! (this should be improved)
 
 Now, depending on whether you want to interact with the iCub or iCubSIM as a **Leader** or **Follower** the instructions change slightly
