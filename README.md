@@ -150,25 +150,30 @@ cd GazeDialogue/controller/build
 ./gazePupil-detector
 ```
 4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now.
+5. turn PupilLabs Capture on
+6. make sure the streaming plugin is on
+7. open a new terminal and open the *detection app*
+```
+python3 main.py
 
+```
+you should see a window open of the eye-tracker output. It should highlight the objects, faces, and gaze. 
 Now, depending on whether you want to interact with the iCub or iCubSIM as a **Leader** or **Follower** the instructions change slightly
 ### Robot as a Leader:
 open a new terminal to run main process for leader
 ```
 ./gazePupil-main-leader
 ```
-5. connect all modules in GazeDialogue-Leader.
-6. Press Enter - robot will look down
-7. Press Enter - robot will find ball and grasp it (try to!)
-8. Press Enter - robot will run GazeDialogue system for leader *PupilLabs is required with streaming plugin*
+5. connect the GazeDialogue-Leader yarp port that receives the the gaze fixations.
+8. Press Enter - robot will run GazeDialogue system for leader
    
 ### Robot as a Follower:
 open a new terminal to run main process for follower
 ```
 ./gazePupil-main-follower
 ```
-5. connect all modules in GazeDialogue-Follower.
-8. Press Enter - robot will run GazeDialogue system for follower *PupilLabs is required with streaming plugin*
+5. connect the GazeDialogue-Follower yarp port that receives the the gaze fixations.
+8. Press Enter - robot will run GazeDialogue system for follower
 
 # Run in real robot (iCub)
 You need to change robot name in the file ```src/extras/configure.cpp``` 
