@@ -1,5 +1,4 @@
 # TODO
-- check that it is working on icubSIM
 - add pupil labs version
 - improve connectivity package - more streamlines
 - clean readme of connectivity - point to your private repo for more info or ask an issue
