@@ -38,8 +38,8 @@ class GazeBehaviour:
         return mysample
 
     def push(self, frame, sample, ball, face, width, height, lsl):
-        pos_x = sample[0][1]
-        pos_y = sample[0][2]
+        pos_x = sample[0][0][1]
+        pos_y = sample[0][0][2]
 
         # print(int(float(pos_x)*width))
         # print(int(height - int(float(pos_y)*height)))
@@ -49,9 +49,9 @@ class GazeBehaviour:
 
         # check the gaze behaviour
         if len(ball) is not 0:
-            mysample = self.record(sample[0][0], ball, face, fixation, [], width, height)
+            mysample = self.record(0.0, ball, face, fixation, [], width, height)
             if len(mysample) is not 0:
                 print(mysample)
                 self.gaze_sequence.append(mysample[1])
-                #lsl.outlet.push_sample(mysample)
+                lsl.outlet.push_sample(mysample)
 
