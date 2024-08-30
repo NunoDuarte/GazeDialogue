@@ -61,11 +61,11 @@ You can test if the detection system is working by running ```python main_offlin
 This is to send the communication of PupilLabs to the detection App which then sends it to the iCub (through YARP)
 - YARP
 - PupilLabs [Capture](https://github.com/pupil-labs/pupil) 
-- Pupil LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture)
+- PupilLabs LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture)
 
 Either install the PupilLabs Capture app or from source. We use LabStreamingLayer(LSL) to stream the data and convert to YARP. Alternatively to LabStreamingLayer is ROS (not yet tested)
 - ROS
-- Pupil ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
+- PupilLabs ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
 
 ## Building *controller app*
 [![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
