@@ -11,7 +11,7 @@ Gaze Dialogue Model system for iCub Humanoid Robot
 ![Static Badge](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white&label=16.04) 
 ![Static Badge](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white&label=20.04)
 
-# Dependencies
+## Dependencies
 ### For controller App 
 follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
 - YCM
