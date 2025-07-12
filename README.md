@@ -3,280 +3,221 @@
 [![Build Status](https://app.travis-ci.com/NunoDuarte/GazeDialogue.svg?branch=master)](https://app.travis-ci.com/NunoDuarte/GazeDialogue)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
-Gaze Dialogue Model system for iCub Humanoid Robot 
+The Gaze Dialogue Model is a system for the iCub Humanoid Robot that enables more natural human-robot interaction through gaze.
 
-<img src="doc/gif_g.gif" width="400" height="225" /> <img src="doc/gif_f.gif" width="400" height="225" />
+<p align="center">
+  <img src="doc/gif_g.gif" width="400" height="225" />
+  <img src="doc/gif_f.gif" width="400" height="225" />
+</p>
+
+## Table of Contents
+
+* [Features](#features)
+* [Demos](#demos)
+* [Tested on](#tested-on)
+* [Dependencies](#dependencies)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Troubleshooting](#troubleshooting)
+* [Structure](#structure)
+* [Citation](#citation)
+
+## Features
+
+*   **Gaze-based interaction:** Control the iCub robot's actions using your gaze.
+*   **Object and face detection:** The system can identify objects and faces in the environment.
+*   **Robot as leader or follower:** The iCub can either lead the interaction or follow the user's gaze.
+*   **Real-time performance:** The system is designed to run in real-time with minimal latency.
+*   **Support for iCub and iCubSim:** The system can be used with both the real iCub robot and the iCub simulator.
+
+## Demos
+
+**iCub Leader** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **iCub Follower** <br>
+<img src="doc/giving_gd_1.gif" width="400" height="225" /> <img src="doc/handover_gd_1.gif" width="400" height="225" />
+
+<img src="doc/python.gif" width="800" height="450" />
 
 ## Tested on
-![Static Badge](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white&label=16.04) 
+
+![Static Badge](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white&label=16.04)
 ![Static Badge](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white&label=20.04)
 
 ## Dependencies
-### For controller App 
-follow instructions in [icub website](https://icub-tech-iit.github.io/documentation/sw_installation/linux_from_sources_manual/):
-- YCM
-- YARP
-- icub-main
-- OpenCV (optional) 
-#### Ubuntu 16.04 
-```
-git clone https://github.com/robotology/ycm.git -b v0.11.3
-git clone https://github.com/robotology/yarp.git -b v2.3.72
-git clone https://github.com/robotology/icub-main.git -b v1.10.0
-git clone https://github.com/robotology/icub-contrib-common -b 7d9b7e4
-```
-#### Ubuntu 20.04
-```
-git clone https://github.com/robotology/ycm.git -b v0.11.3
-git clone https://github.com/robotology/yarp.git -b v3.4.0
-git clone https://github.com/robotology/icub-main.git -b v1.17.0
-```
-#### OpenCV (tested on v3.4.1 and v3.4.17)
-recommended with CUDA (tested on CUDA-8.0, CUDA-11.2, and CUDA-11.4). Please follow the official [OpenCV documentation](https://docs.opencv.org/4.5.2/d7/d9f/tutorial_linux_install.html). 
 
-### For the detection App [![Python 3.5.5](https://img.shields.io/badge/python-3.5.5-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Python 3.9](https://img.shields.io/badge/python-3.9.19-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 1.9](https://img.shields.io/badge/tensorflow-v1.9-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) [![Tensorflow 2.15.0](https://img.shields.io/badge/tensorflow-v2.15.0-orange?style=flat&logo=app)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
+### Controller App
 
-install the requirements. We recommend installing in a virtual environment like [Anaconda](https://docs.anaconda.com/anaconda/install/linux/) 
-```
-pip3 install -r requirements.txt
-```
-For our gaze fixations we use Tensorflow models 
-```
-git clone https://github.com/tensorflow/models.git
-```
-```utils``` package is from Tensorflow [Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) (follow the instructions to install it). Then add it to your path
-```
-cd models/research
-export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
-echo $PYTHONPATH 
-export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection 
-```
-``pylsl`` needs liblsl (v1.13.0). Either install in /usr/ or add the filepath specified by an environment variable named PYLSL_LIB
-```
-cd liblsl & mkdir build & cmake ..
-export PYLSL_LIB=/path/to/liblsl.so
-```
-You can test if the detection system is working by running ```python main_offline.py```
-### For the connectivity App: [![PupilLabs 3.6.7](https://img.shields.io/badge/PupilLabs-3.6.7-blue.svg)](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection)
-This is to send the communication of PupilLabs to the detection App which then sends it to the iCub (through YARP)
-- YARP
-- PupilLabs [Capture](https://github.com/pupil-labs/pupil) 
-- PupilLabs LSL [plugin](https://github.com/labstreaminglayer/App-PupilLabs/tree/65f577a520a316ff955b7076150ffa1a61182748/pupil_capture)
+*   **YCM:**
+    ```bash
+    git clone https://github.com/robotology/ycm.git -b v0.11.3
+    ```
+*   **YARP:**
+    *   Ubuntu 16.04:
+        ```bash
+        git clone https://github.com/robotology/yarp.git -b v2.3.72
+        ```
+    *   Ubuntu 20.04:
+        ```bash
+        git clone https://github.com/robotology/yarp.git -b v3.4.0
+        ```
+*   **icub-main:**
+    *   Ubuntu 16.04:
+        ```bash
+        git clone https://github.com/robotology/icub-main.git -b v1.10.0
+        ```
+    *   Ubuntu 20.04:
+        ```bash
+        git clone https://github.com/robotology/icub-main.git -b v1.17.0
+        ```
+*   **icub-contrib-common:** (Ubuntu 16.04 only)
+    ```bash
+    git clone https://github.com/robotology/icub-contrib-common -b 7d9b7e4
+    ```
+*   **OpenCV:** (Optional, tested on v3.4.1 and v3.4.17) Recommended with CUDA.
 
-Either install the PupilLabs Capture app or from source. We use LabStreamingLayer(LSL) to stream the data and convert to YARP. Alternatively to LabStreamingLayer is ROS (not yet tested)
-- ROS
-- PupilLabs ROS [plugin](https://github.com/qian256/pupil_ros_plugin.git)
+### Detection App
 
-## Building *controller app*
-[![C++](https://img.shields.io/badge/cpp-5.5.0-blue?logo=cplusplus)](https://github.com/NunoDuarte/GazeDialogue/tree/master/controller)
+*   **Python:** 3.5.5 or 3.9
+*   **Tensorflow:** 1.9 or 2.15.0
+*   **Anaconda:** Recommended for managing virtual environments.
+*   **Requirements:**
+    ```bash
+    pip3 install -r requirements.txt
+    ```
+*   **Tensorflow Models:**
+    ```bash
+    git clone https://github.com/tensorflow/models.git
+    ```
+*   **pylsl:** Requires liblsl (v1.13.0)
 
-1. clone repository
-```
-git clone git@github.com:NunoDuarte/GazeDialogue.git
-```
-2. start with the controller App 
-```
-cd controller
-```
-3. install controller App [Dependencies](#dependencies)
-4. build
-```
-mkdir build
-ccmake .
-make -j
-```
-5. install detection App [Dependencies](#dependencies)
-6. install connectivity App [Dependencies](#dependencies) (optional when using iCub)
-7. Jump to [Setup](#setup) for the first tests of the GazeDialogue pipeline
+### Connectivity App
 
-# Demo
-**Test detection App** (pupil_data_test)
-1. go to detection app
-```
-cd detection
-```
-2. run detection system offline
-```
-python3 main_offline.py
-```
-You should see a window of a video output appear. The detection system is running on the PupilLabs exported data (pupil_data_test) and the output are [timestep, gaze fixations label, pixel_x, pixel_y], for each detected gaze fixation. 
+*   **YARP**
+*   **PupilLabs Capture:** or install from source.
+*   **PupilLabs LSL plugin**
+*   **ROS:** (Alternative to LSL, not yet tested)
+*   **PupilLabs ROS plugin**
 
-# Setup
-### Manual mode:
-**Test controller App (iCubSIM)**. There are three modes: manual robot leader; gazedialogue robot leader; gazedialogue robot follower. manual robot leader does not need eye-tracker(PupilLabs) while gazedialogue modes require eye-tracker(PupilLabs) for it to work.
+## Installation
 
-Open terminals:
-```
-yarpserver --write
-yarpmanager
-```
-in yarpmanager do:
-1. open controller/apps/iCub_startup.xml
-2. open controller/apps/GazeDialogue_leader.xml
-3. run all modules in iCub_startup
-You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
-```
-cd GazeDialogue/controller/build
-./gazePupil-detector
-```
-4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now. 
-```
-./gazePupil-manual-leader
-```
-5. connect all modules in GazeDialogue-Leader. Open terminal:
-```
-yarp rpc /service
-```
-7. Write the following ```>> help``` this shows the available actions:
-```
->> look_down
->> grasp_it
->> pass or place
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone git@github.com:NunoDuarte/GazeDialogue.git
+    ```
+2.  **Install dependencies:** Install the dependencies for the [controller](#controller-app), [detection](#detection-app), and [connectivity](#connectivity-app) apps.
+3.  **Build the controller app:**
+    ```bash
+    cd controller
+    mkdir build
+    ccmake .
+    make -j
+    ```
+4.  **Set up the detection app:**
+    *   Add the Tensorflow Object Detection API to your `PYTHONPATH`:
+        ```bash
+        cd models/research
+        export PYTHONPATH=$PYTHONPATH:$(pwd)/slim
+        export PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/object_detection
+        ```
+    *   Set the `PYLSL_LIB` environment variable to the path of your `liblsl.so` file.
 
-## GazeDialogue mode:
-Open terminals:
-```
-yarpserver --write
-yarpmanager
-```
-in yarpmanager do:
-1. open controller/apps/iCub_startup.xml
-2. open controller/apps/GazeDialogue_leader.xml
-3. run all modules in iCub_startup
-You should see the iCubSIM simulator open a window, and a second window. Open more terminals:
-```
-cd GazeDialogue/controller/build
-./gazePupil-detector
-```
-4. connect all modules in iCub_startup. You should see the iCub's perspective in the second window now.
-5. turn PupilLabs Capture on
-6. make sure the streaming plugin is on
-7. open a new terminal and open the *detection app*
-```
-python3 main.py
-```
-you should see a window open of the eye-tracker output. It should highlight the objects, faces, and gaze. 
+## Usage
 
-8. run Pupil_Stream_to_Yarp (pl1_yarp) to convert the message to YARP !!!! (this should be improved)
+### Testing the Detection App
 
-Now, depending on whether you want to interact with the iCub or iCubSIM as a **Leader** or **Follower** the instructions change slightly
-### Robot as a Leader:
-open a new terminal to run main process for leader
-```
-./gazePupil-main-leader
-```
-5. connect the GazeDialogue-Leader yarp port that receives the the gaze fixations.
-8. Press Enter - robot will run GazeDialogue system for leader
-   
-### Robot as a Follower:
-open a new terminal to run main process for follower
-```
-./gazePupil-main-follower
-```
-5. connect the GazeDialogue-Follower yarp port that receives the the gaze fixations.
-8. Press Enter - robot will run GazeDialogue system for follower
+1.  Navigate to the `detection` directory:
+    ```bash
+    cd detection
+    ```
+2.  Run the offline detection script:
+    ```bash
+    python3 main_offline.py
+    ```
+    This will run the detection system on pre-recorded data and output the detected gaze fixations.
 
-# Run in real robot (iCub)
-You need to change robot name in the file ```src/extras/configure.cpp``` 
-```cpp
-        // Open cartesian solver for right and left arm
-        string robot="icub";
-```
-from ```"icubSim"``` to ```"icub"```. Then recompile build.
+### Running the System with iCubSim
 
-## Robot as a Follower:
-1. open YARP - yarpserver 
-2. use yarpnamespace /icub (for more information check [link](https://github.com/NunoDuarte/gazePupil_iCub#run-yarp-from-a-different-computer))
-3. open Pupil-Labs (Capture App)
-4. open [detection](https://github.com/NunoDuarte/GazeDialogue/tree/master/detection) project 
-5. run [Pupil_Stream_to_Yarp](https://github.com/NunoDuarte/armCoupling_iCub/blob/master/lsl/pupil/README.md) to open LSL 
-6. check /pupil_gaze_tracker is publishing gaze fixations 
+#### Manual Mode
 
-Run on the real robot - without right arm (optional). Firstly, start iCubStartup from the yarpmotorgui in the real iCub and run the following packages:
-- yarprobotinterface --from yarprobotinterface_noSkinNoRight.ini
-- iKinCartesianSolver -part left_arm
-- iKinGazeCtrl 
-- wholeBodyDynamics     icubbrain1   --headV2 --autocorrect --no_right_arm
-- gravityCompensator    icubbrain2   --headV2 --no_right_arm
-- fingersTuner          icub-laptop
-- imuFilter             pc104
+1.  Start `yarpserver` and `yarpmanager`.
+2.  In `yarpmanager`, open and run the applications in `controller/apps/iCub_startup.xml` and `controller/apps/GazeDialogue_leader.xml`.
+3.  Run the detector and manual leader executables:
+    ```bash
+    ./gazePupil-detector
+    ./gazePupil-manual-leader
+    ```
+4.  Connect the YARP ports.
+5.  Use the `yarp rpc /service` to send commands to the robot.
+
+#### GazeDialogue Mode
+
+1.  Follow steps 1 and 2 from the manual mode.
+2.  Run the detector:
+    ```bash
+    ./gazePupil-detector
+    ```
+3.  Turn on PupilLabs Capture and the LSL streaming plugin.
+4.  Run the detection script:
+    ```bash
+    python3 main.py
+    ```
+5.  Run the Pupil\_Stream\_to\_Yarp executable.
+6.  Run the main process for either the leader or follower:
+    *   **Leader:**
+        ```bash
+        ./gazePupil-main-leader
+        ```
+    *   **Follower:**
+        ```bash
+        ./gazePupil-main-follower
+        ```
+7.  Connect the YARP ports.
+
+### Running the System with the Real iCub
+
+1.  Change the robot name in `src/extras/configure.cpp` from `icubSim` to `icub`.
+2.  Recompile the controller app.
+3.  Follow the instructions for the GazeDialogue mode, but with the real robot.
+
+## Troubleshooting
+
+### Connectivity Issues
+
+*   **LSL Pupil - YARP on Ubuntu 16.04:**
+    *   Install CodeBlocks, PyCharm, YARP 2.3.72, Pupil 1.7.42, and the LSL Relay and Pupil Remote plugins.
+    *   Configure the build options in CodeBlocks to correctly link the YARP, LSL, and JSON libraries.
+*   **`pthread_create@2.2.5` error in CodeBlocks:** Add `-pthread` to the compiler and linker settings.
+*   **`libYARP_init.so.3` not found:** Add the path to the YARP libraries to the linker search directories.
+*   **Shared library not found (e.g., `liblsl64.so.1.2.0`):** Add the directory containing the library to the linker search directories.
+
+### Tensorflow and CUDA Issues
+
+*   **Ubuntu 16.04 with CUDA 11.2 and Tensorflow 2.7:**
+    *   Install NVIDIA driver 460.32.03 and CUDA 11.2.
+    *   Install cuDNN 8.1 for CUDA 11.0, 11.1, and 11.2.
+    *   Set the `PATH` and `LD_LIBRARY_PATH` environment variables to include the CUDA directories.
+*   **`tf.gfile.GFile` error in Tensorflow 2.7:** Change `tf.gfile.GFile` to `tf.io.gfile.GFile` in `label_map_utils.py`.
+
+### Dual-Computer System
+
+*   If you are running the detection and/or connectivity apps on a different computer from the iCub, make sure to configure YARP to connect to the correct IP address.
 
 ## Structure
-``` text
+
+```
 .
 ├─── Controller
-	├── CMakeLists.txt
-	├── app
-	│   ├── GazeDialogue_follower.xml
-	|   ├── GazeDialogue_leader.xml
-	|   └── iCub_startup.xml
-	|   
-	├── include
-	│   ├── compute.h
-	│   ├── configure.h
-	|   ├── helpers.h
-	|   └── init.h
-	└── src
-	    ├── icub_follower.cpp
-	    ├── icub_leader.cpp
-	    └── extras
-		├── CvHMM.h
-		├── CvMC.h
-		├── compute.cpp
-		├── configure.cpp
-		├── detector.cpp
-		└── helpers.cpp
+│   ├── CMakeLists.txt
+│   ├── app
+│   └── src
 ├─── Detection
-	├── main.py | main_offline.py
-	├── face_detector.py | face_detector_gpu.py
-	├── objt_tracking.py
-	├── gaze_behaviour.py
-	└── pupil_lsl_yarp.py
-
+│   ├── main.py
+│   └── ...
+└─── connectivity
+    └── ...
 ```
 
-## Instructions for a dual-computer system
-In case you have the detection App and/or the connectivity App in a different computer do not forget to point YARP to where iCub is running:
-- yarp namespace /icub (in case /icub is the name of the yarp network)
-- yarp detect (to check you are connected)
-- gedit /home/user/.config/yarp/_icub.conf
-- 'ip of computer you wish to connect' 10000 yarp 
+## Citation
 
-## Extras
-Read camera output
-- yarpdev --device grabber --name /test/video --subdevice usbCamera --d /dev/video0
-- yarp connect /test/video /icubSim/texture/screen
-
-## Issues
-- To make it work on Ubuntu 16.04 with CUDA-11.2 and Tensorflow 2.7 you need to do the following:
-1. install nvidia driver 460.32.03 (cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb)
-2. wget https://developer.download.nvidia.com/compute/cuda/11.2.1/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb
-3. sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.1-460.32.03-1_amd64.deb 
-4. sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
-5. sudo apt-get install cuda-11-2
-6. check that apt-get is not removing any packages
-7. install Cudnn 8.1 for CUDA-11.0, 11.1, and 11.2
-8. test using deviceQuery on cuda-11.0 samples/1_Utilities
-9. follow the guidelines of Building and Instructions
-10. if after installing tensorflow, the system complains about missing cudart.so.11.0 then do this: (you can add this to ~/.bashrc)
-```
-export PATH=$PATH:/usr/local/cuda-11.2/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.2/lib64
-```
-- To make it work on tensorflow 2.7 I needed to alter the code in ~/software/tensorflow/models/research/object_detection/utils/label_map_utils.py (line 132)
-```
-with tf.io.gfile.GFile(path, 'r') as fid:
-```
-instead of 
-```
-with tf.gfile.GFile(path, 'r') as fid:
-```
-
-## Citation 
 If you find this code useful in your research, please consider citing our [paper](https://ieeexplore.ieee.org/abstract/document/9965577):
 
-	M. Raković, N. F. Duarte, J. Marques, A. Billard and J. Santos-Victor, "The Gaze Dialogue Model: Nonverbal Communication in HHI and HRI," in IEEE Transactions on Cybernetics, doi: 10.1109/TCYB.2022.3222077.
-
-
-
+    M. Raković, N. F. Duarte, J. Marques, A. Billard and J. Santos-Victor, "The Gaze Dialogue Model: Nonverbal Communication in HHI and HRI," in IEEE Transactions on Cybernetics, doi: 10.1109/TCYB.2022.3222077.
